@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import {
+  Column,
   ColumnDef,
   ColumnFiltersState,
   SortingState,
@@ -99,27 +100,41 @@ export function DataTable<TData, TValue>({
   });
 
   const isFiltered = table.getState().columnFilters.length > 0;
-  const isGenderFilterAvailable = table.getColumn("gender");
+  
+  const nameFilterColumn = React.useMemo(() => 
+    table.getAllColumns().find(c => ['lastName', 'patientName', 'firstName', 'name', 'medicationName'].includes(c.id)),
+    [table]
+  );
+
+  const genderFilterColumn = React.useMemo(() => 
+    table.getAllColumns().find(c => c.id === 'gender'),
+    [table]
+  );
+
 
   return (
     <div className="space-y-4">
        <div className="flex items-center justify-between">
         <div className="flex flex-1 items-center space-x-2">
-          <Input
-            placeholder="Filtrer par nom..."
-            value={(table.getColumn("lastName")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("lastName")?.setFilterValue(event.target.value)
-            }
-            className="h-8 w-[150px] lg:w-[250px]"
-          />
-          {isGenderFilterAvailable && (
+          {nameFilterColumn && (
+            <Input
+              placeholder="Filtrer par nom..."
+              value={(nameFilterColumn.getFilterValue() as string) ?? ""}
+              onChange={(event) =>
+                nameFilterColumn.setFilterValue(event.target.value)
+              }
+              className="h-8 w-[150px] lg:w-[250px]"
+            />
+          )}
+
+          {genderFilterColumn && (
             <DataTableFacetedFilter
-                column={table.getColumn("gender")}
+                column={genderFilterColumn}
                 title="Sexe"
                 options={[
                     { label: "Masculin", value: "Masculin"},
                     { label: "Féminin", value: "Féminin"},
+                    { label: "Autre", value: "Autre"},
                 ]}
             />
           )}
@@ -260,8 +275,8 @@ export function DataTableViewOptions<TData>({
   }
   
 interface DataTableFacetedFilterProps<TData, TValue> {
-  column: TanstackTable<TData>['getColumn']
-  title: string
+  column?: Column<TData, TValue>
+  title?: string
   options: {
     label: string
     value: string
