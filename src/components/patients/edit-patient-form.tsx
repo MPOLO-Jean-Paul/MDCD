@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
-import { doc } from 'firebase/firestore';
+import { collection, doc } from 'firebase/firestore';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -31,7 +31,9 @@ import { Calendar } from '@/components/ui/calendar';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Patient } from '@/types/patient';
-import { WithId, useFirestore, updateDocumentNonBlocking } from '@/firebase';
+import { WithId, useFirestore, updateDocumentNonBlocking, useCollection, useMemoFirebase } from '@/firebase';
+import { InsuranceProvider } from '@/types/insurance';
+import { Skeleton } from '../ui/skeleton';
 
 
 const formSchema = z.object({
@@ -43,6 +45,8 @@ const formSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email({ message: 'Veuillez saisir une adresse e-mail valide.' }).optional().or(z.literal('')),
   bloodGroup: z.string().optional(),
+  insuranceProviderId: z.string().optional(),
+  insurancePolicyNumber: z.string().optional(),
 });
 
 interface EditPatientFormProps {
@@ -55,11 +59,19 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
   const { toast } = useToast();
   const firestore = useFirestore();
 
+  const providersCollectionRef = useMemoFirebase(
+    () => (firestore ? collection(firestore, 'insurance_providers') : null),
+    [firestore]
+  );
+  const { data: insuranceProviders, isLoading: isLoadingProviders } = useCollection<Omit<InsuranceProvider, 'id'>>(providersCollectionRef);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
         ...patient,
-        dateOfBirth: new Date(patient.dateOfBirth)
+        dateOfBirth: new Date(patient.dateOfBirth),
+        insuranceProviderId: patient.insuranceProviderId || '',
+        insurancePolicyNumber: patient.insurancePolicyNumber || ''
     },
   });
 
@@ -93,6 +105,10 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
     } finally {
       setIsLoading(false);
     }
+  }
+
+  if (isLoadingProviders) {
+    return <div className="space-y-4 py-4"><Skeleton className="h-10" /><Skeleton className="h-10" /><Skeleton className="h-10" /></div>;
   }
 
   return (
@@ -219,6 +235,42 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
             <FormItem>
               <FormLabel>Groupe sanguin</FormLabel>
               <FormControl><Input {...field} /></FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+         <FormField
+          control={form.control}
+          name="insuranceProviderId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Assurance</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionnez une assurance (ou 'Aucune')" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="">Aucune (Particulier)</SelectItem>
+                  {insuranceProviders?.map((provider: WithId<Omit<InsuranceProvider, 'id'>>) => (
+                    <SelectItem key={provider.id} value={provider.id}>
+                      {provider.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="insurancePolicyNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>N° de Police d'Assurance</FormLabel>
+              <FormControl><Input placeholder="POL123456789" {...field} /></FormControl>
               <FormMessage />
             </FormItem>
           )}

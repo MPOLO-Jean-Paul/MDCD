@@ -15,3 +15,7 @@ export interface Patient {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface PatientWithInsurance extends Patient {
+    insuranceProviderName: string;
+}

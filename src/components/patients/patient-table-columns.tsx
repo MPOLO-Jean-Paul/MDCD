@@ -4,12 +4,12 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '../ui/button';
 import { ArrowUpDown } from 'lucide-react';
-import { Patient } from '@/types/patient';
+import { PatientWithInsurance } from '@/types/patient';
 import { PatientTableRowActions } from './patient-table-row-actions';
 import { WithId } from '@/firebase';
 import { differenceInYears } from 'date-fns';
 
-export const columns: ColumnDef<WithId<Omit<Patient, 'id'>>>[] = [
+export const columns: ColumnDef<WithId<Omit<PatientWithInsurance, 'id'>>>[] = [
     {
         id: 'select',
         header: ({ table }) => (
@@ -63,8 +63,8 @@ export const columns: ColumnDef<WithId<Omit<Patient, 'id'>>>[] = [
         header: 'Téléphone',
     },
     {
-        accessorKey: 'address',
-        header: 'Adresse',
+        accessorKey: 'insuranceProviderName',
+        header: 'Assurance',
     },
     {
         id: 'actions',

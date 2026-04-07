@@ -30,7 +30,7 @@ import { useLanguage } from '@/lib/i18n/provider';
 // Define menu items for all roles
 const allMenuItems = [
   { href: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard, roles: ['admin', 'doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff'] },
-  { href: '/admissions', labelKey: 'nav.admissions', icon: BedDouble, roles: ['admin', 'receptionist', 'doctor'] },
+  { href: '/admissions', labelKey: 'nav.admissions', icon: BedDouble, roles: ['admin', 'doctor'] },
   { href: '/patients', labelKey: 'nav.patients', icon: Users2, roles: ['admin', 'receptionist', 'doctor'] },
   { href: '/consultations', labelKey: 'nav.consultations', icon: Stethoscope, roles: ['admin', 'doctor'] },
   { href: '/billing', labelKey: 'nav.billing', icon: FilePlus, roles: ['admin', 'accountant'] },

@@ -31,8 +31,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { useFirestore, setDocumentNonBlocking } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { useFirestore, setDocumentNonBlocking, useCollection, useMemoFirebase, WithId } from '@/firebase';
+import { collection, doc } from 'firebase/firestore';
+import { InsuranceProvider } from '@/types/insurance';
+import { Skeleton } from '../ui/skeleton';
 
 const formSchema = z.object({
   firstName: z.string().min(1, { message: 'Le prénom est requis.' }),
@@ -43,12 +45,20 @@ const formSchema = z.object({
   phone: z.string().optional(),
   email: z.string().email({ message: 'Veuillez saisir une adresse e-mail valide.' }).optional().or(z.literal('')),
   bloodGroup: z.string().optional(),
+  insuranceProviderId: z.string().optional(),
+  insurancePolicyNumber: z.string().optional(),
 });
 
 export function CreatePatientForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const firestore = useFirestore();
+
+  const providersCollectionRef = useMemoFirebase(
+    () => (firestore ? collection(firestore, 'insurance_providers') : null),
+    [firestore]
+  );
+  const { data: insuranceProviders, isLoading: isLoadingProviders } = useCollection<Omit<InsuranceProvider, 'id'>>(providersCollectionRef);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,7 +74,7 @@ export function CreatePatientForm() {
     try {
       if (!firestore) throw new Error("Firestore not initialized");
 
-      const newPatientId = `PAT-${Date.now()}`;
+      const newPatientId = 'MDCD' + uuidv4().substring(0, 6).toUpperCase();
       const newPatientDocRef = doc(firestore, 'patients', newPatientId);
 
       const newPatient = {
@@ -93,6 +103,10 @@ export function CreatePatientForm() {
     } finally {
       setIsLoading(false);
     }
+  }
+  
+  if(isLoadingProviders) {
+      return <div className="space-y-4 py-4"><Skeleton className="h-10" /><Skeleton className="h-10" /><Skeleton className="h-10" /></div>
   }
 
   return (
@@ -223,6 +237,43 @@ export function CreatePatientForm() {
             </FormItem>
           )}
         />
+         <FormField
+          control={form.control}
+          name="insuranceProviderId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Assurance</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Sélectionnez une assurance (ou 'Aucune')" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="">Aucune (Particulier)</SelectItem>
+                  {insuranceProviders?.map((provider: WithId<Omit<InsuranceProvider, 'id'>>) => (
+                    <SelectItem key={provider.id} value={provider.id}>
+                      {provider.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="insurancePolicyNumber"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>N° de Police d'Assurance</FormLabel>
+              <FormControl><Input placeholder="POL123456789" {...field} /></FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="md:col-span-2 flex justify-end">
             <Button type="submit" className="w-full md:w-auto" disabled={isLoading}>
                 {isLoading ? 'Enregistrement...' : 'Enregistrer le patient'}
