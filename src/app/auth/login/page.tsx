@@ -76,7 +76,7 @@ export default function LoginPage() {
         <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary">
           <Hospital className="h-8 w-8 text-primary-foreground" />
         </div>
-        <CardTitle className="text-2xl">Connexion à MediFlow Pro</CardTitle>
+        <CardTitle className="text-2xl">Connexion à Polyclinique MDCD</CardTitle>
         <CardDescription>
           Saisissez vos identifiants pour accéder à votre tableau de bord.
         </CardDescription>

@@ -49,7 +49,7 @@ export function Nav() {
         <Link href="/dashboard" className="flex h-10 w-full items-center justify-center p-2 group-data-[collapsible=icon]:justify-center">
           <Hospital className="size-8 text-sidebar-primary" />
           <span className="ml-2 text-lg font-bold text-sidebar-primary-foreground group-data-[collapsible=icon]:hidden">
-            MediFlow Pro
+            Polyclinique MDCD
           </span>
         </Link>
       </SidebarHeader>
