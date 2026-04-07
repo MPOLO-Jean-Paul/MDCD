@@ -117,11 +117,8 @@ export default function LoginPage() {
         </Form>
       </CardContent>
       <CardFooter className="flex flex-col gap-4">
-        <div className="text-center text-sm">
-          Vous n'avez pas de compte ?{' '}
-          <Link href="/auth/register" className="font-semibold text-primary underline-offset-4 hover:underline">
-            S'inscrire
-          </Link>
+        <div className="text-center text-sm text-muted-foreground">
+          Si vous n'avez pas de compte, veuillez contacter un administrateur.
         </div>
       </CardFooter>
     </Card>

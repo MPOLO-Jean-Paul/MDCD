@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from '@/firebase/client-provider';
+import { UserProfileProvider } from '@/firebase/auth-provider';
 
 export const metadata: Metadata = {
   title: 'MediFlow Pro',
@@ -22,7 +23,9 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <FirebaseClientProvider>
-          {children}
+          <UserProfileProvider>
+            {children}
+          </UserProfileProvider>
           <Toaster />
         </FirebaseClientProvider>
       </body>

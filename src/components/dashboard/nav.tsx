@@ -7,6 +7,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSkeleton,
 } from '@/components/ui/sidebar';
 import {
   BarChart3,
@@ -16,46 +17,31 @@ import {
   LayoutDashboard,
   Pill,
   Settings,
+  ShieldCheck,
   Users2,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { useUserProfile } from '@/firebase/auth-provider';
 
-const menuItems = [
-  {
-    href: '/dashboard',
-    label: 'Tableau de bord',
-    icon: LayoutDashboard,
-  },
-  {
-    href: '/admissions',
-    label: 'Admissions',
-    icon: BedDouble,
-  },
-  {
-    href: '/patients',
-    label: 'Patients',
-    icon: Users2,
-  },
-  {
-    href: '/billing',
-    label: 'Facturation',
-    icon: ClipboardPlus,
-  },
-  {
-    href: '/pharmacy',
-    label: 'Pharmacie',
-    icon: Pill,
-  },
-  {
-    href: '/reports',
-    label: 'Rapports',
-    icon: BarChart3,
-  },
+// Define menu items for all roles
+const allMenuItems = [
+  { href: '/dashboard', label: 'Tableau de bord', icon: LayoutDashboard, roles: ['admin', 'doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff'] },
+  { href: '/admissions', label: 'Admissions', icon: BedDouble, roles: ['admin', 'receptionist', 'doctor'] },
+  { href: '/patients', label: 'Patients', icon: Users2, roles: ['admin', 'receptionist', 'doctor'] },
+  { href: '/billing', label: 'Facturation', icon: ClipboardPlus, roles: ['admin', 'accountant'] },
+  { href: '/pharmacy', label: 'Pharmacie', icon: Pill, roles: ['admin', 'pharmacist'] },
+  { href: '/reports', label: 'Rapports', icon: BarChart3, roles: ['admin', 'accountant'] },
+  { href: '/admin/users', label: 'Utilisateurs', icon: ShieldCheck, roles: ['admin'] },
 ];
 
 export function Nav() {
   const pathname = usePathname();
+  const { profile, isProfileLoading } = useUserProfile();
+
+  const userRole = profile?.roleName;
+
+  const menuItems = allMenuItems.filter(item => userRole && item.roles.includes(userRole));
 
   return (
     <>
@@ -69,19 +55,28 @@ export function Nav() {
       </SidebarHeader>
       <SidebarContent className="p-2">
         <SidebarMenu>
-          {menuItems.map((item) => (
-            <SidebarMenuItem key={item.href}>
-              <Link href={item.href} legacyBehavior passHref>
-                <SidebarMenuButton
-                  tooltip={item.label}
-                  isActive={pathname.startsWith(item.href) && (item.href === '/dashboard' ? pathname === item.href : true) }
-                >
-                  <item.icon />
-                  <span>{item.label}</span>
-                </SidebarMenuButton>
-              </Link>
-            </SidebarMenuItem>
-          ))}
+          {isProfileLoading ? (
+            <>
+              <SidebarMenuSkeleton showIcon />
+              <SidebarMenuSkeleton showIcon />
+              <SidebarMenuSkeleton showIcon />
+              <SidebarMenuSkeleton showIcon />
+            </>
+          ) : (
+            menuItems.map((item) => (
+              <SidebarMenuItem key={item.href}>
+                <Link href={item.href} legacyBehavior passHref>
+                  <SidebarMenuButton
+                    tooltip={item.label}
+                    isActive={pathname.startsWith(item.href) && (item.href === '/dashboard' ? pathname === item.href : true) }
+                  >
+                    <item.icon />
+                    <span>{item.label}</span>
+                  </SidebarMenuButton>
+                </Link>
+              </SidebarMenuItem>
+            ))
+          )}
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter className="p-2">
