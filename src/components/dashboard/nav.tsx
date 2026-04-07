@@ -12,7 +12,7 @@ import {
 import {
   BarChart3,
   BedDouble,
-  ClipboardPlus,
+  FilePlus,
   Hospital,
   LayoutDashboard,
   Pill,
@@ -30,7 +30,7 @@ const allMenuItems = [
   { href: '/dashboard', label: 'Tableau de bord', icon: LayoutDashboard, roles: ['admin', 'doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff'] },
   { href: '/admissions', label: 'Admissions', icon: BedDouble, roles: ['admin', 'receptionist', 'doctor'] },
   { href: '/patients', label: 'Patients', icon: Users2, roles: ['admin', 'receptionist', 'doctor'] },
-  { href: '/billing', label: 'Facturation', icon: ClipboardPlus, roles: ['admin', 'accountant'] },
+  { href: '/billing', label: 'Facturation', icon: FilePlus, roles: ['admin', 'accountant'] },
   { href: '/pharmacy', label: 'Pharmacie', icon: Pill, roles: ['admin', 'pharmacist'] },
   { href: '/reports', label: 'Rapports', icon: BarChart3, roles: ['admin', 'accountant'] },
   { href: '/services', label: 'Services', icon: ClipboardList, roles: ['admin'] },
