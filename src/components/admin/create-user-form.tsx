@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { initializeApp, deleteApp, getApp, getApps } from 'firebase/app';
+import { initializeApp, deleteApp, getApps } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc } from 'firebase/firestore';
 
@@ -64,6 +64,10 @@ export function CreateUserForm() {
       const userCredential = await createUserWithEmailAndPassword(secondaryAuth, values.email, values.password);
       const user = userCredential.user;
 
+      if (!primaryFirestore) {
+        throw new Error("Firestore is not initialized");
+      }
+
       const userDocRef = doc(primaryFirestore, 'users', user.uid);
       setDocumentNonBlocking(userDocRef, {
         id: user.uid,
@@ -101,7 +105,7 @@ export function CreateUserForm() {
       console.error("Error creating user:", error);
     } finally {
       setIsLoading(false);
-      await deleteApp(secondaryApp);
+      await deleteApp(secondaryApp).catch(err => console.error("Error deleting secondary app:", err));
     }
   }
 

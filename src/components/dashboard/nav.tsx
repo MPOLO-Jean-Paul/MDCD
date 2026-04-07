@@ -63,6 +63,8 @@ export function Nav() {
               <SidebarMenuSkeleton showIcon />
               <SidebarMenuSkeleton showIcon />
               <SidebarMenuSkeleton showIcon />
+              <SidebarMenuSkeleton showIcon />
+              <SidebarMenuSkeleton showIcon />
             </>
           ) : (
             menuItems.map((item) => (

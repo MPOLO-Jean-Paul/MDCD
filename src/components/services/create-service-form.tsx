@@ -45,7 +45,7 @@ export function CreateServiceForm() {
   const { toast } = useToast();
 
   const usersCollectionRef = useMemoFirebase(
-    () => collection(primaryFirestore, 'users'),
+    () => primaryFirestore ? collection(primaryFirestore, 'users') : null,
     [primaryFirestore]
   );
   
@@ -65,6 +65,9 @@ export function CreateServiceForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
+      if (!primaryFirestore) {
+        throw new Error("Firestore is not initialized");
+      }
       const newServiceId = uuidv4();
       const serviceDocRef = doc(primaryFirestore, 'services', newServiceId);
       
