@@ -59,6 +59,7 @@ import { Input } from './input';
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "./separator";
 import { cn } from "@/lib/utils"
+import { useLanguage } from '@/lib/i18n/provider';
 
 
 interface DataTableProps<TData, TValue> {
@@ -76,6 +77,7 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] =
     React.useState<ColumnFiltersState>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const { t } = useLanguage();
   
   const table = useReactTable({
     data,
@@ -118,7 +120,7 @@ export function DataTable<TData, TValue>({
         <div className="flex flex-1 items-center space-x-2">
           {nameFilterColumn && (
             <Input
-              placeholder="Filtrer par nom..."
+              placeholder={t('common.searchPlaceholder')}
               value={(nameFilterColumn.getFilterValue() as string) ?? ""}
               onChange={(event) =>
                 nameFilterColumn.setFilterValue(event.target.value)
@@ -130,11 +132,11 @@ export function DataTable<TData, TValue>({
           {genderFilterColumn && (
             <DataTableFacetedFilter
                 column={genderFilterColumn}
-                title="Sexe"
+                title={t('patientsPage.table.gender')}
                 options={[
-                    { label: "Masculin", value: "Masculin"},
-                    { label: "Féminin", value: "Féminin"},
-                    { label: "Autre", value: "Autre"},
+                    { label: t('patientsPage.form.genders.male'), value: "Masculin"},
+                    { label: t('patientsPage.form.genders.female'), value: "Féminin"},
+                    { label: t('patientsPage.form.genders.other'), value: "Autre"},
                 ]}
             />
           )}
@@ -144,7 +146,7 @@ export function DataTable<TData, TValue>({
               onClick={() => table.resetColumnFilters()}
               className="h-8 px-2 lg:px-3"
             >
-              Réinitialiser
+              {t('common.reset')}
             </Button>
           )}
         </div>
@@ -193,7 +195,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Aucun résultat.
+                  {t('common.noResults')}
                 </TableCell>
               </TableRow>
             )}
@@ -202,8 +204,10 @@ export function DataTable<TData, TValue>({
       </div>
       <div className="flex items-center justify-end space-x-2">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} sur{' '}
-          {table.getFilteredRowModel().rows.length} ligne(s) sélectionnée(s).
+          {t('common.selectedRows', {
+            count: table.getFilteredSelectedRowModel().rows.length,
+            total: table.getFilteredRowModel().rows.length
+          })}
         </div>
         <div className="space-x-2">
           <Button
@@ -212,7 +216,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Précédent
+            {t('common.previous')}
           </Button>
           <Button
             variant="outline"
@@ -220,7 +224,7 @@ export function DataTable<TData, TValue>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Suivant
+            {t('common.next')}
           </Button>
         </div>
       </div>
@@ -236,6 +240,7 @@ interface DataTableViewOptionsProps<TData> {
 export function DataTableViewOptions<TData>({
     table,
   }: DataTableViewOptionsProps<TData>) {
+    const { t } = useLanguage();
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -245,11 +250,11 @@ export function DataTableViewOptions<TData>({
             className="ml-auto hidden h-8 lg:flex"
           >
             <SlidersHorizontal className="mr-2 h-4 w-4" />
-            Vue
+            {t('common.view')}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[150px]">
-          <DropdownMenuLabel>Afficher/Masquer</DropdownMenuLabel>
+          <DropdownMenuLabel>{t('common.showHideColumns')}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {table
             .getAllColumns()
@@ -291,6 +296,7 @@ export function DataTableFacetedFilter<TData, TValue>({
 }: DataTableFacetedFilterProps<TData, TValue>) {
   const facets = column?.getFacetedUniqueValues();
   const selectedValues = new Set(column?.getFilterValue() as string[]);
+  const { t } = useLanguage();
 
   return (
     <Popover>
@@ -313,7 +319,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     variant="secondary"
                     className="rounded-sm px-1 font-normal"
                   >
-                    {selectedValues.size} selected
+                    {selectedValues.size} {t('common.selected')}
                   </Badge>
                 ) : (
                   options
@@ -337,7 +343,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         <Command>
           <CommandInput placeholder={title} />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandEmpty>{t('common.noResults')}</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
                 const isSelected = selectedValues.has(option.value);
@@ -387,7 +393,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     onSelect={() => column?.setFilterValue(undefined)}
                     className="justify-center text-center"
                   >
-                    Clear filters
+                    {t('common.clearFilters')}
                   </CommandItem>
                 </CommandGroup>
               </>

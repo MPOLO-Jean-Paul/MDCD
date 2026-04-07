@@ -25,7 +25,9 @@
         "areYouSure": "Êtes-vous absolument sûr(e) ?",
         "irreversibleAction": "Cette action est irréversible.",
         "confirm": "Confirmer",
-        "chooseDate": "Choisissez une date"
+        "chooseDate": "Choisissez une date",
+        "selected": "sélectionné(s)",
+        "clearFilters": "Effacer les filtres"
     },
     "nav": {
         "main": "Polyclinique MDCD",

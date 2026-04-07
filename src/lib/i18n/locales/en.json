@@ -25,7 +25,9 @@
         "areYouSure": "Are you absolutely sure?",
         "irreversibleAction": "This action is irreversible.",
         "confirm": "Confirm",
-        "chooseDate": "Choose a date"
+        "chooseDate": "Choose a date",
+        "selected": "selected",
+        "clearFilters": "Clear filters"
     },
     "nav": {
         "main": "MDCD Polyclinic",
