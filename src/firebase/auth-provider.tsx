@@ -1,7 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, ReactNode, useMemo } from 'react';
-import { useUser, useDoc, useMemoFirebase, useFirestore } from '@/firebase';
+import React, { createContext, useContext, ReactNode, useMemo, useEffect } from 'react';
+import { useUser, useDoc, useMemoFirebase, useFirestore, setDocumentNonBlocking } from '@/firebase';
 import { doc } from 'firebase/firestore';
 
 // Represents the data stored in /users/{userId}
@@ -54,10 +54,36 @@ export function UserProfileProvider({ children }: { children: ReactNode }) {
   
   const { data: userRoleData, isLoading: isRoleLoading, error: roleError } = useDoc<UserRoleDocument>(userRoleRef);
 
+  // Effect to self-heal missing user_role document
+  useEffect(() => {
+    if (firestore && user && userDocData && !userRoleData && !isUserDocLoading && !isRoleLoading) {
+      console.log(`Attempting to self-heal missing user_role for user: ${user.uid}`);
+      const roleToSet = userDocData.roleId;
+      if (roleToSet) {
+        const roleDocToCreateRef = doc(firestore, 'user_roles', user.uid);
+        setDocumentNonBlocking(roleDocToCreateRef, { roleName: roleToSet }, {});
+      }
+    }
+  }, [firestore, user, userDocData, userRoleData, isUserDocLoading, isRoleLoading]);
+
 
   const value = useMemo((): UserProfileState => {
     const isLoading = isAuthLoading || isUserDocLoading || isRoleLoading;
     const error = userDocError || roleError;
+
+    // Condition where user doc is loaded, but role doc is not (yet). We can proceed.
+    // This provides a fallback and enables the self-healing effect to trigger.
+    if (user && userDocData && !userRoleData && !isLoading) {
+      return {
+        profile: {
+          ...userDocData,
+          id: user.uid,
+          roleName: userDocData.roleId, // Use roleId from user doc as fallback
+        },
+        isProfileLoading: false,
+        profileError: null,
+      };
+    }
 
     if (isLoading || error || !userDocData || !userRoleData || !user) {
       return {
@@ -67,7 +93,6 @@ export function UserProfileProvider({ children }: { children: ReactNode }) {
       };
     }
     
-    // The check for `user` not being null is important before accessing `user.uid`
     if(user) {
         return {
           profile: {
