@@ -42,7 +42,7 @@ const formSchema = z.object({
   lastName: z.string().min(1, { message: 'Le nom est requis.' }),
   email: z.string().email({ message: 'Veuillez saisir une adresse e-mail valide.' }),
   password: z.string().min(6, { message: 'Le mot de passe doit contenir au moins 6 caractères.' }),
-  role: z.enum(['doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff']),
+  role: z.enum(['doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff', 'admin']),
 });
 
 export default function RegisterPage() {
@@ -196,6 +196,7 @@ export default function RegisterPage() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
+                      <SelectItem value="admin">Administrateur</SelectItem>
                       <SelectItem value="doctor">Médecin</SelectItem>
                       <SelectItem value="receptionist">Réceptionniste</SelectItem>
                       <SelectItem value="pharmacist">Pharmacien</SelectItem>
