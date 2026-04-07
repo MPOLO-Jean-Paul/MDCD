@@ -24,22 +24,24 @@ import {
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useUserProfile } from '@/firebase/auth-provider';
+import { useLanguage } from '@/lib/i18n/provider';
 
 // Define menu items for all roles
 const allMenuItems = [
-  { href: '/dashboard', label: 'Tableau de bord', icon: LayoutDashboard, roles: ['admin', 'doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff'] },
-  { href: '/admissions', label: 'Admissions', icon: BedDouble, roles: ['admin', 'receptionist', 'doctor'] },
-  { href: '/patients', label: 'Patients', icon: Users2, roles: ['admin', 'receptionist', 'doctor'] },
-  { href: '/billing', label: 'Facturation', icon: FilePlus, roles: ['admin', 'accountant'] },
-  { href: '/pharmacy', label: 'Pharmacie', icon: Pill, roles: ['admin', 'pharmacist'] },
-  { href: '/reports', label: 'Rapports', icon: BarChart3, roles: ['admin', 'accountant'] },
-  { href: '/services', label: 'Services', icon: ClipboardList, roles: ['admin'] },
-  { href: '/admin/users', label: 'Utilisateurs', icon: ShieldCheck, roles: ['admin'] },
+  { href: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard, roles: ['admin', 'doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff'] },
+  { href: '/admissions', labelKey: 'nav.admissions', icon: BedDouble, roles: ['admin', 'receptionist', 'doctor'] },
+  { href: '/patients', labelKey: 'nav.patients', icon: Users2, roles: ['admin', 'receptionist', 'doctor'] },
+  { href: '/billing', labelKey: 'nav.billing', icon: FilePlus, roles: ['admin', 'accountant'] },
+  { href: '/pharmacy', labelKey: 'nav.pharmacy', icon: Pill, roles: ['admin', 'pharmacist'] },
+  { href: '/reports', labelKey: 'nav.reports', icon: BarChart3, roles: ['admin', 'accountant'] },
+  { href: '/services', labelKey: 'nav.services', icon: ClipboardList, roles: ['admin'] },
+  { href: '/admin/users', labelKey: 'nav.users', icon: ShieldCheck, roles: ['admin'] },
 ];
 
 export function Nav() {
   const pathname = usePathname();
   const { profile, isProfileLoading } = useUserProfile();
+  const { t } = useLanguage();
 
   const userRole = profile?.roleName;
 
@@ -51,7 +53,7 @@ export function Nav() {
         <Link href="/dashboard" className="flex h-10 w-full items-center justify-center p-2 group-data-[collapsible=icon]:justify-center">
           <Hospital className="size-8 text-sidebar-primary" />
           <span className="ml-2 text-lg font-bold text-sidebar-primary-foreground group-data-[collapsible=icon]:hidden">
-            Polyclinique MDCD
+            {t('nav.main')}
           </span>
         </Link>
       </SidebarHeader>
@@ -71,12 +73,12 @@ export function Nav() {
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
-                  tooltip={item.label}
+                  tooltip={t(item.labelKey)}
                   isActive={pathname.startsWith(item.href) && (item.href === '/dashboard' ? pathname === item.href : true) }
                 >
                   <Link href={item.href}>
                     <item.icon />
-                    <span>{item.label}</span>
+                    <span>{t(item.labelKey)}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -87,10 +89,10 @@ export function Nav() {
       <SidebarFooter className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Paramètres" isActive={pathname === '/settings'}>
+                <SidebarMenuButton asChild tooltip={t('nav.settings')} isActive={pathname === '/settings'}>
                     <Link href="/settings">
                         <Settings />
-                        <span>Paramètres</span>
+                        <span>{t('nav.settings')}</span>
                     </Link>
                 </SidebarMenuButton>
           </SidebarMenuItem>

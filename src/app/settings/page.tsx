@@ -1,3 +1,5 @@
+'use client';
+
 import {
     Card,
     CardContent,
@@ -8,19 +10,22 @@ import {
 import { ThemeSwitcher } from '@/components/settings/theme-switcher';
 import { LanguageSwitcher } from '@/components/settings/language-switcher';
 import { Separator } from '@/components/ui/separator';
-  
+import { useLanguage } from '@/lib/i18n/provider';
+
   export default function SettingsPage() {
+    const { t } = useLanguage();
+
     return (
       <>
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <h2 className="text-3xl font-bold tracking-tight">Paramètres</h2>
+          <h2 className="text-3xl font-bold tracking-tight">{t('settingsPage.title')}</h2>
         </div>
         <div className="grid gap-6 mt-4 max-w-2xl">
             <Card>
                 <CardHeader>
-                    <CardTitle>Affichage</CardTitle>
+                    <CardTitle>{t('settingsPage.display.title')}</CardTitle>
                     <CardDescription>
-                        Personnalisez l'apparence de l'application.
+                        {t('settingsPage.display.description')}
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -31,13 +36,13 @@ import { Separator } from '@/components/ui/separator';
             </Card>
             <Card>
                 <CardHeader>
-                    <CardTitle>Notifications</CardTitle>
+                    <CardTitle>{t('settingsPage.notifications.title')}</CardTitle>
                     <CardDescription>
-                    Gérez vos préférences de notification.
+                        {t('settingsPage.notifications.description')}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <p>Les paramètres de notification seront bientôt disponibles.</p>
+                    <p>{t('settingsPage.notifications.unavailable')}</p>
                 </CardContent>
             </Card>
         </div>

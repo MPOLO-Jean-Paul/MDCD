@@ -30,6 +30,7 @@ import {
 } from "@/components/ui/popover"
 import { ScrollArea } from '../ui/scroll-area';
 import { useState } from 'react';
+import { useLanguage } from '@/lib/i18n/provider';
 
 // Mock data for notifications
 const initialNotifications = [
@@ -43,6 +44,7 @@ export function Header() {
   const auth = useAuth();
   const { user } = useUser();
   const router = useRouter();
+  const { t } = useLanguage();
   const [notifications, setNotifications] = useState(initialNotifications);
 
   const handleSignOut = async () => {
@@ -70,7 +72,7 @@ export function Header() {
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="search"
-          placeholder="Rechercher..."
+          placeholder={t('header.searchPlaceholder')}
           className="w-full rounded-lg bg-secondary pl-8 md:w-[200px] lg:w-[336px]"
         />
       </div>
@@ -84,14 +86,14 @@ export function Header() {
                   {unreadNotifications}
                 </span>
               )}
-              <span className="sr-only">Ouvrir les notifications</span>
+              <span className="sr-only">{t('header.notifications.open')}</span>
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-80 p-0">
                 <div className="p-4">
-                  <h4 className="font-medium leading-none">Notifications</h4>
+                  <h4 className="font-medium leading-none">{t('header.notifications.title')}</h4>
                   <p className="text-sm text-muted-foreground">
-                    Vous avez {unreadNotifications} notifications non lues.
+                    {t('header.notifications.unread', {count: unreadNotifications})}
                   </p>
                 </div>
                 <ScrollArea className="h-[300px]">
@@ -115,7 +117,7 @@ export function Header() {
                     </div>
                 </ScrollArea>
                 <div className="border-t p-2">
-                    <Button size="sm" variant="link" className="w-full" onClick={markAllAsRead}>Marquer tout comme lu</Button>
+                    <Button size="sm" variant="link" className="w-full" onClick={markAllAsRead}>{t('header.notifications.markAllAsRead')}</Button>
                 </div>
           </PopoverContent>
         </Popover>
@@ -143,21 +145,21 @@ export function Header() {
               <DropdownMenuItem asChild>
                 <Link href="/profile">
                   <User className="mr-2" />
-                  <span>Profil</span>
+                  <span>{t('header.userMenu.profile')}</span>
                   <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/billing">
                   <CreditCard className="mr-2" />
-                  <span>Facturation</span>
+                  <span>{t('header.userMenu.billing')}</span>
                   <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/settings">
                   <Settings className="mr-2" />
-                  <span>Paramètres</span>
+                  <span>{t('header.userMenu.settings')}</span>
                   <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                 </Link>
               </DropdownMenuItem>
@@ -166,13 +168,13 @@ export function Header() {
             <DropdownMenuItem asChild>
               <Link href="/support">
                   <LifeBuoy className="mr-2" />
-                  <span>Support</span>
+                  <span>{t('header.userMenu.support')}</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>
               <LogOut className="mr-2" />
-              <span>Se déconnecter</span>
+              <span>{t('header.userMenu.logout')}</span>
               <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -1,0 +1,514 @@
+{
+    "common": {
+        "actions": "Actions",
+        "save": "Enregistrer",
+        "saving": "Enregistrement...",
+        "cancel": "Annuler",
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "deactivate": "Désactiver",
+        "activate": "Activer",
+        "status": "Statut",
+        "active": "Actif",
+        "inactive": "Inactif",
+        "none": "Aucun",
+        "optional": "Optionnel",
+        "loading": "Chargement...",
+        "noResults": "Aucun résultat.",
+        "searchPlaceholder": "Rechercher...",
+        "view": "Vue",
+        "showHideColumns": "Afficher/Masquer les colonnes",
+        "reset": "Réinitialiser",
+        "previous": "Précédent",
+        "next": "Suivant",
+        "selectedRows": "{count} sur {total} ligne(s) sélectionnée(s).",
+        "areYouSure": "Êtes-vous absolument sûr(e) ?",
+        "irreversibleAction": "Cette action est irréversible.",
+        "confirm": "Confirmer",
+        "chooseDate": "Choisissez une date"
+    },
+    "nav": {
+        "main": "Polyclinique MDCD",
+        "dashboard": "Tableau de bord",
+        "admissions": "Admissions",
+        "patients": "Patients",
+        "billing": "Facturation",
+        "pharmacy": "Pharmacie",
+        "reports": "Rapports",
+        "services": "Services",
+        "users": "Utilisateurs",
+        "settings": "Paramètres"
+    },
+    "header": {
+        "searchPlaceholder": "Rechercher...",
+        "notifications": {
+            "title": "Notifications",
+            "unread": "Vous avez {count} notifications non lues.",
+            "markAllAsRead": "Marquer tout comme lu",
+            "open": "Ouvrir les notifications"
+        },
+        "userMenu": {
+            "myAccount": "Mon Compte",
+            "profile": "Profil",
+            "billing": "Facturation",
+            "settings": "Paramètres",
+            "support": "Support",
+            "logout": "Se déconnecter"
+        }
+    },
+    "footer": {
+        "copyright": "© {year} Polyclinique MDCD. Tous droits réservés.",
+        "support": "Support",
+        "settings": "Paramètres"
+    },
+    "loginPage": {
+        "title": "Connexion à Polyclinique MDCD",
+        "description": "Saisissez vos identifiants pour accéder à votre tableau de bord.",
+        "emailLabel": "Adresse e-mail",
+        "emailPlaceholder": "exemple@mediflow.pro",
+        "passwordLabel": "Mot de passe",
+        "passwordPlaceholder": "********",
+        "submitButton": "Se connecter",
+        "submittingButton": "Connexion en cours...",
+        "errorTitle": "Erreur de connexion",
+        "errorMessageDefault": "Une erreur est survenue lors de la connexion.",
+        "errorMessageInvalid": "Adresse e-mail ou mot de passe incorrect."
+    },
+    "dashboardPage": {
+        "title": "Tableau de Bord",
+        "kpi": {
+            "revenueToday": "Chiffre d'affaires (Aujourd'hui)",
+            "revenueYesterday": "+20.1% par rapport à hier",
+            "admissionsToday": "Admissions (Aujourd'hui)",
+            "admissionsYesterday": "+5 depuis hier",
+            "occupancyRate": "Taux d'occupation",
+            "occupancyYesterday": "-2% par rapport à hier",
+            "actsToBill": "Actes à facturer",
+            "actsToBillPending": "En attente de traitement"
+        },
+        "revenueChart": {
+            "title": "Aperçu des revenus",
+            "description": "Aperçu mensuel des revenus de l'hôpital.",
+            "label": "Chiffre d'affaires"
+        },
+        "recentAdmissions": {
+            "title": "Admissions Récentes",
+            "description": "Les 5 dernières admissions de la journée.",
+            "status": {
+                "emergency": "Urgence",
+                "scheduled": "Programmé",
+                "observation": "Observation"
+            }
+        }
+    },
+    "usersPage": {
+        "title": "Gestion des utilisateurs",
+        "createUser": "Créer un utilisateur",
+        "dialogTitle": "Créer un nouvel utilisateur",
+        "dialogDescription": "Remplissez les informations ci-dessous pour créer un nouveau compte pour un membre du personnel.",
+        "listTitle": "Liste des utilisateurs",
+        "listDescription": "Créez, modifiez et gérez les comptes des membres du personnel.",
+        "form": {
+            "firstName": "Prénom",
+            "lastName": "Nom",
+            "email": "Adresse e-mail",
+            "password": "Mot de passe",
+            "passwordPlaceholder": "Mot de passe temporaire",
+            "role": "Rôle",
+            "selectRole": "Sélectionnez un rôle",
+            "roles": {
+                "doctor": "Médecin",
+                "receptionist": "Réceptionniste",
+                "pharmacist": "Pharmacien",
+                "accountant": "Comptable",
+                "lab_staff": "Personnel de laboratoire",
+                "admin": "Administrateur"
+            },
+            "submit": "Créer le compte",
+            "submitting": "Création en cours..."
+        },
+        "editDialogTitle": "Modifier l'utilisateur",
+        "editDialogDescription": "Mettez à jour les informations de {user}.",
+        "table": {
+            "name": "Nom",
+            "email": "Email",
+            "role": "Rôle",
+            "status": "Statut"
+        },
+        "actions": {
+            "edit": "Modifier",
+            "deactivate": "Désactiver",
+            "activate": "Activer",
+            "delete": "Supprimer",
+            "deleteWarning": "Cette action est irréversible. Elle supprimera définitivement les données de l'utilisateur de Firestore, mais ne supprimera pas son compte d'authentification.",
+            "deactivateWarningTitle": "Confirmer la {action}",
+            "deactivateWarningDescription": "Voulez-vous vraiment {action} le compte de {user}? L'utilisateur ne pourra {context} se connecter."
+        },
+        "toasts": {
+            "createSuccessTitle": "Utilisateur créé avec succès",
+            "createSuccessDescription": "Le compte pour {user} a été créé.",
+            "createErrorTitle": "Erreur de création",
+            "createErrorEmailInUse": "Cette adresse e-mail est déjà utilisée.",
+            "updateSuccessTitle": "Utilisateur mis à jour",
+            "updateSuccessDescription": "Le compte de {user} a été mis à jour avec succès.",
+            "updateErrorTitle": "Erreur de mise à jour",
+            "deleteSuccessTitle": "Utilisateur supprimé",
+            "deleteSuccessDescription": "Le compte de {user} a été supprimé de la base de données.",
+            "toggleStatusTitle": "Utilisateur {status}",
+            "toggleStatusDescription": "Le compte de {user} a été mis à jour."
+        }
+    },
+    "servicesPage": {
+        "title": "Gestion des services",
+        "addService": "Ajouter un service",
+        "dialogTitle": "Ajouter un nouveau service",
+        "dialogDescription": "Remplissez les informations ci-dessous pour créer un nouveau service hospitalier.",
+        "listTitle": "Liste des services",
+        "listDescription": "Créez, modifiez et gérez les services offerts par la polyclinique.",
+        "form": {
+            "name": "Nom du service",
+            "description": "Description",
+            "category": "Catégorie",
+            "unitPrice": "Prix Unitaire (XOF)",
+            "responsible": "Responsable du service",
+            "selectResponsible": "Sélectionnez un responsable",
+            "responsibleDescription": "Optionnel. Le membre du personnel en charge de ce service.",
+            "submit": "Créer le service",
+            "submitting": "Création en cours..."
+        },
+        "editDialogTitle": "Modifier le service",
+        "editDialogDescription": "Mettez à jour les informations du service {service}.",
+        "table": {
+            "name": "Nom du service",
+            "category": "Catégorie",
+            "unitPrice": "Prix Unitaire",
+            "responsible": "Responsable"
+        },
+        "actions": {
+            "deactivateWarningTitle": "Confirmer la {action}",
+            "deactivateWarningDescription": "Voulez-vous vraiment {action} le service {service}?",
+            "deleteWarning": "Cette action est irréversible. Elle supprimera définitivement le service de la base de données."
+        },
+        "toasts": {
+            "createSuccessTitle": "Service créé avec succès",
+            "createSuccessDescription": "Le service \"{service}\" a été ajouté.",
+            "createErrorTitle": "Erreur de création",
+            "updateSuccessTitle": "Service mis à jour",
+            "updateSuccessDescription": "Le service \"{service}\" a été mis à jour avec succès.",
+            "updateErrorTitle": "Erreur de mise à jour",
+            "deleteSuccessTitle": "Service supprimé",
+            "deleteSuccessDescription": "Le service {service} a été supprimé.",
+            "toggleStatusTitle": "Service {status}",
+            "toggleStatusDescription": "Le service {service} a été mis à jour."
+        }
+    },
+    "settingsPage": {
+        "title": "Paramètres",
+        "display": {
+            "title": "Affichage",
+            "description": "Personnalisez l'apparence de l'application."
+        },
+        "theme": {
+            "title": "Thème",
+            "description": "Sélectionnez un thème pour le tableau de bord.",
+            "light": "Clair",
+            "dark": "Sombre",
+            "system": "Système"
+        },
+        "language": {
+            "title": "Langue",
+            "description": "Choisissez la langue de l'interface."
+        },
+        "notifications": {
+            "title": "Notifications",
+            "description": "Gérez vos préférences de notification.",
+            "unavailable": "Les paramètres de notification seront bientôt disponibles."
+        }
+    },
+    "supportPage": {
+        "title": "Support",
+        "helpCenter": "Centre d'aide",
+        "description": "Besoin d'aide ? Contactez notre équipe de support.",
+        "body": "Si vous rencontrez un problème technique ou si vous avez des questions sur l'utilisation de l'application, notre équipe est là pour vous aider.",
+        "contactByEmail": "Contacter par e-mail",
+        "supportHours": "Horaires de support",
+        "hours": "Lundi - Vendredi : 9h00 - 17h00"
+    },
+    "profilePage": {
+        "title": "Mon Profil",
+        "profileTab": "Profil",
+        "passwordTab": "Mot de passe",
+        "profileInfo": {
+            "title": "Informations du profil",
+            "description": "Mettez à jour vos informations personnelles."
+        },
+        "changePassword": {
+            "title": "Changer le mot de passe",
+            "description": "Assurez-vous d'utiliser un mot de passe long et aléatoire pour garantir la sécurité de votre compte."
+        },
+        "updateForm": {
+            "firstName": "Prénom",
+            "lastName": "Nom",
+            "email": "Adresse e-mail",
+            "submit": "Sauvegarder les modifications",
+            "submitting": "Sauvegarde..."
+        },
+        "passwordForm": {
+            "current": "Mot de passe actuel",
+            "new": "Nouveau mot de passe",
+            "submit": "Changer le mot de passe",
+            "submitting": "Mise à jour..."
+        },
+        "toasts": {
+            "updateSuccessTitle": "Profil mis à jour",
+            "updateSuccessDescription": "Vos informations ont été enregistrées avec succès.",
+            "updateErrorTitle": "Erreur de mise à jour",
+            "passwordSuccessTitle": "Mot de passe mis à jour",
+            "passwordSuccessDescription": "Votre mot de passe a été changé avec succès.",
+            "passwordErrorWrong": "Le mot de passe actuel est incorrect.",
+            "passwordErrorWeak": "Le nouveau mot de passe est trop faible."
+        }
+    },
+    "admissionsPage": {
+        "title": "Admissions",
+        "newAdmission": "Nouvelle admission",
+        "dialogTitle": "Créer une admission",
+        "dialogDescription": "Enregistrez une nouvelle admission pour un patient.",
+        "listTitle": "Admissions récentes",
+        "listDescription": "Liste des dernières admissions, urgences et rendez-vous.",
+        "table": {
+            "patient": "Patient",
+            "date": "Date d'admission",
+            "type": "Type",
+            "reason": "Motif"
+        },
+        "form": {
+            "patient": "Patient",
+            "selectPatient": "Sélectionnez un patient",
+            "type": "Type d'admission",
+            "selectType": "Sélectionnez un type",
+            "reason": "Motif d'admission",
+            "reasonPlaceholder": "Décrivez la raison de la visite...",
+            "submit": "Enregistrer l'admission",
+            "submitting": "Enregistrement..."
+        },
+        "types": {
+            "appointment": "Rendez-vous",
+            "emergency": "Urgence",
+            "hospitalization": "Hospitalisation"
+        },
+        "statuses": {
+            "pending": "En attente",
+            "admitted": "Admis",
+            "discharged": "Sorti",
+            "completed": "Terminé",
+            "canceled": "Annulé"
+        },
+        "editDialogTitle": "Modifier l'admission",
+        "editDialogDescription": "Mise à jour du dossier d'admission pour {patientName}.",
+        "toasts": {
+            "createSuccessTitle": "Admission créée avec succès",
+            "createSuccessDescription": "L'admission pour le patient a été enregistrée.",
+            "createErrorTitle": "Erreur de création",
+            "updateSuccessTitle": "Admission mise à jour",
+            "updateSuccessDescription": "L'admission de {patientName} a été mise à jour."
+        }
+    },
+    "patientsPage": {
+        "title": "Gestion des patients",
+        "newPatient": "Nouveau patient",
+        "dialogTitle": "Enregistrer un nouveau patient",
+        "dialogDescription": "Remplissez le formulaire ci-dessous pour ajouter un nouveau patient au système.",
+        "listTitle": "Liste des patients",
+        "listDescription": "Recherchez, consultez et gérez les dossiers des patients.",
+        "table": {
+            "fullName": "Nom complet",
+            "age": "Âge",
+            "gender": "Sexe",
+            "phone": "Téléphone",
+            "address": "Adresse"
+        },
+        "form": {
+            "lastName": "Nom",
+            "firstName": "Prénom",
+            "dob": "Date de naissance",
+            "gender": "Sexe",
+            "genders": {
+                "male": "Masculin",
+                "female": "Féminin",
+                "other": "Autre"
+            },
+            "phone": "Téléphone",
+            "email": "Email",
+            "address": "Adresse",
+            "bloodGroup": "Groupe sanguin",
+            "submit": "Enregistrer le patient",
+            "submitting": "Enregistrement..."
+        },
+        "editDialogTitle": "Modifier le dossier patient",
+        "editDialogDescription": "Mettez à jour les informations pour {patientName}.",
+        "actions": {
+            "viewRecord": "Voir le dossier",
+            "deleteWarning": "Cette action est irréversible. Elle supprimera définitivement le dossier du patient et toutes les données associées."
+        },
+        "toasts": {
+            "createSuccessTitle": "Patient créé avec succès",
+            "createSuccessDescription": "Le dossier pour {patientName} a été créé.",
+            "createErrorTitle": "Erreur de création",
+            "updateSuccessTitle": "Patient mis à jour avec succès",
+            "updateSuccessDescription": "Le dossier pour {patientName} a été mis à jour.",
+            "deleteSuccessTitle": "Patient supprimé",
+            "deleteSuccessDescription": "Le dossier de {patientName} a été supprimé."
+        }
+    },
+    "pharmacyPage": {
+        "title": "Gestion de la Pharmacie",
+        "manageProducts": "Gérer les produits",
+        "dialogTitle": "Gérer les produits de la pharmacie",
+        "dialogDescription": "Ajoutez un nouvel article en stock ou définissez un nouveau type de médicament.",
+        "tabs": {
+            "addStock": "Ajouter au Stock",
+            "defineMedication": "Nouveau Médicament"
+        },
+        "kpi": {
+            "totalValue": "Valeur Totale du Stock",
+            "totalValueDesc": "Calculé sur {count} produits",
+            "lowStock": "Produits en Faible Stock",
+            "lowStockDesc": "Sous le niveau de réapprovisionnement",
+            "nearingExpiry": "Produits Proches de l'Expiration",
+            "nearingExpiryDesc": "Dans les 30 prochains jours",
+            "inStock": "Produits en Stock",
+            "inStockDesc": "Lots uniques actifs"
+        },
+        "inventory": {
+            "title": "Inventaire des stocks",
+            "description": "Suivez et gérez tous les articles en stock dans la pharmacie."
+        },
+        "addStockForm": {
+            "medication": "Médicament",
+            "selectMedication": "Sélectionnez un médicament à stocker",
+            "batchNumber": "N° de lot",
+            "quantity": "Quantité",
+            "expirationDate": "Date d'expiration",
+            "location": "Emplacement de stockage",
+            "locationPlaceholder": "Étagère A, Section 2",
+            "locationDesc": "Optionnel. Permet de localiser facilement le produit.",
+            "submit": "Ajouter au stock",
+            "submitting": "Ajout en cours..."
+        },
+        "addMedicationForm": {
+            "name": "Nom du médicament",
+            "namePlaceholder": "Paracétamol 500mg",
+            "description": "Description",
+            "descriptionPlaceholder": "Antalgique et antipyrétique...",
+            "unitPrice": "Prix Unitaire (XOF)",
+            "reorderLevel": "Seuil de Réappro.",
+            "unit": "Unité",
+            "unitPlaceholder": "comprimé, flacon...",
+            "dosage": "Dosage",
+            "dosagePlaceholder": "500mg, 10%",
+            "manufacturer": "Fabricant",
+            "manufacturerPlaceholder": "Labo X",
+            "submit": "Créer le médicament",
+            "submitting": "Création en cours..."
+        },
+        "editStockDialogTitle": "Modifier l'article en stock",
+        "editStockDialogDescription": "Mise à jour des informations pour le lot {batchNumber} de {medicationName}.",
+        "table": {
+            "medication": "Médicament",
+            "batchNumber": "N° de Lot",
+            "quantity": "Quantité",
+            "expirationDate": "Date de Péremption"
+        },
+        "statuses": {
+            "inStock": "En Stock",
+            "lowStock": "Stock Faible",
+            "nearingExpiry": "Péremption Proche",
+            "expired": "Périmé"
+        },
+        "actions": {
+            "deleteWarning": "Cette action est irréversible. Elle supprimera définitivement cet article du stock."
+        },
+        "toasts": {
+            "addStockSuccessTitle": "Article ajouté au stock",
+            "addStockSuccessDescription": "Le lot {batchNumber} a été ajouté à l'inventaire.",
+            "addStockErrorTitle": "Erreur d'ajout",
+            "addMedicationSuccessTitle": "Médicament créé avec succès",
+            "addMedicationSuccessDescription": "Le médicament \"{name}\" a été ajouté au catalogue.",
+            "addMedicationErrorTitle": "Erreur de création",
+            "updateSuccessTitle": "Stock mis à jour",
+            "updateSuccessDescription": "Le lot {batchNumber} a été mis à jour.",
+            "updateErrorTitle": "Erreur de mise à jour",
+            "deleteSuccessTitle": "Article supprimé du stock",
+            "deleteSuccessDescription": "Le lot {batchNumber} de {medicationName} a été supprimé."
+        }
+    },
+    "billingPage": {
+        "title": "Facturation",
+        "exportList": "Exporter la liste",
+        "createInvoice": "Créer une facture",
+        "dialogTitle": "Créer une nouvelle facture",
+        "dialogDescription": "Générez une nouvelle facture pour un patient.",
+        "listTitle": "Gestion des factures",
+        "listDescription": "Créez, suivez et gérez les factures des patients et des assurances.",
+        "table": {
+            "invoiceNo": "N° Facture",
+            "patient": "Patient",
+            "invoiceDate": "Date de facturation",
+            "totalAmount": "Montant Total",
+            "balanceDue": "Solde Dû"
+        },
+        "form": {
+            "patient": "Patient",
+            "selectPatient": "Sélectionnez un patient",
+            "totalAmount": "Montant Total (XOF)",
+            "dueDate": "Date d'échéance",
+            "status": "Statut",
+            "submit": "Créer la facture",
+            "submitting": "Création en cours..."
+        },
+        "statuses": {
+            "pending": "En attente",
+            "paid": "Payée",
+            "partiallyPaid": "Partiellement payée",
+            "overdue": "En retard",
+            "cancelled": "Annulée"
+        },
+        "actions": {
+            "viewDetails": "Voir les détails",
+            "recordPayment": "Enregistrer un paiement",
+            "deleteWarning": "Cette action est irréversible. Elle supprimera définitivement la facture."
+        },
+        "toasts": {
+            "createSuccessTitle": "Facture créée avec succès",
+            "createSuccessDescription": "La facture {invoiceId} a été créée.",
+            "createErrorTitle": "Erreur de création",
+            "deleteSuccessTitle": "Facture supprimée",
+            "deleteSuccessDescription": "La facture {invoiceId} a été supprimée."
+        }
+    },
+    "reportsPage": {
+        "title": "Rapports Financiers et Opérationnels",
+        "export": "Exporter les rapports",
+        "kpi": {
+            "totalRevenue": "Chiffre d'affaires (Total)",
+            "totalRevenueDesc": "+15.2% ce mois-ci",
+            "unpaidInvoices": "Factures impayées",
+            "unpaidInvoicesDesc": "32 factures en retard",
+            "recoveryRate": "Taux de recouvrement",
+            "recoveryRateDesc": "+1.5% par rapport au mois dernier",
+            "insuranceRefunds": "Remboursements assurances",
+            "insuranceRefundsDesc": "En attente de conciliation"
+        },
+        "revenueByService": {
+            "title": "Chiffre d'affaires par service",
+            "description": "Analyse détaillée des revenus générés par chaque catégorie de service.",
+            "consultations": "Consultations",
+            "lab": "Laboratoire",
+            "imaging": "Imagerie",
+            "hospitalization": "Hospitalisation",
+            "pharmacy": "Pharmacie",
+            "surgeries": "Actes Chirurg."
+        }
+    }
+}

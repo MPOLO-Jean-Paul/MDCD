@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { UserProfileProvider } from '@/firebase/auth-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
+import { LanguageProvider } from '@/lib/i18n/provider';
 
 export const metadata: Metadata = {
   title: 'Polyclinique MDCD',
@@ -28,12 +29,14 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
         >
-          <FirebaseClientProvider>
-            <UserProfileProvider>
-              {children}
-            </UserProfileProvider>
-            <Toaster />
-          </FirebaseClientProvider>
+          <LanguageProvider>
+            <FirebaseClientProvider>
+              <UserProfileProvider>
+                {children}
+              </UserProfileProvider>
+              <Toaster />
+            </FirebaseClientProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

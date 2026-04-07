@@ -8,17 +8,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useLanguage } from '@/lib/i18n/provider';
 
 export function LanguageSwitcher() {
+  const { locale, setLocale, t } = useLanguage();
+
   return (
     <div className="space-y-2">
-      <Label>Langue</Label>
+      <Label>{t('settingsPage.language.title')}</Label>
       <p className="text-sm text-muted-foreground">
-        Choisissez la langue de l'interface.
+        {t('settingsPage.language.description')}
       </p>
-      <Select defaultValue="fr">
+      <Select value={locale} onValueChange={(value) => setLocale(value as 'fr' | 'en')}>
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Langue" />
+          <SelectValue placeholder={t('settingsPage.language.title')} />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="fr">Français</SelectItem>
