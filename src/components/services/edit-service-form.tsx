@@ -75,10 +75,16 @@ export function EditServiceForm({ service, setDialogOpen }: EditServiceFormProps
         throw new Error("Firestore is not initialized");
       }
       const serviceDocRef = doc(primaryFirestore, 'services', service.id);
-      updateDocumentNonBlocking(serviceDocRef, {
+      
+      const dataToUpdate: any = {
         ...values,
         updatedAt: new Date().toISOString(),
-      });
+      };
+      if (dataToUpdate.responsibleUserId === 'none') {
+        dataToUpdate.responsibleUserId = '';
+      }
+
+      updateDocumentNonBlocking(serviceDocRef, dataToUpdate);
 
       toast({
         title: 'Service mis à jour',
@@ -177,7 +183,7 @@ export function EditServiceForm({ service, setDialogOpen }: EditServiceFormProps
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="">Aucun</SelectItem>
+                  <SelectItem value="none">Aucun</SelectItem>
                   {users?.map((user: WithId<Omit<UserProfile, 'id'>>) => (
                       <SelectItem key={user.id} value={user.id}>
                           {user.firstName} {user.lastName} ({user.roleId})

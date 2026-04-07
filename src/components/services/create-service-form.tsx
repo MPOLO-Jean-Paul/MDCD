@@ -71,13 +71,18 @@ export function CreateServiceForm() {
       const newServiceId = uuidv4();
       const serviceDocRef = doc(primaryFirestore, 'services', newServiceId);
       
-      setDocumentNonBlocking(serviceDocRef, {
-        id: newServiceId,
+      const dataToSubmit: any = {
         ...values,
+        id: newServiceId,
         isActive: true,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      }, {});
+      };
+      if (dataToSubmit.responsibleUserId === 'none') {
+        dataToSubmit.responsibleUserId = '';
+      }
+
+      setDocumentNonBlocking(serviceDocRef, dataToSubmit, {});
 
       toast({
         title: 'Service créé avec succès',
@@ -176,7 +181,7 @@ export function CreateServiceForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="">Aucun</SelectItem>
+                  <SelectItem value="none">Aucun</SelectItem>
                   {users?.map((user: WithId<Omit<UserProfile, 'id'>>) => (
                       <SelectItem key={user.id} value={user.id}>
                           {user.firstName} {user.lastName} ({user.roleId})
