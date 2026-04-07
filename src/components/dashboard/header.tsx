@@ -23,11 +23,27 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Bell, CreditCard, LifeBuoy, LogOut, Search, Settings, User } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { ScrollArea } from '../ui/scroll-area';
+import { useState } from 'react';
+
+// Mock data for notifications
+const initialNotifications = [
+  { id: 1, title: "Nouvelle admission", description: "Patient Moussa Traoré admis en urgence.", time: "Il y a 5 min", read: false },
+  { id: 2, title: "Stock faible", description: "Le stock de Paracétamol est bas.", time: "Il y a 30 min", read: false },
+  { id: 3, title: "Rapport financier prêt", description: "Le rapport mensuel de mai 2024 est disponible.", time: "Il y a 2 heures", read: true },
+  { id: 4, title: "Mise à jour du système", description: "Maintenance prévue ce soir à 23h.", time: "Il y a 1 jour", read: true },
+];
 
 export function Header() {
   const auth = useAuth();
   const { user } = useUser();
   const router = useRouter();
+  const [notifications, setNotifications] = useState(initialNotifications);
 
   const handleSignOut = async () => {
     await auth.signOut();
@@ -37,78 +53,131 @@ export function Header() {
   const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
   const userInitials = user?.displayName?.split(' ').map(n => n[0]).join('') || user?.email?.charAt(0).toUpperCase() || 'U';
 
+  const unreadNotifications = notifications.filter(n => !n.read).length;
+
+  const markAllAsRead = () => {
+    setNotifications(notifications.map(n => ({ ...n, read: true })));
+  };
+
+  const handleNotificationClick = (id: number) => {
+    setNotifications(notifications.map(n => n.id === id ? { ...n, read: true } : n));
+  };
+
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
       <SidebarTrigger className="md:hidden" />
-      <div className="relative flex-1">
+      <div className="relative flex-1 md:grow-0">
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="search"
-          placeholder="Rechercher patient, acte..."
-          className="w-full rounded-lg bg-card pl-8 md:w-[200px] lg:w-[320px]"
+          placeholder="Rechercher..."
+          className="w-full rounded-lg bg-secondary pl-8 md:w-[200px] lg:w-[336px]"
         />
       </div>
-      <Button variant="outline" size="icon" className="h-8 w-8">
-        <Bell className="h-4 w-4" />
-        <span className="sr-only">Notifications</span>
-      </Button>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-            <Avatar className="h-9 w-9">
-              <AvatarImage src={userAvatar?.imageUrl} alt="Avatar" data-ai-hint={userAvatar?.imageHint} />
-              <AvatarFallback>{userInitials}</AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end">
-          <DropdownMenuLabel>
-            <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">{user?.displayName || 'Utilisateur'}</p>
-              <p className="text-xs leading-none text-muted-foreground">
-                {user?.email}
-              </p>
-            </div>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
+      <div className="ml-auto flex items-center gap-2">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="icon" className="h-9 w-9">
+              <Bell className="h-4 w-4" />
+              {unreadNotifications > 0 && (
+                <span className="absolute top-0 right-0 -mt-1 -mr-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                  {unreadNotifications}
+                </span>
+              )}
+              <span className="sr-only">Ouvrir les notifications</span>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-80 p-0">
+                <div className="p-4">
+                  <h4 className="font-medium leading-none">Notifications</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Vous avez {unreadNotifications} notifications non lues.
+                  </p>
+                </div>
+                <ScrollArea className="h-[300px]">
+                    <div className="grid gap-1 p-2">
+                    {notifications.map((notification) => (
+                      <Link
+                        key={notification.id}
+                        href="#"
+                        className="group grid grid-cols-[25px_1fr] items-start gap-3 rounded-md px-2 py-2 text-sm transition-colors hover:bg-accent"
+                        onClick={() => handleNotificationClick(notification.id)}
+                        data-read={notification.read}
+                      >
+                        <span className="flex h-2 w-2 translate-y-1 rounded-full bg-sky-500 group-data-[read=true]:hidden" />
+                        <div className="grid gap-1">
+                          <p className="font-medium">{notification.title}</p>
+                          <p className="text-muted-foreground">{notification.description}</p>
+                          <p className="text-xs text-muted-foreground">{notification.time}</p>
+                        </div>
+                      </Link>
+                    ))}
+                    </div>
+                </ScrollArea>
+                <div className="border-t p-2">
+                    <Button size="sm" variant="link" className="w-full" onClick={markAllAsRead}>Marquer tout comme lu</Button>
+                </div>
+          </PopoverContent>
+        </Popover>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+              <Avatar className="h-9 w-9">
+                <AvatarImage src={userAvatar?.imageUrl} alt="Avatar" data-ai-hint={userAvatar?.imageHint} />
+                <AvatarFallback>{userInitials}</AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="end">
+            <DropdownMenuLabel>
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">{user?.displayName || 'Utilisateur'}</p>
+                <p className="text-xs leading-none text-muted-foreground">
+                  {user?.email}
+                </p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem asChild>
+                <Link href="/profile">
+                  <User className="mr-2" />
+                  <span>Profil</span>
+                  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/billing">
+                  <CreditCard className="mr-2" />
+                  <span>Facturation</span>
+                  <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href="/settings">
+                  <Settings className="mr-2" />
+                  <span>Paramètres</span>
+                  <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link href="/profile">
-                <User className="mr-2" />
-                <span>Profil</span>
-                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+              <Link href="/support">
+                  <LifeBuoy className="mr-2" />
+                  <span>Support</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/billing">
-                <CreditCard className="mr-2" />
-                <span>Facturation</span>
-                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-              </Link>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleSignOut}>
+              <LogOut className="mr-2" />
+              <span>Se déconnecter</span>
+              <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/settings">
-                <Settings className="mr-2" />
-                <span>Paramètres</span>
-                <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-              </Link>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href="/support">
-                <LifeBuoy className="mr-2" />
-                <span>Support</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleSignOut}>
-            <LogOut className="mr-2" />
-            <span>Se déconnecter</span>
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </header>
   );
 }
