@@ -229,7 +229,7 @@ service cloud.firestore {
      */
     match /consultations/{consultationId} {
       allow get: if isStaff() && (isAdmin() || isOwner(resource.data.consultingDoctorId));
-      allow list: if isDoctor() || isAdmin();
+      allow list: if isDoctor() || isAdmin() || isReceptionist();
       allow create: if isDoctor() && isOwner(request.resource.data.consultingDoctorId);
       allow update: if isExistingDoc() && (isAdmin() || isOwner(resource.data.consultingDoctorId));
       allow delete: if isExistingDoc() && isAdmin();
@@ -372,7 +372,7 @@ service cloud.firestore {
      * @principle Restricts financial data access to authorized roles like accountants and admins.
      */
     match /invoices/{invoiceId} {
-      allow get, list: if isAccountant() || isAdmin();
+      allow get, list: if isAccountant() || isAdmin() || isReceptionist();
       allow create: if (isAccountant() || isAdmin()) && isOwner(request.resource.data.generatedByUserId);
       allow update: if isExistingDoc() && (isAccountant() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
