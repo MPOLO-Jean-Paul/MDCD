@@ -19,6 +19,7 @@ import {
   Settings,
   ShieldCheck,
   Users2,
+  ClipboardList,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -32,6 +33,7 @@ const allMenuItems = [
   { href: '/billing', label: 'Facturation', icon: ClipboardPlus, roles: ['admin', 'accountant'] },
   { href: '/pharmacy', label: 'Pharmacie', icon: Pill, roles: ['admin', 'pharmacist'] },
   { href: '/reports', label: 'Rapports', icon: BarChart3, roles: ['admin', 'accountant'] },
+  { href: '/services', label: 'Services', icon: ClipboardList, roles: ['admin'] },
   { href: '/admin/users', label: 'Utilisateurs', icon: ShieldCheck, roles: ['admin'] },
 ];
 

@@ -16,6 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { CreateUserForm } from '@/components/admin/create-user-form';
+import { UserList } from '@/components/admin/user-list';
 
 
 export default function UserManagementPage() {
@@ -50,7 +51,7 @@ export default function UserManagementPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <p>La liste des utilisateurs et les fonctionnalités de modification seront bientôt disponibles ici.</p>
+          <UserList />
         </CardContent>
       </Card>
     </>
