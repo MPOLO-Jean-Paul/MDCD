@@ -70,7 +70,7 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
     defaultValues: {
         ...patient,
         dateOfBirth: new Date(patient.dateOfBirth),
-        insuranceProviderId: patient.insuranceProviderId || '',
+        insuranceProviderId: patient.insuranceProviderId || 'none',
         insurancePolicyNumber: patient.insurancePolicyNumber || ''
     },
   });
@@ -81,8 +81,14 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
       if (!firestore) throw new Error("Firestore not initialized");
 
       const patientDocRef = doc(firestore, 'patients', patient.id);
+      
+      const dataToSave = { ...values };
+      if (dataToSave.insuranceProviderId === 'none') {
+        dataToSave.insuranceProviderId = '';
+      }
+      
       const updatedPatient = {
-        ...values,
+        ...dataToSave,
         dateOfBirth: values.dateOfBirth.toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -252,7 +258,7 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="">Aucune (Particulier)</SelectItem>
+                  <SelectItem value="none">Aucune (Particulier)</SelectItem>
                   {insuranceProviders?.map((provider: WithId<Omit<InsuranceProvider, 'id'>>) => (
                     <SelectItem key={provider.id} value={provider.id}>
                       {provider.name}

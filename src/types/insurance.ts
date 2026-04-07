@@ -9,4 +9,5 @@ export interface InsuranceProvider {
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
+    monthlySubscriptionFee?: number;
 }

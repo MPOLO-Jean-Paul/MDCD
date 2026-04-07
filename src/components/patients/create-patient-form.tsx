@@ -77,9 +77,14 @@ export function CreatePatientForm() {
       const newPatientId = 'MDCD' + uuidv4().substring(0, 6).toUpperCase();
       const newPatientDocRef = doc(firestore, 'patients', newPatientId);
 
+      const dataToSave = { ...values };
+      if (dataToSave.insuranceProviderId === 'none') {
+        dataToSave.insuranceProviderId = '';
+      }
+
       const newPatient = {
         id: newPatientId,
-        ...values,
+        ...dataToSave,
         dateOfBirth: values.dateOfBirth.toISOString(),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
@@ -250,7 +255,7 @@ export function CreatePatientForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="">Aucune (Particulier)</SelectItem>
+                  <SelectItem value="none">Aucune (Particulier)</SelectItem>
                   {insuranceProviders?.map((provider: WithId<Omit<InsuranceProvider, 'id'>>) => (
                     <SelectItem key={provider.id} value={provider.id}>
                       {provider.name}

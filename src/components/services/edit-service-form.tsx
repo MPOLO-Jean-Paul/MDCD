@@ -63,7 +63,7 @@ export function EditServiceForm({ service, setDialogOpen }: EditServiceFormProps
       description: service.description,
       category: service.category,
       unitPrice: service.unitPrice,
-      responsibleUserId: service.responsibleUserId || '',
+      responsibleUserId: service.responsibleUserId || 'none',
     },
   });
 
