@@ -27,7 +27,6 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
   } from "@/components/ui/dialog"
 import { useFirestore, updateDocumentNonBlocking, deleteDocumentNonBlocking, WithId } from '@/firebase';
 import { doc } from 'firebase/firestore';
@@ -49,6 +48,7 @@ export function UserTableRowActions({ user }: UserTableRowActionsProps) {
     const { toast } = useToast();
 
     const handleToggleActive = async () => {
+        if (!firestore) return;
         const userDocRef = doc(firestore, 'users', user.id);
         const newStatus = !user.isActive;
         updateDocumentNonBlocking(userDocRef, { isActive: newStatus });
@@ -60,6 +60,7 @@ export function UserTableRowActions({ user }: UserTableRowActionsProps) {
     };
 
     const handleDelete = async () => {
+        if (!firestore) return;
         const userDocRef = doc(firestore, 'users', user.id);
         const userRoleDocRef = doc(firestore, 'user_roles', user.id);
 

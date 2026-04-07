@@ -4,20 +4,21 @@ import { useMemo } from 'react';
 import { useCollection, useFirestore, useMemoFirebase, type WithId } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { DataTable } from '@/components/ui/data-table';
-import { columns, Service } from './service-table-columns';
+import { columns } from './service-table-columns';
 import { Skeleton } from '../ui/skeleton';
 import type { UserProfile } from '../admin/user-table-columns';
+import type { Service } from '@/types/service';
 
 export function ServiceList() {
   const firestore = useFirestore();
   
   const servicesCollectionRef = useMemoFirebase(
-    () => collection(firestore, 'services'),
+    () => firestore ? collection(firestore, 'services') : null,
     [firestore]
   );
 
   const usersCollectionRef = useMemoFirebase(
-    () => collection(firestore, 'users'),
+    () => firestore ? collection(firestore, 'users') : null,
     [firestore]
   );
   
@@ -55,4 +56,3 @@ export function ServiceList() {
     <DataTable columns={columns} data={servicesWithUserName || []} />
   );
 }
-    

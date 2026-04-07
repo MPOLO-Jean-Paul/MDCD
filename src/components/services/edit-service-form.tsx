@@ -28,7 +28,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore, updateDocumentNonBlocking, WithId, useCollection, useMemoFirebase } from '@/firebase';
 import { Service } from '@/types/service';
-import { UserProfile } from '../admin/user-table-columns';
+import type { UserProfile } from '../admin/user-table-columns';
 import { Skeleton } from '../ui/skeleton';
 
 const formSchema = z.object({
@@ -50,7 +50,7 @@ export function EditServiceForm({ service, setDialogOpen }: EditServiceFormProps
   const { toast } = useToast();
 
   const usersCollectionRef = useMemoFirebase(
-    () => collection(primaryFirestore, 'users'),
+    () => primaryFirestore ? collection(primaryFirestore, 'users') : null,
     [primaryFirestore]
   );
   
@@ -71,6 +71,9 @@ export function EditServiceForm({ service, setDialogOpen }: EditServiceFormProps
     setIsLoading(true);
 
     try {
+      if (!primaryFirestore) {
+        throw new Error("Firestore is not initialized");
+      }
       const serviceDocRef = doc(primaryFirestore, 'services', service.id);
       updateDocumentNonBlocking(serviceDocRef, {
         ...values,
@@ -82,7 +85,6 @@ export function EditServiceForm({ service, setDialogOpen }: EditServiceFormProps
         description: `Le service "${values.name}" a été mis à jour avec succès.`,
       });
       setDialogOpen(false);
-      form.reset();
 
     } catch (error: any) {
       toast({
@@ -200,4 +202,3 @@ export function EditServiceForm({ service, setDialogOpen }: EditServiceFormProps
     </Form>
   );
 }
-    

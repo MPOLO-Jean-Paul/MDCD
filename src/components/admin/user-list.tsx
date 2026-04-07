@@ -10,7 +10,7 @@ export function UserList() {
   const firestore = useFirestore();
   
   const usersCollectionRef = useMemoFirebase(
-    () => collection(firestore, 'users'),
+    () => firestore ? collection(firestore, 'users') : null,
     [firestore]
   );
   

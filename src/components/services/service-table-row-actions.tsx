@@ -48,6 +48,7 @@ export function ServiceTableRowActions({ service }: ServiceTableRowActionsProps)
     const { toast } = useToast();
 
     const handleToggleActive = async () => {
+        if (!firestore) return;
         const serviceDocRef = doc(firestore, 'services', service.id);
         const newStatus = !service.isActive;
         updateDocumentNonBlocking(serviceDocRef, { isActive: newStatus });
@@ -59,6 +60,7 @@ export function ServiceTableRowActions({ service }: ServiceTableRowActionsProps)
     };
 
     const handleDelete = async () => {
+        if (!firestore) return;
         const serviceDocRef = doc(firestore, 'services', service.id);
         deleteDocumentNonBlocking(serviceDocRef);
         toast({
@@ -140,4 +142,3 @@ export function ServiceTableRowActions({ service }: ServiceTableRowActionsProps)
     </>
   );
 }
-    

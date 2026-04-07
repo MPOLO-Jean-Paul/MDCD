@@ -72,7 +72,7 @@ export const columns: ColumnDef<WithId<Omit<ServiceWithUser, 'id'>>>[] = [
         header: 'Statut',
         cell: ({ row }) => {
             const isActive = row.getValue('isActive');
-            return <Badge variant={isActive ? 'default' : 'destructive'}>{isActive ? 'Actif' : 'Inactif'}</Badge>;
+            return <Badge variant={isActive ? 'default' : 'secondary'}>{isActive ? 'Actif' : 'Inactif'}</Badge>;
         }
     },
     {
@@ -80,4 +80,3 @@ export const columns: ColumnDef<WithId<Omit<ServiceWithUser, 'id'>>>[] = [
         cell: ({ row }) => <ServiceTableRowActions service={row.original} />,
     },
 ];
-    

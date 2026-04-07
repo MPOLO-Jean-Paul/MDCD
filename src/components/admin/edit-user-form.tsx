@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore, updateDocumentNonBlocking, WithId } from '@/firebase';
-import { UserProfile } from './user-table-columns';
+import type { UserProfile } from './user-table-columns';
 
 
 const formSchema = z.object({
@@ -57,6 +57,9 @@ export function EditUserForm({ user, setDialogOpen }: EditUserFormProps) {
     setIsLoading(true);
 
     try {
+      if (!primaryFirestore) {
+        throw new Error("Firestore is not initialized");
+      }
       const userDocRef = doc(primaryFirestore, 'users', user.id);
       updateDocumentNonBlocking(userDocRef, {
         firstName: values.firstName,
@@ -78,7 +81,6 @@ export function EditUserForm({ user, setDialogOpen }: EditUserFormProps) {
         description: `Le compte de ${values.firstName} ${values.lastName} a été mis à jour avec succès.`,
       });
       setDialogOpen(false);
-      form.reset();
 
     } catch (error: any) {
       toast({
