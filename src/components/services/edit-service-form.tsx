@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { useFirestore, updateDocumentNonBlocking, WithId, useCollection, useMemoFirebase } from '@/firebase';
-import { Service } from './service-table-columns';
+import { Service } from '@/types/service';
 import { UserProfile } from '../admin/user-table-columns';
 import { Skeleton } from '../ui/skeleton';
 

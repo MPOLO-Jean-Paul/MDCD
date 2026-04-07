@@ -31,7 +31,7 @@ import {
 import { useFirestore, updateDocumentNonBlocking, deleteDocumentNonBlocking, WithId } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
-import { Service } from './service-table-columns';
+import { Service } from '@/types/service';
 import { EditServiceForm } from './edit-service-form';
 
 

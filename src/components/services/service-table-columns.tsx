@@ -7,23 +7,7 @@ import { ServiceTableRowActions } from './service-table-row-actions';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '../ui/button';
 import { ArrowUpDown } from 'lucide-react';
-
-export interface Service {
-    id: string;
-    name: string;
-    description: string;
-    unitPrice: number;
-    category: string;
-    responsibleUserId?: string;
-    isActive: boolean;
-    createdAt: string;
-    updatedAt: string;
-}
-
-// This interface will be used by the data table, after joining with user data
-export interface ServiceWithUser extends Service {
-    responsibleUserName?: string;
-}
+import { ServiceWithUser } from '@/types/service';
 
 export const columns: ColumnDef<WithId<Omit<ServiceWithUser, 'id'>>>[] = [
     {
