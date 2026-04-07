@@ -3,7 +3,7 @@ import RecentAdmissions from '@/components/dashboard/recent-admissions';
 import RevenueChart from '@/components/dashboard/revenue-chart';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, PlusCircle } from 'lucide-react';
+import { FileText } from 'lucide-react';
 
 export default function DashboardPage() {
   return (
@@ -14,10 +14,6 @@ export default function DashboardPage() {
           <Button variant="outline">
             <FileText className="mr-2 h-4 w-4" />
             Exporter les données
-          </Button>
-          <Button>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Ajouter un patient
           </Button>
         </div>
       </div>
