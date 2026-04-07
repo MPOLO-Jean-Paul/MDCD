@@ -7,7 +7,16 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { PlusCircle, FileText } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { InvoiceList } from '@/components/billing/invoice-list';
+import { CreateInvoiceForm } from '@/components/billing/create-invoice-form';
 
 export default function BillingPage() {
   return (
@@ -19,10 +28,23 @@ export default function BillingPage() {
                 <FileText className="mr-2 h-4 w-4" />
                 Exporter la liste
             </Button>
-            <Button>
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Créer une facture
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                  <Button>
+                      <PlusCircle className="mr-2 h-4 w-4" />
+                      Créer une facture
+                  </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-xl">
+                  <DialogHeader>
+                      <DialogTitle>Créer une nouvelle facture</DialogTitle>
+                      <DialogDescription>
+                          Générez une nouvelle facture pour un patient.
+                      </DialogDescription>
+                  </DialogHeader>
+                  <CreateInvoiceForm />
+              </DialogContent>
+            </Dialog>
         </div>
       </div>
       <Card>

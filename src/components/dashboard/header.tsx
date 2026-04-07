@@ -95,9 +95,11 @@ export function Header() {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <LifeBuoy className="mr-2" />
-            <span>Support</span>
+          <DropdownMenuItem asChild>
+            <Link href="/support">
+                <LifeBuoy className="mr-2" />
+                <span>Support</span>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleSignOut}>
