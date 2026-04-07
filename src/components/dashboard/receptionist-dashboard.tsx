@@ -1,6 +1,6 @@
 'use client';
 
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
+import { useCollection, useFirestore, useMemoFirebase, WithId } from '@/firebase';
 import { collection } from 'firebase/firestore';
 import { Patient } from '@/types/patient';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -8,9 +8,10 @@ import { Users2, Cake } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import { useMemo } from 'react';
 import { ScrollArea } from '../ui/scroll-area';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 
 interface PatientsByYear {
-    [year: string]: number;
+    [year: string]: WithId<Omit<Patient, 'id'>>[];
 }
 
 export function ReceptionistDashboard() {
@@ -26,15 +27,23 @@ export function ReceptionistDashboard() {
         
         const byYear = patients.reduce((acc: PatientsByYear, patient) => {
             const year = new Date(patient.dateOfBirth).getFullYear().toString();
-            acc[year] = (acc[year] || 0) + 1;
+            if (!acc[year]) {
+                acc[year] = [];
+            }
+            acc[year].push(patient);
             return acc;
         }, {});
 
-        const sortedYears = Object.entries(byYear).sort(([yearA], [yearB]) => parseInt(yearB) - parseInt(yearA));
+        const sortedYears = Object.keys(byYear)
+            .sort((a, b) => parseInt(b) - parseInt(a))
+            .reduce((obj: PatientsByYear, key) => {
+                obj[key] = byYear[key];
+                return obj;
+            }, {});
 
         return {
             total: patients.length,
-            byYear: Object.fromEntries(sortedYears),
+            byYear: sortedYears,
         };
     }, [patients]);
 
@@ -77,18 +86,22 @@ export function ReceptionistDashboard() {
             </CardHeader>
             <CardContent>
                 <ScrollArea className="h-[300px]">
-                    <div className="space-y-4">
-                        {Object.entries(dashboardStats.byYear).length > 0 ? (
-                             Object.entries(dashboardStats.byYear).map(([year, count]) => (
-                                <div key={year} className="flex items-center">
-                                    <div className="font-medium">{year}</div>
-                                    <div className="ml-auto text-muted-foreground">{count} patient(s)</div>
-                                </div>
-                            ))
-                        ) : (
-                            <p className="text-sm text-muted-foreground text-center py-8">Aucun patient trouvé.</p>
-                        )}
-                    </div>
+                    {Object.keys(dashboardStats.byYear).length > 0 ? (
+                        <Accordion type="single" collapsible className="w-full">
+                            {Object.entries(dashboardStats.byYear).map(([year, patientList]) => (
+                                <AccordionItem value={year} key={year}>
+                                    <AccordionTrigger>{year} ({patientList.length} patient(s))</AccordionTrigger>
+                                    <AccordionContent>
+                                        <ul className='list-disc pl-5 space-y-1 text-sm'>
+                                            {patientList.map(p => <li key={p.id}>{p.firstName} {p.lastName}</li>)}
+                                        </ul>
+                                    </AccordionContent>
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                    ) : (
+                        <p className="text-sm text-muted-foreground text-center py-8">Aucun patient trouvé.</p>
+                    )}
                 </ScrollArea>
             </CardContent>
           </Card>
