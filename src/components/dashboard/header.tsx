@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Avatar,
   AvatarFallback,
@@ -16,10 +18,25 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import { useAuth, useUser } from '@/firebase';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Bell, CreditCard, LifeBuoy, LogOut, Search, Settings, User } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export function Header() {
+  const auth = useAuth();
+  const { user } = useUser();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await auth.signOut();
+    router.push('/auth/login');
+  };
+  
+  const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
+  const userInitials = user?.displayName?.split(' ').map(n => n[0]).join('') || user?.email?.charAt(0).toUpperCase() || 'U';
+
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
       <SidebarTrigger className="md:hidden" />
@@ -39,17 +56,17 @@ export function Header() {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-9 w-9">
-              <AvatarImage src="https://picsum.photos/seed/user-avatar/40/40" alt="Avatar" data-ai-hint="person" />
-              <AvatarFallback>AD</AvatarFallback>
+              <AvatarImage src={userAvatar?.imageUrl} alt="Avatar" data-ai-hint={userAvatar?.imageHint} />
+              <AvatarFallback>{userInitials}</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end">
           <DropdownMenuLabel>
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">Dr. Alain Dupont</p>
+              <p className="text-sm font-medium leading-none">{user?.displayName || 'Utilisateur'}</p>
               <p className="text-xs leading-none text-muted-foreground">
-                a.dupont@mediflow.pro
+                {user?.email}
               </p>
             </div>
           </DropdownMenuLabel>
@@ -83,7 +100,7 @@ export function Header() {
             <span>Support</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={handleSignOut}>
             <LogOut className="mr-2" />
             <span>Se déconnecter</span>
             <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>

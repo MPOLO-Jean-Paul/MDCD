@@ -23,7 +23,7 @@ import Link from 'next/link';
 
 const menuItems = [
   {
-    href: '/',
+    href: '/dashboard',
     label: 'Tableau de bord',
     icon: LayoutDashboard,
   },
@@ -60,7 +60,7 @@ export function Nav() {
   return (
     <>
       <SidebarHeader>
-        <Link href="/" className="flex h-10 w-full items-center justify-center p-2 group-data-[collapsible=icon]:justify-center">
+        <Link href="/dashboard" className="flex h-10 w-full items-center justify-center p-2 group-data-[collapsible=icon]:justify-center">
           <Hospital className="size-8 text-sidebar-primary" />
           <span className="ml-2 text-lg font-bold text-sidebar-primary-foreground group-data-[collapsible=icon]:hidden">
             MediFlow Pro
@@ -74,7 +74,7 @@ export function Nav() {
               <Link href={item.href} legacyBehavior passHref>
                 <SidebarMenuButton
                   tooltip={item.label}
-                  isActive={pathname === item.href}
+                  isActive={pathname.startsWith(item.href) && (item.href === '/dashboard' ? pathname === item.href : true) }
                 >
                   <item.icon />
                   <span>{item.label}</span>
