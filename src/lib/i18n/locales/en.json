@@ -32,6 +32,7 @@
         "dashboard": "Dashboard",
         "admissions": "Admissions",
         "patients": "Patients",
+        "consultations": "Consultations",
         "billing": "Billing",
         "pharmacy": "Pharmacy",
         "reports": "Reports",
@@ -509,6 +510,50 @@
             "hospitalization": "Hospitalization",
             "pharmacy": "Pharmacy",
             "surgeries": "Surgeries"
+        }
+    },
+    "consultationsPage": {
+        "title": "Consultations",
+        "newConsultation": "New Consultation",
+        "dialogTitle": "New Medical Consultation",
+        "dialogDescription": "Fill in the details below to record a new consultation.",
+        "listTitle": "Recent Consultations",
+        "listDescription": "List of the latest medical consultations.",
+        "table": {
+            "date": "Date",
+            "patient": "Patient",
+            "diagnosis": "Diagnosis"
+        },
+        "form": {
+            "patient": "Patient",
+            "selectPatient": "Select a patient",
+            "symptoms": "Symptoms",
+            "symptomsPlaceholder": "Fever, cough, headache...",
+            "diagnosis": "Diagnosis",
+            "diagnosisPlaceholder": "Seasonal flu...",
+            "notes": "Additional Notes (Optional)",
+            "notesPlaceholder": "Prescribe rest, follow-up in 3 days...",
+            "submit": "Save Consultation",
+            "submitting": "Saving..."
+        },
+        "statuses": {
+            "completed": "Completed",
+            "followUp": "Follow-up Required",
+            "draft": "Draft"
+        },
+        "editDialogTitle": "Edit Consultation",
+        "editDialogDescription": "Update the consultation record for {patientName}.",
+        "actions": {
+            "viewDetails": "View Details",
+            "prescribe": "Prescribe Medication",
+            "requestExam": "Request Exam"
+        },
+        "toasts": {
+            "createSuccessTitle": "Consultation Saved",
+            "createSuccessDescription": "The consultation for the patient has been successfully saved.",
+            "createErrorTitle": "Creation Error",
+            "updateSuccessTitle": "Consultation Updated",
+            "updateSuccessDescription": "The consultation for {patientName} has been updated."
         }
     }
 }

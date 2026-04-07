@@ -20,6 +20,7 @@ import {
   ShieldCheck,
   Users2,
   ClipboardList,
+  Stethoscope,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -31,6 +32,7 @@ const allMenuItems = [
   { href: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard, roles: ['admin', 'doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff'] },
   { href: '/admissions', labelKey: 'nav.admissions', icon: BedDouble, roles: ['admin', 'receptionist', 'doctor'] },
   { href: '/patients', labelKey: 'nav.patients', icon: Users2, roles: ['admin', 'receptionist', 'doctor'] },
+  { href: '/consultations', labelKey: 'nav.consultations', icon: Stethoscope, roles: ['admin', 'doctor'] },
   { href: '/billing', labelKey: 'nav.billing', icon: FilePlus, roles: ['admin', 'accountant'] },
   { href: '/pharmacy', labelKey: 'nav.pharmacy', icon: Pill, roles: ['admin', 'pharmacist'] },
   { href: '/reports', labelKey: 'nav.reports', icon: BarChart3, roles: ['admin', 'accountant'] },

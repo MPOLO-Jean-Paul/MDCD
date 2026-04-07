@@ -32,6 +32,7 @@
         "dashboard": "Tableau de bord",
         "admissions": "Admissions",
         "patients": "Patients",
+        "consultations": "Consultations",
         "billing": "Facturation",
         "pharmacy": "Pharmacie",
         "reports": "Rapports",
@@ -509,6 +510,50 @@
             "hospitalization": "Hospitalisation",
             "pharmacy": "Pharmacie",
             "surgeries": "Actes Chirurg."
+        }
+    },
+    "consultationsPage": {
+        "title": "Consultations",
+        "newConsultation": "Nouvelle Consultation",
+        "dialogTitle": "Nouvelle Consultation Médicale",
+        "dialogDescription": "Remplissez les détails ci-dessous pour enregistrer une nouvelle consultation.",
+        "listTitle": "Consultations Récentes",
+        "listDescription": "Liste des dernières consultations médicales.",
+        "table": {
+            "date": "Date",
+            "patient": "Patient",
+            "diagnosis": "Diagnostic"
+        },
+        "form": {
+            "patient": "Patient",
+            "selectPatient": "Sélectionnez un patient",
+            "symptoms": "Symptômes",
+            "symptomsPlaceholder": "Fièvre, toux, maux de tête...",
+            "diagnosis": "Diagnostic",
+            "diagnosisPlaceholder": "Grippe saisonnière...",
+            "notes": "Notes supplémentaires (Optionnel)",
+            "notesPlaceholder": "Prescrire du repos, suivi dans 3 jours...",
+            "submit": "Enregistrer la consultation",
+            "submitting": "Enregistrement..."
+        },
+        "statuses": {
+            "completed": "Terminée",
+            "followUp": "Suivi requis",
+            "draft": "Brouillon"
+        },
+        "editDialogTitle": "Modifier la consultation",
+        "editDialogDescription": "Mise à jour du dossier de consultation pour {patientName}.",
+        "actions": {
+            "viewDetails": "Voir les détails",
+            "prescribe": "Prescrire des médicaments",
+            "requestExam": "Demander un examen"
+        },
+        "toasts": {
+            "createSuccessTitle": "Consultation enregistrée",
+            "createSuccessDescription": "La consultation pour le patient a été enregistrée avec succès.",
+            "createErrorTitle": "Erreur de création",
+            "updateSuccessTitle": "Consultation mise à jour",
+            "updateSuccessDescription": "La consultation de {patientName} a été mise à jour."
         }
     }
 }
