@@ -19,6 +19,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { useAuth, useUser } from '@/firebase';
+import { useUserProfile } from '@/firebase/auth-provider';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Bell, CreditCard, LifeBuoy, LogOut, Search, Settings, User } from 'lucide-react';
 import Link from 'next/link';
@@ -29,23 +30,51 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { ScrollArea } from '../ui/scroll-area';
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useLanguage } from '@/lib/i18n/provider';
 
 // Mock data for notifications
-const initialNotifications = [
+const adminNotifications = [
   { id: 1, title: "Nouvelle admission", description: "Patient Moussa Traoré admis en urgence.", time: "Il y a 5 min", read: false },
   { id: 2, title: "Stock faible", description: "Le stock de Paracétamol est bas.", time: "Il y a 30 min", read: false },
   { id: 3, title: "Rapport financier prêt", description: "Le rapport mensuel de mai 2024 est disponible.", time: "Il y a 2 heures", read: true },
   { id: 4, title: "Mise à jour du système", description: "Maintenance prévue ce soir à 23h.", time: "Il y a 1 jour", read: true },
 ];
 
+const receptionistNotifications = [
+  { id: 1, title: "Nouveau patient enregistré", description: "Dossier pour Awa Gueye créé.", time: "Il y a 3 min", read: false },
+  { id: 2, title: "Rapport de labo reçu", description: "Les résultats pour le patient Omar Sy sont prêts pour archivage.", time: "Il y a 15 min", read: false },
+  { id: 3, title: "Transfert demandé", description: "Le Dr. Diallo demande le transfert du dossier de M. Ba.", time: "Il y a 1 heure", read: true },
+];
+
+const defaultNotifications = [
+    { id: 1, title: "Bienvenue !", description: "Aucune notification pour le moment.", time: "maintenant", read: true },
+];
+
 export function Header() {
   const auth = useAuth();
   const { user } = useUser();
+  const { profile } = useUserProfile();
   const router = useRouter();
   const { t } = useLanguage();
+
+  const initialNotifications = useMemo(() => {
+    if (!profile) return defaultNotifications;
+    switch (profile.roleName) {
+        case 'admin':
+            return adminNotifications;
+        case 'receptionist':
+            return receptionistNotifications;
+        default:
+            return defaultNotifications;
+    }
+  }, [profile]);
+
   const [notifications, setNotifications] = useState(initialNotifications);
+
+  useEffect(() => {
+    setNotifications(initialNotifications);
+  }, [initialNotifications]);
 
   const handleSignOut = async () => {
     await auth.signOut();
@@ -53,7 +82,7 @@ export function Header() {
   };
   
   const userAvatar = PlaceHolderImages.find(img => img.id === 'user-avatar');
-  const userInitials = user?.displayName?.split(' ').map(n => n[0]).join('') || user?.email?.charAt(0).toUpperCase() || 'U';
+  const userInitials = profile?.firstName?.charAt(0) || user?.email?.charAt(0).toUpperCase() || 'U';
 
   const unreadNotifications = notifications.filter(n => !n.read).length;
 
@@ -134,7 +163,7 @@ export function Header() {
           <DropdownMenuContent className="w-56" align="end">
             <DropdownMenuLabel>
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{user?.displayName || 'Utilisateur'}</p>
+                <p className="text-sm font-medium leading-none">{profile?.firstName ? `${profile.firstName} ${profile.lastName}` : (user?.displayName || 'Utilisateur')}</p>
                 <p className="text-xs leading-none text-muted-foreground">
                   {user?.email}
                 </p>
