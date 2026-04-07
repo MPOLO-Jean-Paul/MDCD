@@ -11,7 +11,7 @@ const translations = { en, fr };
 interface LanguageContextType {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: (key: string) => string;
+  t: (key: string, replacements?: Record<string, string | number>) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -19,28 +19,38 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [locale, setLocale] = useState<Locale>('fr');
 
-  const t = (key: string): string => {
+  const t = (key: string, replacements?: Record<string, string | number>): string => {
     const keys = key.split('.');
     let result: any = translations[locale];
     for (const k of keys) {
       result = result?.[k];
       if (result === undefined) {
-        // Fallback to French if translation is missing in the current locale
+        // Fallback to French if translation is missing
         let fallbackResult: any = translations.fr;
         for (const fk of keys) {
           fallbackResult = fallbackResult?.[fk];
         }
-        return fallbackResult || key;
+        result = fallbackResult || key;
+        break; // Exit loop after finding fallback or using key
       }
     }
-    return result || key;
+
+    let finalString = typeof result === 'string' ? result : key;
+
+    if (replacements) {
+      for (const [placeholder, value] of Object.entries(replacements)) {
+        finalString = finalString.replace(`{${placeholder}}`, String(value));
+      }
+    }
+    
+    return finalString;
   };
 
   const value = useMemo(() => ({
     locale,
     setLocale,
     t,
-  }), [locale]);
+  }), [locale, t]);
 
   return (
     <LanguageContext.Provider value={value}>

@@ -34,6 +34,8 @@ import { Patient } from '@/types/patient';
 import { WithId, useFirestore, updateDocumentNonBlocking, useCollection, useMemoFirebase } from '@/firebase';
 import { InsuranceProvider } from '@/types/insurance';
 import { Skeleton } from '../ui/skeleton';
+import { Textarea } from '../ui/textarea';
+import { useLanguage } from '@/lib/i18n/provider';
 
 
 const formSchema = z.object({
@@ -47,6 +49,7 @@ const formSchema = z.object({
   bloodGroup: z.string().optional(),
   insuranceProviderId: z.string().optional(),
   insurancePolicyNumber: z.string().optional(),
+  firstVisitReason: z.string().min(1, { message: 'Le motif de la visite est requis.' }),
 });
 
 interface EditPatientFormProps {
@@ -58,6 +61,7 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const firestore = useFirestore();
+  const { t } = useLanguage();
 
   const providersCollectionRef = useMemoFirebase(
     () => (firestore ? collection(firestore, 'insurance_providers') : null),
@@ -71,7 +75,8 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
         ...patient,
         dateOfBirth: new Date(patient.dateOfBirth),
         insuranceProviderId: patient.insuranceProviderId || 'none',
-        insurancePolicyNumber: patient.insurancePolicyNumber || ''
+        insurancePolicyNumber: patient.insurancePolicyNumber || '',
+        firstVisitReason: patient.firstVisitReason || ''
     },
   });
 
@@ -96,15 +101,15 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
       updateDocumentNonBlocking(patientDocRef, updatedPatient);
       
       toast({
-        title: 'Patient mis à jour avec succès',
-        description: `Le dossier pour ${values.firstName} ${values.lastName} a été mis à jour.`,
+        title: t('patientsPage.toasts.updateSuccessTitle'),
+        description: t('patientsPage.toasts.updateSuccessDescription', { patientName: `${values.firstName} ${values.lastName}` }),
       });
       setDialogOpen(false);
 
     } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: "Erreur de mise à jour",
+        title: t('common.saving'),
         description: error.message || "Une erreur est survenue.",
       });
       console.error("Error updating patient:", error);
@@ -125,7 +130,7 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
           name="lastName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom</FormLabel>
+              <FormLabel>{t('patientsPage.form.lastName')}</FormLabel>
               <FormControl><Input {...field} /></FormControl>
               <FormMessage />
             </FormItem>
@@ -136,7 +141,7 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
           name="firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Prénom</FormLabel>
+              <FormLabel>{t('patientsPage.form.firstName')}</FormLabel>
               <FormControl><Input {...field} /></FormControl>
               <FormMessage />
             </FormItem>
@@ -147,7 +152,7 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
           name="dateOfBirth"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Date de naissance</FormLabel>
+              <FormLabel>{t('patientsPage.form.dob')}</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -161,7 +166,7 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
                       {field.value ? (
                         format(field.value, "PPP", { locale: fr })
                       ) : (
-                        <span>Choisissez une date</span>
+                        <span>{t('common.chooseDate')}</span>
                       )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
@@ -186,15 +191,15 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
           name="gender"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sexe</FormLabel>
+              <FormLabel>{t('patientsPage.form.gender')}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="Masculin">Masculin</SelectItem>
-                  <SelectItem value="Féminin">Féminin</SelectItem>
-                  <SelectItem value="Autre">Autre</SelectItem>
+                  <SelectItem value="Masculin">{t('patientsPage.form.genders.male')}</SelectItem>
+                  <SelectItem value="Féminin">{t('patientsPage.form.genders.female')}</SelectItem>
+                  <SelectItem value="Autre">{t('patientsPage.form.genders.other')}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -206,7 +211,7 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Téléphone</FormLabel>
+              <FormLabel>{t('patientsPage.form.phone')}</FormLabel>
               <FormControl><Input {...field} /></FormControl>
               <FormMessage />
             </FormItem>
@@ -217,7 +222,7 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('patientsPage.form.email')}</FormLabel>
               <FormControl><Input {...field} /></FormControl>
               <FormMessage />
             </FormItem>
@@ -228,18 +233,34 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
           name="address"
           render={({ field }) => (
             <FormItem className="md:col-span-2">
-              <FormLabel>Adresse</FormLabel>
+              <FormLabel>{t('patientsPage.form.address')}</FormLabel>
               <FormControl><Input {...field} /></FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
+            control={form.control}
+            name="firstVisitReason"
+            render={({ field }) => (
+                <FormItem className="md:col-span-2">
+                <FormLabel>{t('patientsPage.form.firstVisitReason')}</FormLabel>
+                <FormControl>
+                    <Textarea
+                    placeholder={t('admissionsPage.form.reasonPlaceholder')}
+                    {...field}
+                    />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+        />
+        <FormField
           control={form.control}
           name="bloodGroup"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Groupe sanguin</FormLabel>
+              <FormLabel>{t('patientsPage.form.bloodGroup')}</FormLabel>
               <FormControl><Input {...field} /></FormControl>
               <FormMessage />
             </FormItem>
@@ -250,7 +271,7 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
           name="insuranceProviderId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Assurance</FormLabel>
+              <FormLabel>{t('nav.insurance')}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -258,7 +279,7 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="none">Aucune (Particulier)</SelectItem>
+                  <SelectItem value="none">{t('common.none')} (Particulier)</SelectItem>
                   {insuranceProviders?.map((provider: WithId<Omit<InsuranceProvider, 'id'>>) => (
                     <SelectItem key={provider.id} value={provider.id}>
                       {provider.name}
@@ -282,9 +303,9 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
           )}
         />
         <div className="md:col-span-2 flex justify-end gap-2">
-             <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>Annuler</Button>
+             <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>{t('common.cancel')}</Button>
             <Button type="submit" disabled={isLoading}>
-                {isLoading ? 'Sauvegarde...' : 'Sauvegarder les modifications'}
+                {isLoading ? t('common.saving') : t('common.save')}
             </Button>
         </div>
       </form>

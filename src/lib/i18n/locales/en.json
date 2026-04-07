@@ -63,7 +63,9 @@
     "footer": {
         "copyright": "© {year} MDCD Polyclinic. All rights reserved.",
         "support": "Support",
-        "settings": "Settings"
+        "settings": "Settings",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy"
     },
     "loginPage": {
         "title": "Login to MDCD Polyclinic",
@@ -346,6 +348,7 @@
             "email": "Email",
             "address": "Address",
             "bloodGroup": "Blood Group",
+            "firstVisitReason": "Reason for first visit",
             "submit": "Register Patient",
             "submitting": "Registering..."
         },

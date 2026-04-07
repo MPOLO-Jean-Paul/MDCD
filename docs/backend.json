@@ -143,6 +143,10 @@
           "type": "string",
           "description": "Reference to the InsuranceProvider entity for the patient's primary insurance. (Relationship: InsuranceProvider 1:N Patient)"
         },
+        "firstVisitReason": {
+          "type": "string",
+          "description": "The reason for the patient's first visit, captured during registration."
+        },
         "createdAt": {
           "type": "string",
           "description": "Timestamp indicating when the patient record was created.",

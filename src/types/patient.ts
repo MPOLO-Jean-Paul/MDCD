@@ -12,6 +12,7 @@ export interface Patient {
     emergencyContactPhone?: string;
     insurancePolicyNumber?: string;
     insuranceProviderId?: string;
+    firstVisitReason?: string;
     createdAt: string;
     updatedAt: string;
 }

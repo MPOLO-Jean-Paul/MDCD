@@ -35,6 +35,8 @@ import { useFirestore, setDocumentNonBlocking, useCollection, useMemoFirebase, W
 import { collection, doc } from 'firebase/firestore';
 import { InsuranceProvider } from '@/types/insurance';
 import { Skeleton } from '../ui/skeleton';
+import { Textarea } from '../ui/textarea';
+import { useLanguage } from '@/lib/i18n/provider';
 
 const formSchema = z.object({
   firstName: z.string().min(1, { message: 'Le prénom est requis.' }),
@@ -47,12 +49,14 @@ const formSchema = z.object({
   bloodGroup: z.string().optional(),
   insuranceProviderId: z.string().optional(),
   insurancePolicyNumber: z.string().optional(),
+  firstVisitReason: z.string().min(1, { message: 'Le motif de la visite est requis.' }),
 });
 
 export function CreatePatientForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const firestore = useFirestore();
+  const { t } = useLanguage();
 
   const providersCollectionRef = useMemoFirebase(
     () => (firestore ? collection(firestore, 'insurance_providers') : null),
@@ -66,6 +70,7 @@ export function CreatePatientForm() {
       firstName: '',
       lastName: '',
       gender: 'Masculin',
+      firstVisitReason: '',
     },
   });
 
@@ -93,15 +98,15 @@ export function CreatePatientForm() {
       setDocumentNonBlocking(newPatientDocRef, newPatient, {});
       
       toast({
-        title: 'Patient créé avec succès',
-        description: `Le dossier pour ${values.firstName} ${values.lastName} a été créé.`,
+        title: t('patientsPage.toasts.createSuccessTitle'),
+        description: t('patientsPage.toasts.createSuccessDescription', { patientName: `${values.firstName} ${values.lastName}` }),
       });
       form.reset();
 
     } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: "Erreur de création",
+        title: t('patientsPage.toasts.createErrorTitle'),
         description: error.message || "Une erreur est survenue.",
       });
       console.error("Error creating patient:", error);
@@ -122,7 +127,7 @@ export function CreatePatientForm() {
           name="lastName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom</FormLabel>
+              <FormLabel>{t('patientsPage.form.lastName')}</FormLabel>
               <FormControl><Input placeholder="Diallo" {...field} /></FormControl>
               <FormMessage />
             </FormItem>
@@ -133,7 +138,7 @@ export function CreatePatientForm() {
           name="firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Prénom</FormLabel>
+              <FormLabel>{t('patientsPage.form.firstName')}</FormLabel>
               <FormControl><Input placeholder="Amina" {...field} /></FormControl>
               <FormMessage />
             </FormItem>
@@ -144,7 +149,7 @@ export function CreatePatientForm() {
           name="dateOfBirth"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Date de naissance</FormLabel>
+              <FormLabel>{t('patientsPage.form.dob')}</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -158,7 +163,7 @@ export function CreatePatientForm() {
                       {field.value ? (
                         format(field.value, "PPP", { locale: fr })
                       ) : (
-                        <span>Choisissez une date</span>
+                        <span>{t('common.chooseDate')}</span>
                       )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
@@ -183,15 +188,15 @@ export function CreatePatientForm() {
           name="gender"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sexe</FormLabel>
+              <FormLabel>{t('patientsPage.form.gender')}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="Masculin">Masculin</SelectItem>
-                  <SelectItem value="Féminin">Féminin</SelectItem>
-                  <SelectItem value="Autre">Autre</SelectItem>
+                  <SelectItem value="Masculin">{t('patientsPage.form.genders.male')}</SelectItem>
+                  <SelectItem value="Féminin">{t('patientsPage.form.genders.female')}</SelectItem>
+                  <SelectItem value="Autre">{t('patientsPage.form.genders.other')}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -203,7 +208,7 @@ export function CreatePatientForm() {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Téléphone</FormLabel>
+              <FormLabel>{t('patientsPage.form.phone')}</FormLabel>
               <FormControl><Input placeholder="+221 77 123 45 67" {...field} /></FormControl>
               <FormMessage />
             </FormItem>
@@ -214,7 +219,7 @@ export function CreatePatientForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('patientsPage.form.email')}</FormLabel>
               <FormControl><Input placeholder="patient@example.com" {...field} /></FormControl>
               <FormMessage />
             </FormItem>
@@ -225,18 +230,34 @@ export function CreatePatientForm() {
           name="address"
           render={({ field }) => (
             <FormItem className="md:col-span-2">
-              <FormLabel>Adresse</FormLabel>
+              <FormLabel>{t('patientsPage.form.address')}</FormLabel>
               <FormControl><Input placeholder="123, Rue de Dakar" {...field} /></FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <FormField
+            control={form.control}
+            name="firstVisitReason"
+            render={({ field }) => (
+                <FormItem className="md:col-span-2">
+                <FormLabel>{t('patientsPage.form.firstVisitReason')}</FormLabel>
+                <FormControl>
+                    <Textarea
+                    placeholder={t('admissionsPage.form.reasonPlaceholder')}
+                    {...field}
+                    />
+                </FormControl>
+                <FormMessage />
+                </FormItem>
+            )}
+        />
+        <FormField
           control={form.control}
           name="bloodGroup"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Groupe sanguin</FormLabel>
+              <FormLabel>{t('patientsPage.form.bloodGroup')}</FormLabel>
               <FormControl><Input placeholder="A+" {...field} /></FormControl>
               <FormMessage />
             </FormItem>
@@ -247,7 +268,7 @@ export function CreatePatientForm() {
           name="insuranceProviderId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Assurance</FormLabel>
+              <FormLabel>{t('nav.insurance')}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
@@ -255,7 +276,7 @@ export function CreatePatientForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="none">Aucune (Particulier)</SelectItem>
+                  <SelectItem value="none">{t('common.none')} (Particulier)</SelectItem>
                   {insuranceProviders?.map((provider: WithId<Omit<InsuranceProvider, 'id'>>) => (
                     <SelectItem key={provider.id} value={provider.id}>
                       {provider.name}
@@ -281,7 +302,7 @@ export function CreatePatientForm() {
 
         <div className="md:col-span-2 flex justify-end">
             <Button type="submit" className="w-full md:w-auto" disabled={isLoading}>
-                {isLoading ? 'Enregistrement...' : 'Enregistrer le patient'}
+                {isLoading ? t('patientsPage.form.submitting') : t('patientsPage.form.submit')}
             </Button>
         </div>
       </form>
