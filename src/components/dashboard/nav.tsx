@@ -65,15 +65,16 @@ export function Nav() {
           ) : (
             menuItems.map((item) => (
               <SidebarMenuItem key={item.href}>
-                <Link href={item.href} legacyBehavior passHref>
-                  <SidebarMenuButton
-                    tooltip={item.label}
-                    isActive={pathname.startsWith(item.href) && (item.href === '/dashboard' ? pathname === item.href : true) }
-                  >
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.label}
+                  isActive={pathname.startsWith(item.href) && (item.href === '/dashboard' ? pathname === item.href : true) }
+                >
+                  <Link href={item.href}>
                     <item.icon />
                     <span>{item.label}</span>
-                  </SidebarMenuButton>
-                </Link>
+                  </Link>
+                </SidebarMenuButton>
               </SidebarMenuItem>
             ))
           )}
@@ -82,12 +83,12 @@ export function Nav() {
       <SidebarFooter className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <Link href="/settings" legacyBehavior passHref>
-              <SidebarMenuButton tooltip="Paramètres" isActive={pathname === '/settings'}>
+            <SidebarMenuButton asChild tooltip="Paramètres" isActive={pathname === '/settings'}>
+              <Link href="/settings">
                 <Settings />
                 <span>Paramètres</span>
-              </SidebarMenuButton>
-            </Link>
+              </Link>
+            </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
