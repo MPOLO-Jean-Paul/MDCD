@@ -1,0 +1,439 @@
+/**
+ * # Firestore Security Rules for MediFlow Pro
+ *
+ * ## Core Philosophy
+ * This ruleset enforces a strict Role-Based Access Control (RBAC) model tailored for a hospital management system.
+ * The central principle is that a user's permissions are determined by their assigned role (e.g., 'admin', 'doctor', 'receptionist').
+ * All data is considered sensitive and private by default; access is explicitly granted only to authenticated staff members with appropriate roles.
+ *
+ * ## Data Structure
+ * - `/user_roles/{userId}`: This collection is the cornerstone of our security model. It stores the role name for each user, allowing for fast and efficient role checks in rules.
+ * - Top-Level Collections: The data is organized into logical, top-level collections (e.g., /patients, /consultations, /invoices). This flat structure simplifies rule writing and avoids complex hierarchical dependencies.
+ * - Subcollections: Nested data is used sparingly (e.g., /invoices/{invoiceId}/items) and rules for these subcollections are designed to securely inherit context from their parent document.
+ *
+ * ## Key Security Decisions
+ * - **Default Deny**: All paths are closed by default. Access must be explicitly granted.
+ * - **Authentication Required**: No unauthenticated access is permitted anywhere in the database. All operations require a signed-in user with an assigned role.
+ * - **Role-Based Authorization**: Most rules depend on helper functions like `isAdmin()`, `isDoctor()`, etc., which check the user's role in the `/user_roles` collection.
+ * - **Admin Override**: An 'admin' role generally has full CRUD access across most collections for administrative purposes.
+ * - **No User Listing**: General staff members are prohibited from listing all users in the `/users` collection to protect staff privacy.
+ * - **Append-Only Audit Log**: The `/audit_logs` collection is write-only for admins (simulating a trusted server process) and cannot be read, updated, or deleted by clients, ensuring the integrity of the audit trail.
+ *
+ * ## Denormalization for Authorization
+ * To create simpler and more performant rules, this ruleset relies on the denormalization of key identifiers. For example:
+ * - A `/consultations/{consultationId}` document contains a `consultingDoctorId` field. This allows a rule to grant access by simply checking `isOwner(resource.data.consultingDoctorId)` without needing a slow and costly `get()` to another collection.
+ * - The user's role is stored in a dedicated `/user_roles/{userId}` document, where the document ID matches the user's UID. This allows any rule to quickly `get()` a user's role for authorization decisions.
+ *
+ * ## Structural Segregation
+ * - **Reference Data**: Collections like `/roles`, `/medications`, and `/services` hold static or semi-static data. They generally allow reads for all authenticated staff but restrict writes to admins.
+ * - **Transactional Data**: Collections like `/patients`, `/admissions`, and `/invoices` contain sensitive operational data. Access to these is tightly controlled based on specific roles and ownership fields (e.g., `admittingUserId`, `generatedByUserId`).
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =====================================================================
+    // Helper Functions
+    // =====================================================================
+
+    /**
+     * Checks if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the requesting user's UID matches the provided userId.
+     * This is the foundation of the ownership model.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Checks if a document being updated or deleted actually exists.
+     * This prevents operations on non-existent data.
+     */
+    function isExistingDoc() {
+      return resource != null;
+    }
+
+    /**
+     * Retrieves the role data for the currently authenticated user.
+     * This is the core of the RBAC system. It assumes a /user_roles/{userId}
+     * document exists containing a 'roleName' field.
+     */
+    function getUserRole() {
+      return get(/databases/$(database)/documents/user_roles/$(request.auth.uid)).data;
+    }
+
+    /**
+     * Checks if the user is a staff member with an assigned role.
+     * This is the baseline check for almost all data access.
+     */
+    function isStaff() {
+      return isSignedIn() && exists(/databases/$(database)/documents/user_roles/$(request.auth.uid));
+    }
+
+    // --- Role-specific Helper Functions ---
+
+    function isAdmin() {
+      return isStaff() && getUserRole().roleName == 'admin';
+    }
+
+    function isDoctor() {
+      return isStaff() && getUserRole().roleName == 'doctor';
+    }
+
+    function isReceptionist() {
+      return isStaff() && getUserRole().roleName == 'receptionist';
+    }
+    
+    function isPharmacist() {
+      return isStaff() && getUserRole().roleName == 'pharmacist';
+    }
+
+    function isAccountant() {
+      return isStaff() && getUserRole().roleName == 'accountant';
+    }
+
+    function isLabStaff() {
+      return isStaff() && getUserRole().roleName == 'lab_staff';
+    }
+    
+    // =====================================================================
+    // Collection Rules
+    // =====================================================================
+
+    /**
+     * @description Stores the role for each user. This is the source of truth for RBAC.
+     * @path /user_roles/{userId}
+     * @allow (get) A user reading their own role.
+     * @deny (update) A non-admin user trying to change their own or another user's role.
+     * @principle Restricts access to a user's own data tree, with admin oversight.
+     */
+    match /user_roles/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isAdmin();
+      allow update: if isExistingDoc() && isAdmin();
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Defines the available roles in the system (e.g., 'Admin', 'Doctor'). This is reference data.
+     * @path /roles/{roleId}
+     * @allow (get) Any authenticated staff member reading the list of available roles.
+     * @deny (create) A non-admin user trying to create a new role.
+     * @principle Enforces read-only access for general users on static reference data, with admin control for writes.
+     */
+    match /roles/{roleId} {
+      allow get, list: if isStaff();
+      allow create: if isAdmin();
+      allow update: if isExistingDoc() && isAdmin();
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Stores staff member profile information.
+     * @path /users/{userId}
+     * @allow (create) A new user creating their own profile document for the first time.
+     * @deny (list) A regular user trying to list all other staff members.
+     * @principle Allows a user to manage their own profile, but prevents enumeration of other users, with admin control.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isOwner(userId);
+      allow update: if isExistingDoc() && (isOwner(userId) || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Stores patient demographic and medical information.
+     * @path /patients/{patientId}
+     * @allow (get) Any staff member viewing a patient's file.
+     * @deny (delete) A doctor or receptionist trying to delete a patient record.
+     * @principle Provides broad read access for internal staff but restricts destructive operations to admins.
+     */
+    match /patients/{patientId} {
+      allow get, list: if isStaff();
+      allow create: if isReceptionist() || isDoctor() || isAdmin();
+      allow update: if isExistingDoc() && (isReceptionist() || isDoctor() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Manages details of insurance companies. This is reference data.
+     * @path /insurance_providers/{providerId}
+     * @allow (list) Any staff member listing insurance providers.
+     * @deny (create) A doctor trying to add a new insurance provider.
+     * @principle Enforces read-only access for general users on static reference data, with admin control for writes.
+     */
+    match /insurance_providers/{providerId} {
+      allow get, list: if isStaff();
+      allow create: if isAccountant() || isAdmin();
+      allow update: if isExistingDoc() && (isAccountant() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Manages hospital bed inventory and status.
+     * @path /beds/{bedId}
+     * @allow (get) A receptionist checking the status of a bed.
+     * @deny (create) A doctor trying to add a new bed to the system.
+     * @principle Enforces read-only access for general users on static reference data, with admin control for writes.
+     */
+    match /beds/{bedId} {
+      allow get, list: if isStaff();
+      allow create: if isReceptionist() || isAdmin();
+      allow update: if isExistingDoc() && (isReceptionist() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Records patient admissions and appointments.
+     * @path /admissions/{admissionId}
+     * @allow (create) A receptionist creating a new admission for a patient.
+     * @deny (delete) A receptionist trying to delete an admission record.
+     * @principle Allows creation by authorized roles but restricts deletion to admins for data integrity.
+     */
+    match /admissions/{admissionId} {
+      allow get, list: if isStaff();
+      allow create: if (isReceptionist() || isAdmin()) && isOwner(request.resource.data.admittingUserId);
+      allow update: if isExistingDoc() && (isReceptionist() || isDoctor() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Tracks patient hospitalization details.
+     * @path /hospitalizations/{hospitalizationId}
+     * @allow (get) A doctor viewing a patient's hospitalization record.
+     * @deny (create) A pharmacist trying to create a hospitalization record.
+     * @principle Grants broad read access to staff but restricts writes to relevant roles.
+     */
+    match /hospitalizations/{hospitalizationId} {
+      allow get, list: if isStaff();
+      allow create: if isReceptionist() || isDoctor() || isAdmin();
+      allow update: if isExistingDoc() && (isReceptionist() || isDoctor() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Records medical consultation details.
+     * @path /consultations/{consultationId}
+     * @allow (create) A doctor creating a consultation record for themselves.
+     * @deny (get) A doctor trying to read a consultation record belonging to another doctor.
+     * @principle Enforces document ownership for writes and reads, ensuring patient privacy between practitioners.
+     */
+    match /consultations/{consultationId} {
+      allow get: if isStaff() && (isAdmin() || isOwner(resource.data.consultingDoctorId));
+      allow list: if isDoctor() || isAdmin();
+      allow create: if isDoctor() && isOwner(request.resource.data.consultingDoctorId);
+      allow update: if isExistingDoc() && (isAdmin() || isOwner(resource.data.consultingDoctorId));
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Manages medication details. This is reference data.
+     * @path /medications/{medicationId}
+     * @allow (list) A doctor listing available medications.
+     * @deny (create) A receptionist trying to add a new medication.
+     * @principle Enforces read-only access for general users on static reference data, with admin/pharmacist control for writes.
+     */
+    match /medications/{medicationId} {
+      allow get, list: if isStaff();
+      allow create: if isPharmacist() || isAdmin();
+      allow update: if isExistingDoc() && (isPharmacist() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Manages inventory for specific batches of medications.
+     * @path /stock_items/{stockItemId}
+     * @allow (update) A pharmacist updating the quantity of a stock item.
+     * @deny (update) A doctor trying to update stock levels.
+     * @principle Restricts access to roles directly responsible for inventory management.
+     */
+    match /stock_items/{stockItemId} {
+      allow get, list: if isPharmacist() || isAdmin();
+      allow create: if isPharmacist() || isAdmin();
+      allow update: if isExistingDoc() && (isPharmacist() || isAdmin()) && isOwner(request.resource.data.lastUpdateUserId);
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Records electronic prescriptions.
+     * @path /prescriptions/{prescriptionId}
+     * @allow (create) A doctor creating a new prescription for a patient.
+     * @deny (get) A doctor trying to view a prescription written by another doctor.
+     * @principle Enforces document ownership, allowing access only to the prescribing doctor, the dispensing pharmacist, and admins.
+     */
+    match /prescriptions/{prescriptionId} {
+      allow get: if isStaff() && (isAdmin() || isOwner(resource.data.prescribingDoctorId) || isOwner(resource.data.dispensingPharmacyUserId));
+      allow list: if isDoctor() || isPharmacist() || isAdmin();
+      allow create: if isDoctor() && isOwner(request.resource.data.prescribingDoctorId);
+      allow update: if isExistingDoc() && (isAdmin() || isOwner(resource.data.prescribingDoctorId) || (isPharmacist() && isOwner(request.resource.data.dispensingPharmacyUserId)));
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Details individual items within a prescription.
+     * @path /prescriptions/{prescriptionId}/items/{itemId}
+     * @allow (get) A pharmacist viewing an item on a prescription they are dispensing.
+     * @deny (get) A doctor viewing an item on another doctor's prescription.
+     * @principle Inherits permissions from the parent prescription document, avoiding redundant logic.
+     */
+    match /prescriptions/{prescriptionId}/items/{itemId} {
+      allow get, list: if isStaff() && (isAdmin() || isOwner(get(/databases/$(database)/documents/prescriptions/$(prescriptionId)).data.prescribingDoctorId) || isOwner(get(/databases/$(database)/documents/prescriptions/$(prescriptionId)).data.dispensingPharmacyUserId));
+      allow create: if isDoctor() && isOwner(get(/databases/$(database)/documents/prescriptions/$(prescriptionId)).data.prescribingDoctorId);
+      allow update: if isExistingDoc() && (isAdmin() || isOwner(get(/databases/$(database)/documents/prescriptions/$(prescriptionId)).data.prescribingDoctorId) || isPharmacist());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Defines types of lab examinations. This is reference data.
+     * @path /examination_types/{typeId}
+     * @allow (list) A doctor listing available examination types.
+     * @deny (create) A receptionist trying to add a new examination type.
+     * @principle Enforces read-only access for general users on static reference data, with admin/lab staff control for writes.
+     */
+    match /examination_types/{typeId} {
+      allow get, list: if isStaff();
+      allow create: if isLabStaff() || isAdmin();
+      allow update: if isExistingDoc() && (isLabStaff() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Records requests for lab examinations.
+     * @path /examination_requests/{requestId}
+     * @allow (create) A doctor creating an examination request for a patient.
+     * @deny (update) A doctor trying to update the status of a request after it has been submitted.
+     * @principle Restricts access based on roles involved in the examination workflow (requesting doctor, lab staff, admin).
+     */
+    match /examination_requests/{requestId} {
+      allow get: if isStaff() && (isAdmin() || isOwner(resource.data.requestingDoctorId) || isLabStaff());
+      allow list: if isDoctor() || isLabStaff() || isAdmin();
+      allow create: if isDoctor() && isOwner(request.resource.data.requestingDoctorId);
+      allow update: if isExistingDoc() && (isLabStaff() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Stores the results from an examination.
+     * @path /examination_results/{resultId}
+     * @allow (create) A lab staff member uploading results for a request.
+     * @deny (get) A doctor trying to view results for an examination they did not request.
+     * @principle Restricts access to sensitive results to the involved parties: lab staff, the validating doctor, and the original requesting doctor.
+     */
+    match /examination_results/{resultId} {
+      allow get: if isStaff() && (isAdmin() || isLabStaff() || isOwner(resource.data.validatedByUserId) || isOwner(get(/databases/$(database)/documents/examination_requests/$(resource.data.examinationRequestId)).data.requestingDoctorId));
+      allow list: if isDoctor() || isLabStaff() || isAdmin();
+      allow create: if isLabStaff() && isOwner(request.resource.data.performingLabUserId);
+      allow update: if isExistingDoc() && (isLabStaff() || isDoctor() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Stores metadata for uploaded documents.
+     * @path /documents/{documentId}
+     * @allow (create) Any staff member uploading a document and tagging themselves as the uploader.
+     * @deny (delete) A non-admin user trying to delete a document they did not upload.
+     * @principle Enforces document ownership for modification and deletion.
+     */
+    match /documents/{documentId} {
+      allow get, list: if isStaff();
+      allow create: if isStaff() && isOwner(request.resource.data.uploadedByUserId);
+      allow update: if isExistingDoc() && (isOwner(resource.data.uploadedByUserId) || isAdmin());
+      allow delete: if isExistingDoc() && (isOwner(resource.data.uploadedByUserId) || isAdmin());
+    }
+
+    /**
+     * @description Defines billable services. This is reference data.
+     * @path /services/{serviceId}
+     * @allow (list) An accountant listing all billable services.
+     * @deny (create) A doctor trying to create a new billable service.
+     * @principle Enforces read-only access for general users on static reference data, with admin/accountant control for writes.
+     */
+    match /services/{serviceId} {
+      allow get, list: if isStaff();
+      allow create: if isAccountant() || isAdmin();
+      allow update: if isExistingDoc() && (isAccountant() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Consolidates all billable items for a patient.
+     * @path /invoices/{invoiceId}
+     * @allow (create) An accountant generating an invoice for a patient.
+     * @deny (get) A doctor trying to view a patient's invoice.
+     * @principle Restricts financial data access to authorized roles like accountants and admins.
+     */
+    match /invoices/{invoiceId} {
+      allow get, list: if isAccountant() || isAdmin();
+      allow create: if (isAccountant() || isAdmin()) && isOwner(request.resource.data.generatedByUserId);
+      allow update: if isExistingDoc() && (isAccountant() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Details individual billable items on an invoice.
+     * @path /invoices/{invoiceId}/items/{itemId}
+     * @allow (get) An accountant viewing the line items on an invoice.
+     * @deny (create) A doctor trying to add an item to an invoice.
+     * @principle Inherits permissions from the parent invoice, restricting access to financial roles.
+     */
+    match /invoices/{invoiceId}/items/{itemId} {
+      allow get, list: if isAccountant() || isAdmin();
+      allow create: if isAccountant() || isAdmin();
+      allow update: if isExistingDoc() && (isAccountant() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Records payments received from patients.
+     * @path /payments/{paymentId}
+     * @allow (create) An accountant recording a new payment.
+     * @deny (update) A receptionist trying to modify a payment record.
+     * @principle Restricts financial data access to authorized roles like accountants and admins.
+     */
+    match /payments/{paymentId} {
+      allow get, list: if isAccountant() || isAdmin();
+      allow create: if (isAccountant() || isAdmin()) && isOwner(request.resource.data.receivedByUserId);
+      allow update: if isExistingDoc() && (isAccountant() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Manages insurance claims.
+     * @path /insurance_claims/{claimId}
+     * @allow (get) An accountant viewing an insurance claim.
+     * @deny (create) A doctor trying to file an insurance claim.
+     * @principle Restricts financial data access to authorized roles like accountants and admins.
+     */
+    match /insurance_claims/{claimId} {
+      allow get, list: if isAccountant() || isAdmin();
+      allow create: if (isAccountant() || isAdmin()) && isOwner(request.resource.data.submittedByUserId);
+      allow update: if isExistingDoc() && (isAccountant() || isAdmin());
+      allow delete: if isExistingDoc() && isAdmin();
+    }
+
+    /**
+     * @description Records an audit trail of critical user actions.
+     * @path /audit_logs/{logId}
+     * @allow (create) An admin creating a log entry (simulating a trusted server function).
+     * @deny (get) Any user, including admins, reading the audit log from the client.
+     * @principle Secures the audit trail by making it append-only from a trusted source and completely inaccessible to clients to prevent tampering or viewing.
+     */
+    match /audit_logs/{logId} {
+      allow get: if false;
+      allow list: if false;
+      allow create: if isAdmin(); // In production, this should only be callable by a service account.
+      allow update: if false;
+      allow delete: if false;
+    }
+
+  }
+}

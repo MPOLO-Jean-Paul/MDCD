@@ -1,0 +1,1821 @@
+{
+  "entities": {
+    "Role": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Role",
+      "type": "object",
+      "description": "Defines the different access roles within the Hospital Management System for Role-Based Access Control (RBAC).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Role entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the role (e.g., 'Admin', 'Médecin', 'Réceptionniste', 'Pharmacien', 'Comptable')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the role's responsibilities and permissions."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description"
+      ]
+    },
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a staff member with access to the Hospital Management System, adhering to RBAC.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "username": {
+          "type": "string",
+          "description": "Unique username used by the staff member for login purposes."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the staff member.",
+          "format": "email"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "First name of the staff member."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name of the staff member."
+        },
+        "roleId": {
+          "type": "string",
+          "description": "Reference to the Role entity that defines the user's permissions and access level. (Relationship: Role 1:N User)"
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Indicates whether the user account is currently active or disabled."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the user account was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the user account was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "email",
+        "firstName",
+        "lastName",
+        "roleId",
+        "isActive",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Patient": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Patient",
+      "type": "object",
+      "description": "Stores demographic and essential medical information for each patient.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Patient entity, automatically generated."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The first name of the patient."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The last name of the patient."
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "description": "The patient's date of birth.",
+          "format": "date"
+        },
+        "gender": {
+          "type": "string",
+          "description": "The gender of the patient."
+        },
+        "address": {
+          "type": "string",
+          "description": "The patient's residential address."
+        },
+        "phone": {
+          "type": "string",
+          "description": "The patient's primary phone number."
+        },
+        "email": {
+          "type": "string",
+          "description": "The patient's email address.",
+          "format": "email"
+        },
+        "bloodGroup": {
+          "type": "string",
+          "description": "The patient's blood group (e.g., 'A+', 'O-')."
+        },
+        "emergencyContactName": {
+          "type": "string",
+          "description": "The name of the patient's emergency contact."
+        },
+        "emergencyContactPhone": {
+          "type": "string",
+          "description": "The phone number of the patient's emergency contact."
+        },
+        "insurancePolicyNumber": {
+          "type": "string",
+          "description": "The policy number for the patient's primary insurance."
+        },
+        "insuranceProviderId": {
+          "type": "string",
+          "description": "Reference to the InsuranceProvider entity for the patient's primary insurance. (Relationship: InsuranceProvider 1:N Patient)"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the patient record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the patient record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "firstName",
+        "lastName",
+        "dateOfBirth",
+        "gender",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "InsuranceProvider": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "InsuranceProvider",
+      "type": "object",
+      "description": "Manages details of insurance companies and third-party payers the hospital works with.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the InsuranceProvider entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The official name of the insurance provider."
+        },
+        "contactPerson": {
+          "type": "string",
+          "description": "The main contact person at the insurance provider."
+        },
+        "contactPhone": {
+          "type": "string",
+          "description": "The phone number for the contact person at the insurance provider."
+        },
+        "contactEmail": {
+          "type": "string",
+          "description": "The email address for the contact person at the insurance provider.",
+          "format": "email"
+        },
+        "address": {
+          "type": "string",
+          "description": "The physical address of the insurance provider."
+        },
+        "policyTerms": {
+          "type": "string",
+          "description": "A description of general policy terms and conditions (e.g., percentage coverage, exclusions)."
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Indicates whether the insurance provider is currently active and partnered with the hospital."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the insurance provider record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the insurance provider record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "isActive",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Bed": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Bed",
+      "type": "object",
+      "description": "Manages individual hospital beds, their location, and current status for inpatient services.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Bed entity."
+        },
+        "bedNumber": {
+          "type": "string",
+          "description": "The unique number or identifier for the bed within its ward/room."
+        },
+        "ward": {
+          "type": "string",
+          "description": "The name of the ward where the bed is located."
+        },
+        "roomNumber": {
+          "type": "string",
+          "description": "The room number where the bed is located."
+        },
+        "type": {
+          "type": "string",
+          "description": "The type of bed (e.g., 'General', 'ICU', 'Pediatric', 'Maternity')."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the bed (e.g., 'Available', 'Occupied', 'Maintenance', 'Cleaning')."
+        },
+        "pricePerDay": {
+          "type": "number",
+          "description": "The standard daily rate for occupying this bed."
+        },
+        "lastOccupancyAdmissionId": {
+          "type": "string",
+          "description": "Reference to the last Admission entity that occupied this bed, for historical tracking. (Relationship: Bed 1:N Admission)"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the bed record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the bed record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "bedNumber",
+        "ward",
+        "roomNumber",
+        "type",
+        "status",
+        "pricePerDay",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Admission": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Admission",
+      "type": "object",
+      "description": "Records patient admissions, appointments, and initial encounters, including emergencies and hospitalizations.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Admission entity."
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to the Patient entity being admitted. (Relationship: Patient 1:N Admission)"
+        },
+        "admissionDateTime": {
+          "type": "string",
+          "description": "Date and time of the patient's admission or appointment.",
+          "format": "date-time"
+        },
+        "admissionType": {
+          "type": "string",
+          "description": "The type of admission (e.g., 'Rendez-vous', 'Urgence', 'Hospitalisation')."
+        },
+        "reasonForAdmission": {
+          "type": "string",
+          "description": "A brief description of the reason for the patient's admission or visit."
+        },
+        "bedId": {
+          "type": "string",
+          "description": "Optional reference to the Bed entity if the admission involves hospitalization. (Relationship: Bed 1:N Admission)"
+        },
+        "initialPaymentAmount": {
+          "type": "number",
+          "description": "The initial payment amount received during the admission process."
+        },
+        "initialPaymentMethod": {
+          "type": "string",
+          "description": "The method used for the initial payment (e.g., 'Cash', 'Mobile Money', 'Credit Card')."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the admission (e.g., 'Pending', 'Admitted', 'Discharged', 'Completed', 'Canceled')."
+        },
+        "admittingUserId": {
+          "type": "string",
+          "description": "Reference to the User entity (staff member) who handled the admission. (Relationship: User 1:N Admission)"
+        },
+        "dischargeDateTime": {
+          "type": "string",
+          "description": "Date and time of the patient's discharge, if applicable.",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the admission record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the admission record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "patientId",
+        "admissionDateTime",
+        "admissionType",
+        "reasonForAdmission",
+        "status",
+        "admittingUserId",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Hospitalization": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Hospitalization",
+      "type": "object",
+      "description": "Tracks a patient's duration of stay and related details during hospitalization.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Hospitalization entity."
+        },
+        "admissionId": {
+          "type": "string",
+          "description": "Reference to the Admission entity that initiated this hospitalization. (Relationship: Admission 1:N Hospitalization)"
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to the Patient entity being hospitalized. (Relationship: Patient 1:N Hospitalization)"
+        },
+        "bedId": {
+          "type": "string",
+          "description": "Reference to the Bed entity assigned for this hospitalization. (Relationship: Bed 1:N Hospitalization)"
+        },
+        "startDate": {
+          "type": "string",
+          "description": "The date and time the patient started their hospitalization.",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "The date and time the patient ended their hospitalization (discharge date).",
+          "format": "date-time"
+        },
+        "initialDeposit": {
+          "type": "number",
+          "description": "The initial deposit amount paid for the hospitalization."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the hospitalization (e.g., 'Admitted', 'Discharged', 'InProgress')."
+        },
+        "dailyRateCharged": {
+          "type": "number",
+          "description": "The daily rate charged for the bed and associated services during this hospitalization."
+        },
+        "totalDays": {
+          "type": "number",
+          "description": "The calculated total number of days for the hospitalization."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the hospitalization record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the hospitalization record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "admissionId",
+        "patientId",
+        "bedId",
+        "startDate",
+        "initialDeposit",
+        "status",
+        "dailyRateCharged",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Consultation": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Consultation",
+      "type": "object",
+      "description": "Records details of medical consultations, including diagnosis and notes.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Consultation entity."
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to the Patient entity who received the consultation. (Relationship: Patient 1:N Consultation)"
+        },
+        "admissionId": {
+          "type": "string",
+          "description": "Optional reference to the Admission entity if the consultation is part of an admission event. (Relationship: Admission 1:N Consultation)"
+        },
+        "consultationDateTime": {
+          "type": "string",
+          "description": "Date and time when the consultation took place.",
+          "format": "date-time"
+        },
+        "consultingDoctorId": {
+          "type": "string",
+          "description": "Reference to the User entity (doctor) who performed the consultation. (Relationship: User 1:N Consultation)"
+        },
+        "symptoms": {
+          "type": "string",
+          "description": "A description of the patient's reported symptoms."
+        },
+        "diagnosis": {
+          "type": "string",
+          "description": "The doctor's diagnosis for the patient's condition."
+        },
+        "notes": {
+          "type": "string",
+          "description": "General notes or observations from the consultation."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the consultation (e.g., 'Completed', 'Follow-up Required', 'Draft')."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the consultation record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the consultation record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "patientId",
+        "consultationDateTime",
+        "consultingDoctorId",
+        "diagnosis",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Medication": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Medication",
+      "type": "object",
+      "description": "Manages details for individual medications available in the pharmacy stock.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Medication entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The generic or brand name of the medication."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the medication, including its uses and properties."
+        },
+        "unitOfMeasure": {
+          "type": "string",
+          "description": "The unit of measure for the medication (e.g., 'tablet', 'ml', 'capsule')."
+        },
+        "strength": {
+          "type": "string",
+          "description": "The strength of the medication (e.g., '500mg', '10ml')."
+        },
+        "manufacturer": {
+          "type": "string",
+          "description": "The manufacturer of the medication."
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Indicates whether the medication is actively stocked and available."
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "The standard cost per unit of the medication."
+        },
+        "reorderLevel": {
+          "type": "number",
+          "description": "The minimum stock level at which a reorder alert should be triggered."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the medication record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the medication record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "unitOfMeasure",
+        "unitPrice",
+        "isActive",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "StockItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "StockItem",
+      "type": "object",
+      "description": "Manages inventory details for specific batches of medications and medical supplies.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the StockItem entity."
+        },
+        "medicationId": {
+          "type": "string",
+          "description": "Reference to the Medication entity this stock item represents. (Relationship: Medication 1:N StockItem)"
+        },
+        "batchNumber": {
+          "type": "string",
+          "description": "The specific batch number of the stock item for traceability."
+        },
+        "expirationDate": {
+          "type": "string",
+          "description": "The expiration date of this particular stock item batch.",
+          "format": "date"
+        },
+        "currentQuantity": {
+          "type": "number",
+          "description": "The current quantity of this stock item available."
+        },
+        "location": {
+          "type": "string",
+          "description": "The physical storage location of the stock item (e.g., 'Pharmacy Shelf A', 'Lab Fridge')."
+        },
+        "lastUpdateUserId": {
+          "type": "string",
+          "description": "Reference to the User entity (staff member) who last updated this stock item's quantity or details. (Relationship: User 1:N StockItem)"
+        },
+        "lastUpdateDateTime": {
+          "type": "string",
+          "description": "Timestamp indicating when the stock item record was last updated.",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the stock item record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the stock item record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "medicationId",
+        "batchNumber",
+        "expirationDate",
+        "currentQuantity",
+        "lastUpdateUserId",
+        "lastUpdateDateTime",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Prescription": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Prescription",
+      "type": "object",
+      "description": "Records electronic prescriptions issued during consultations.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Prescription entity."
+        },
+        "consultationId": {
+          "type": "string",
+          "description": "Reference to the Consultation entity during which this prescription was issued. (Relationship: Consultation 1:N Prescription)"
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to the Patient entity for whom the prescription is intended. (Relationship: Patient 1:N Prescription)"
+        },
+        "prescribingDoctorId": {
+          "type": "string",
+          "description": "Reference to the User entity (doctor) who issued the prescription. (Relationship: User 1:N Prescription)"
+        },
+        "prescriptionDate": {
+          "type": "string",
+          "description": "The date when the prescription was issued.",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the prescription (e.g., 'Active', 'Filled', 'Partially Filled', 'Cancelled')."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Any specific instructions or additional notes for the pharmacist or patient."
+        },
+        "dispensingPharmacyUserId": {
+          "type": "string",
+          "description": "Optional reference to the User entity (pharmacist) who dispensed the medication. (Relationship: User 1:N Prescription)"
+        },
+        "dispensingDateTime": {
+          "type": "string",
+          "description": "Date and time when the medication associated with this prescription was dispensed.",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the prescription record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the prescription record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "consultationId",
+        "patientId",
+        "prescribingDoctorId",
+        "prescriptionDate",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "PrescriptionItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PrescriptionItem",
+      "type": "object",
+      "description": "Details individual medications and their instructions within a prescription.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the PrescriptionItem entity."
+        },
+        "prescriptionId": {
+          "type": "string",
+          "description": "Reference to the Prescription entity this item belongs to. (Relationship: Prescription 1:N PrescriptionItem)"
+        },
+        "medicationId": {
+          "type": "string",
+          "description": "Reference to the Medication entity being prescribed. (Relationship: Medication 1:N PrescriptionItem)"
+        },
+        "dosage": {
+          "type": "string",
+          "description": "The prescribed dosage instructions (e.g., '500mg', '2ml')."
+        },
+        "frequency": {
+          "type": "string",
+          "description": "How often the medication should be taken (e.g., 'Once daily', 'Every 8 hours')."
+        },
+        "duration": {
+          "type": "string",
+          "description": "The duration for which the medication should be taken (e.g., '7 days', 'Until finished')."
+        },
+        "quantity": {
+          "type": "number",
+          "description": "The total quantity of medication prescribed."
+        },
+        "dispensedQuantity": {
+          "type": "number",
+          "description": "The quantity of medication actually dispensed to the patient."
+        },
+        "instructions": {
+          "type": "string",
+          "description": "Specific instructions for the patient regarding this medication."
+        },
+        "isDispensed": {
+          "type": "boolean",
+          "description": "Indicates whether this specific medication item has been dispensed."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the prescription item record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the prescription item record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "prescriptionId",
+        "medicationId",
+        "dosage",
+        "frequency",
+        "duration",
+        "quantity",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ExaminationType": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ExaminationType",
+      "type": "object",
+      "description": "Defines the types of laboratory and imaging examinations offered by the hospital.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ExaminationType entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the examination type (e.g., 'Complete Blood Count', 'Chest X-Ray')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of what the examination entails."
+        },
+        "price": {
+          "type": "number",
+          "description": "The standard price for this examination type."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the examination (e.g., 'Laboratory', 'Radiology', 'Pathology')."
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Indicates whether this examination type is currently offered."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the examination type record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the examination type record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "price",
+        "category",
+        "isActive",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ExaminationRequest": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ExaminationRequest",
+      "type": "object",
+      "description": "Records requests for laboratory or imaging examinations for a patient.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ExaminationRequest entity."
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to the Patient entity for whom the examination is requested. (Relationship: Patient 1:N ExaminationRequest)"
+        },
+        "consultationId": {
+          "type": "string",
+          "description": "Optional reference to the Consultation entity if the request originated from a consultation. (Relationship: Consultation 1:N ExaminationRequest)"
+        },
+        "requestingDoctorId": {
+          "type": "string",
+          "description": "Reference to the User entity (doctor) who requested the examination. (Relationship: User 1:N ExaminationRequest)"
+        },
+        "requestDate": {
+          "type": "string",
+          "description": "The date and time when the examination was requested.",
+          "format": "date-time"
+        },
+        "examinationTypeId": {
+          "type": "string",
+          "description": "Reference to the ExaminationType entity for the requested examination. (Relationship: ExaminationType 1:N ExaminationRequest)"
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the examination request (e.g., 'Pending', 'Scheduled', 'InProgress', 'Completed', 'Blocked by Payment')."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Any specific instructions or clinical context for the examination."
+        },
+        "isPaymentRequired": {
+          "type": "boolean",
+          "description": "Indicates if payment is required before processing this examination request."
+        },
+        "isPaid": {
+          "type": "boolean",
+          "description": "Indicates if the payment for this examination request has been made."
+        },
+        "overrideAdminUserId": {
+          "type": "string",
+          "description": "Optional reference to the User entity (admin) who authorized an override of a payment block. (Relationship: User 1:N ExaminationRequest)"
+        },
+        "overrideReason": {
+          "type": "string",
+          "description": "The reason provided for overriding a payment block."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the examination request record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the examination request record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "patientId",
+        "requestingDoctorId",
+        "requestDate",
+        "examinationTypeId",
+        "status",
+        "isPaymentRequired",
+        "isPaid",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ExaminationResult": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ExaminationResult",
+      "type": "object",
+      "description": "Stores the results obtained from a laboratory or imaging examination.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ExaminationResult entity."
+        },
+        "examinationRequestId": {
+          "type": "string",
+          "description": "Reference to the ExaminationRequest entity for which these results are generated. (Relationship: ExaminationRequest 1:N ExaminationResult)"
+        },
+        "performingLabUserId": {
+          "type": "string",
+          "description": "Reference to the User entity (lab staff) who performed or processed the examination. (Relationship: User 1:N ExaminationResult)"
+        },
+        "resultDate": {
+          "type": "string",
+          "description": "The date and time when the examination results were available.",
+          "format": "date-time"
+        },
+        "resultDetails": {
+          "type": "string",
+          "description": "The actual results of the examination, which can be text-based or structured data."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the result (e.g., 'Preliminary', 'Final', 'Corrected')."
+        },
+        "validatedByUserId": {
+          "type": "string",
+          "description": "Optional reference to the User entity (doctor) who validated the examination results. (Relationship: User 1:N ExaminationResult)"
+        },
+        "validationDate": {
+          "type": "string",
+          "description": "The date and time when the examination results were validated.",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the examination result record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the examination result record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "examinationRequestId",
+        "performingLabUserId",
+        "resultDate",
+        "resultDetails",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Document": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Document",
+      "type": "object",
+      "description": "Stores metadata for various uploaded medical documents and reports.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Document entity."
+        },
+        "fileName": {
+          "type": "string",
+          "description": "The original file name of the uploaded document."
+        },
+        "fileType": {
+          "type": "string",
+          "description": "The MIME type of the file (e.g., 'application/pdf', 'image/jpeg')."
+        },
+        "filePath": {
+          "type": "string",
+          "description": "The storage path or URI where the document file is located.",
+          "format": "uri"
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Optional reference to the Patient entity if the document is related to a patient. (Relationship: Patient 1:N Document)"
+        },
+        "consultationId": {
+          "type": "string",
+          "description": "Optional reference to the Consultation entity if the document is linked to a consultation. (Relationship: Consultation 1:N Document)"
+        },
+        "examinationResultId": {
+          "type": "string",
+          "description": "Optional reference to the ExaminationResult entity if the document is an examination report. (Relationship: ExaminationResult 1:N Document)"
+        },
+        "hospitalizationId": {
+          "type": "string",
+          "description": "Optional reference to the Hospitalization entity if the document is related to a hospitalization. (Relationship: Hospitalization 1:N Document)"
+        },
+        "invoiceId": {
+          "type": "string",
+          "description": "Optional reference to the Invoice entity if the document is related to an invoice. (Relationship: Invoice 1:N Document)"
+        },
+        "uploadedByUserId": {
+          "type": "string",
+          "description": "Reference to the User entity (staff member) who uploaded the document. (Relationship: User 1:N Document)"
+        },
+        "uploadDate": {
+          "type": "string",
+          "description": "The date and time when the document was uploaded.",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description or summary of the document's content."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the document record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the document record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "fileName",
+        "fileType",
+        "filePath",
+        "uploadedByUserId",
+        "uploadDate",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Service": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Service",
+      "type": "object",
+      "description": "Defines billable services provided by the hospital (e.g., consultation fees, procedures).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Service entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the service (e.g., 'General Consultation', 'Surgical Procedure A')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the service provided."
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "The standard unit price for this service."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the service (e.g., 'Medical', 'Nursing', 'Administrative', 'Procedure')."
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "Indicates whether this service is actively offered and billable."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the service record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the service record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "unitPrice",
+        "category",
+        "isActive",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Invoice": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Invoice",
+      "type": "object",
+      "description": "Consolidates all billable items and charges for a patient into a single financial document.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Invoice entity."
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to the Patient entity to whom this invoice belongs. (Relationship: Patient 1:N Invoice)"
+        },
+        "admissionId": {
+          "type": "string",
+          "description": "Optional reference to the Admission entity if the invoice is tied to a specific admission. (Relationship: Admission 1:N Invoice)"
+        },
+        "invoiceDate": {
+          "type": "string",
+          "description": "The date when the invoice was generated.",
+          "format": "date-time"
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "The date by which the payment for this invoice is due.",
+          "format": "date-time"
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "The total amount of all charges listed on the invoice."
+        },
+        "amountPaid": {
+          "type": "number",
+          "description": "The total amount that has been paid towards this invoice."
+        },
+        "balanceDue": {
+          "type": "number",
+          "description": "The remaining balance due on the invoice (Total Amount - Amount Paid)."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current payment status of the invoice (e.g., 'Pending', 'Paid', 'Partially Paid', 'Overdue', 'Cancelled')."
+        },
+        "generatedByUserId": {
+          "type": "string",
+          "description": "Reference to the User entity (staff member) who generated this invoice. (Relationship: User 1:N Invoice)"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the invoice record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the invoice record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "patientId",
+        "invoiceDate",
+        "dueDate",
+        "totalAmount",
+        "amountPaid",
+        "balanceDue",
+        "status",
+        "generatedByUserId",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "InvoiceItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "InvoiceItem",
+      "type": "object",
+      "description": "Details each individual billable item or service included in an invoice, ensuring financial traceability for every medical act.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the InvoiceItem entity."
+        },
+        "invoiceId": {
+          "type": "string",
+          "description": "Reference to the Invoice entity this item belongs to. (Relationship: Invoice 1:N InvoiceItem)"
+        },
+        "description": {
+          "type": "string",
+          "description": "A descriptive name of the charged item (e.g., 'General Consultation', 'Blood Test - CBC', 'Paracetamol 500mg')."
+        },
+        "quantity": {
+          "type": "number",
+          "description": "The quantity of the item or service being charged."
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "The unit price of the item or service at the time of invoicing."
+        },
+        "subTotal": {
+          "type": "number",
+          "description": "The sub-total amount for this item (quantity * unitPrice)."
+        },
+        "discountAmount": {
+          "type": "number",
+          "description": "Any discount amount applied specifically to this invoice item."
+        },
+        "finalAmount": {
+          "type": "number",
+          "description": "The final amount charged for this item after discounts (subTotal - discountAmount)."
+        },
+        "sourceEntity": {
+          "type": "string",
+          "description": "The name of the entity that originated this charge (e.g., 'Consultation', 'ExaminationRequest', 'Hospitalization', 'PrescriptionItem', 'Service')."
+        },
+        "sourceEntityId": {
+          "type": "string",
+          "description": "The ID of the originating entity, providing a direct link for traceability (e.g., ID of a Consultation, ExaminationRequest, or PrescriptionItem)."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the invoice item record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the invoice item record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "invoiceId",
+        "description",
+        "quantity",
+        "unitPrice",
+        "subTotal",
+        "finalAmount",
+        "sourceEntity",
+        "sourceEntityId",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Payment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Payment",
+      "type": "object",
+      "description": "Records all payments received from patients or insurance providers towards invoices.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Payment entity."
+        },
+        "invoiceId": {
+          "type": "string",
+          "description": "Reference to the Invoice entity to which this payment is applied. (Relationship: Invoice 1:N Payment)"
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to the Patient entity associated with this payment. (Relationship: Patient 1:N Payment)"
+        },
+        "paymentDate": {
+          "type": "string",
+          "description": "The date and time when the payment was made.",
+          "format": "date-time"
+        },
+        "amount": {
+          "type": "number",
+          "description": "The amount of the payment received."
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "The method of payment (e.g., 'Cash', 'Mobile Money', 'Credit Card', 'Insurance Claim')."
+        },
+        "transactionId": {
+          "type": "string",
+          "description": "An optional external transaction ID from the payment gateway or system."
+        },
+        "receivedByUserId": {
+          "type": "string",
+          "description": "Reference to the User entity (staff member) who received and processed the payment. (Relationship: User 1:N Payment)"
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the payment (e.g., 'Completed', 'Pending', 'Failed', 'Refunded')."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the payment record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the payment record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "invoiceId",
+        "patientId",
+        "paymentDate",
+        "amount",
+        "paymentMethod",
+        "receivedByUserId",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "InsuranceClaim": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "InsuranceClaim",
+      "type": "object",
+      "description": "Manages details of claims submitted to insurance providers for patient services.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the InsuranceClaim entity."
+        },
+        "patientId": {
+          "type": "string",
+          "description": "Reference to the Patient entity for whom the claim is being submitted. (Relationship: Patient 1:N InsuranceClaim)"
+        },
+        "invoiceId": {
+          "type": "string",
+          "description": "Reference to the Invoice entity that this insurance claim covers. (Relationship: Invoice 1:N InsuranceClaim)"
+        },
+        "insuranceProviderId": {
+          "type": "string",
+          "description": "Reference to the InsuranceProvider entity to whom the claim is submitted. (Relationship: InsuranceProvider 1:N InsuranceClaim)"
+        },
+        "claimDate": {
+          "type": "string",
+          "description": "The date when the insurance claim was submitted.",
+          "format": "date-time"
+        },
+        "claimAmount": {
+          "type": "number",
+          "description": "The total amount requested from the insurance provider for this claim."
+        },
+        "approvedAmount": {
+          "type": "number",
+          "description": "The amount approved and agreed upon by the insurance provider for payment."
+        },
+        "rejectionReason": {
+          "type": "string",
+          "description": "The reason provided by the insurance provider if the claim was rejected or partially approved."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the insurance claim (e.g., 'Submitted', 'Pending Approval', 'Approved', 'Rejected', 'Paid')."
+        },
+        "claimReferenceNumber": {
+          "type": "string",
+          "description": "A unique reference number provided by the insurance company for this claim."
+        },
+        "submittedByUserId": {
+          "type": "string",
+          "description": "Reference to the User entity (staff member) who submitted this claim. (Relationship: User 1:N InsuranceClaim)"
+        },
+        "paymentReceivedDate": {
+          "type": "string",
+          "description": "The date when payment from the insurance provider for this claim was received.",
+          "format": "date-time"
+        },
+        "paymentReference": {
+          "type": "string",
+          "description": "A reference or transaction ID for the payment received from the insurance provider."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the insurance claim record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp indicating when the insurance claim record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "patientId",
+        "invoiceId",
+        "insuranceProviderId",
+        "claimDate",
+        "claimAmount",
+        "status",
+        "submittedByUserId",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AuditLog": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AuditLog",
+      "type": "object",
+      "description": "Records all critical user actions for security, compliance, and traceability (audit trail).",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the AuditLog entry."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User entity who performed the action. (Relationship: User 1:N AuditLog)"
+        },
+        "actionType": {
+          "type": "string",
+          "description": "The type of action performed (e.g., 'Create', 'Read', 'Update', 'Delete', 'Login', 'Logout', 'PaymentOverride', 'PrescriptionDispensed')."
+        },
+        "entityName": {
+          "type": "string",
+          "description": "The name of the data entity affected by the action (e.g., 'Patient', 'Invoice', 'Medication')."
+        },
+        "entityId": {
+          "type": "string",
+          "description": "The unique identifier of the specific entity instance affected by the action."
+        },
+        "oldValue": {
+          "type": "string",
+          "description": "A JSON string representation of the entity's state before the update (if applicable)."
+        },
+        "newValue": {
+          "type": "string",
+          "description": "A JSON string representation of the entity's state after the update (if applicable)."
+        },
+        "actionDateTime": {
+          "type": "string",
+          "description": "The date and time when the action was performed.",
+          "format": "date-time"
+        },
+        "ipAddress": {
+          "type": "string",
+          "description": "The IP address from which the action originated."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed, human-readable description of the action performed."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "actionType",
+        "entityName",
+        "entityId",
+        "actionDateTime",
+        "description"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/user_roles/{userId}",
+        "definition": {
+          "entityName": "Role",
+          "schema": {
+            "$ref": "#/backend/entities/Role"
+          },
+          "description": "Stores the active role of a specific user for Role-Based Access Control (RBAC). The document ID is the user's UID. This is crucial for Authorization Independence and QAPs, allowing security rules to quickly and atomically retrieve a user's role without additional 'get()' calls.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user (Firebase Authentication UID)."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles/{roleId}",
+        "definition": {
+          "entityName": "Role",
+          "schema": {
+            "$ref": "#/backend/entities/Role"
+          },
+          "description": "Defines the different access roles within the Hospital Management System. This is static reference data, read-only for most users, write-only for Admins.",
+          "params": [
+            {
+              "name": "roleId",
+              "description": "The unique identifier for the Role."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores detailed profiles of staff members. Access is typically restricted to the user themselves (read) and Admins (CRUD).",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the User, corresponding to their Firebase Authentication UID."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/patients/{patientId}",
+        "definition": {
+          "entityName": "Patient",
+          "schema": {
+            "$ref": "#/backend/entities/Patient"
+          },
+          "description": "Stores demographic and essential medical information for each patient. Accessible by authorized hospital staff based on roles (e.g., Receptionist, Doctor, Admin).",
+          "params": [
+            {
+              "name": "patientId",
+              "description": "The unique identifier for the Patient."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/insurance_providers/{providerId}",
+        "definition": {
+          "entityName": "InsuranceProvider",
+          "schema": {
+            "$ref": "#/backend/entities/InsuranceProvider"
+          },
+          "description": "Manages details of insurance companies and third-party payers. This is static reference data, accessible by staff involved in billing and admissions.",
+          "params": [
+            {
+              "name": "providerId",
+              "description": "The unique identifier for the InsuranceProvider."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/beds/{bedId}",
+        "definition": {
+          "entityName": "Bed",
+          "schema": {
+            "$ref": "#/backend/entities/Bed"
+          },
+          "description": "Manages individual hospital beds, their location, and current status. Accessible by staff managing admissions and hospitalizations.",
+          "params": [
+            {
+              "name": "bedId",
+              "description": "The unique identifier for the Bed."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/admissions/{admissionId}",
+        "definition": {
+          "entityName": "Admission",
+          "schema": {
+            "$ref": "#/backend/entities/Admission"
+          },
+          "description": "Records patient admissions, appointments, and initial encounters. Includes denormalized 'patientId' and 'admittingUserId' for authorization independence and QAPs.",
+          "params": [
+            {
+              "name": "admissionId",
+              "description": "The unique identifier for the Admission."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/hospitalizations/{hospitalizationId}",
+        "definition": {
+          "entityName": "Hospitalization",
+          "schema": {
+            "$ref": "#/backend/entities/Hospitalization"
+          },
+          "description": "Tracks a patient's duration of stay and related details during hospitalization. Includes denormalized 'patientId' and 'bedId' for authorization independence and QAPs.",
+          "params": [
+            {
+              "name": "hospitalizationId",
+              "description": "The unique identifier for the Hospitalization."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/consultations/{consultationId}",
+        "definition": {
+          "entityName": "Consultation",
+          "schema": {
+            "$ref": "#/backend/entities/Consultation"
+          },
+          "description": "Records details of medical consultations. Includes denormalized 'patientId' and 'consultingDoctorId' for authorization independence and QAPs.",
+          "params": [
+            {
+              "name": "consultationId",
+              "description": "The unique identifier for the Consultation."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/medications/{medicationId}",
+        "definition": {
+          "entityName": "Medication",
+          "schema": {
+            "$ref": "#/backend/entities/Medication"
+          },
+          "description": "Manages details for individual medications available in the pharmacy stock. This is static reference data, accessible by pharmacists and doctors.",
+          "params": [
+            {
+              "name": "medicationId",
+              "description": "The unique identifier for the Medication."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/stock_items/{stockItemId}",
+        "definition": {
+          "entityName": "StockItem",
+          "schema": {
+            "$ref": "#/backend/entities/StockItem"
+          },
+          "description": "Manages inventory details for specific batches of medications and medical supplies. Includes denormalized 'medicationId' and 'lastUpdateUserId' for authorization independence and QAPs.",
+          "params": [
+            {
+              "name": "stockItemId",
+              "description": "The unique identifier for the StockItem."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/prescriptions/{prescriptionId}",
+        "definition": {
+          "entityName": "Prescription",
+          "schema": {
+            "$ref": "#/backend/entities/Prescription"
+          },
+          "description": "Records electronic prescriptions issued during consultations. Includes denormalized 'patientId', 'prescribingDoctorId', and 'dispensingPharmacyUserId' for authorization independence and QAPs.",
+          "params": [
+            {
+              "name": "prescriptionId",
+              "description": "The unique identifier for the Prescription."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/prescriptions/{prescriptionId}/items/{itemId}",
+        "definition": {
+          "entityName": "PrescriptionItem",
+          "schema": {
+            "$ref": "#/backend/entities/PrescriptionItem"
+          },
+          "description": "Details individual medications and their instructions within a prescription. Includes denormalized 'patientId' and 'prescribingDoctorId' from the parent prescription for authorization independence.",
+          "params": [
+            {
+              "name": "prescriptionId",
+              "description": "The unique identifier of the parent Prescription."
+            },
+            {
+              "name": "itemId",
+              "description": "The unique identifier for the PrescriptionItem."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/examination_types/{typeId}",
+        "definition": {
+          "entityName": "ExaminationType",
+          "schema": {
+            "$ref": "#/backend/entities/ExaminationType"
+          },
+          "description": "Defines the types of laboratory and imaging examinations offered. This is static reference data, accessible by doctors and lab staff.",
+          "params": [
+            {
+              "name": "typeId",
+              "description": "The unique identifier for the ExaminationType."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/examination_requests/{requestId}",
+        "definition": {
+          "entityName": "ExaminationRequest",
+          "schema": {
+            "$ref": "#/backend/entities/ExaminationRequest"
+          },
+          "description": "Records requests for examinations. Includes denormalized 'patientId', 'requestingDoctorId', 'examinationTypeId', and 'overrideAdminUserId' for authorization independence and QAPs.",
+          "params": [
+            {
+              "name": "requestId",
+              "description": "The unique identifier for the ExaminationRequest."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/examination_results/{resultId}",
+        "definition": {
+          "entityName": "ExaminationResult",
+          "schema": {
+            "$ref": "#/backend/entities/ExaminationResult"
+          },
+          "description": "Stores the results from an examination. Includes denormalized 'patientId' and 'requestingDoctorId' (from the related ExaminationRequest) and 'performingLabUserId' and 'validatedByUserId' for authorization independence.",
+          "params": [
+            {
+              "name": "resultId",
+              "description": "The unique identifier for the ExaminationResult."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/documents/{documentId}",
+        "definition": {
+          "entityName": "Document",
+          "schema": {
+            "$ref": "#/backend/entities/Document"
+          },
+          "description": "Stores metadata for various uploaded medical documents and reports. Includes denormalized 'patientId' (if applicable) and 'uploadedByUserId' for authorization independence and QAPs.",
+          "params": [
+            {
+              "name": "documentId",
+              "description": "The unique identifier for the Document."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/services/{serviceId}",
+        "definition": {
+          "entityName": "Service",
+          "schema": {
+            "$ref": "#/backend/entities/Service"
+          },
+          "description": "Defines billable services provided by the hospital. This is static reference data, accessible by staff involved in billing.",
+          "params": [
+            {
+              "name": "serviceId",
+              "description": "The unique identifier for the Service."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/invoices/{invoiceId}",
+        "definition": {
+          "entityName": "Invoice",
+          "schema": {
+            "$ref": "#/backend/entities/Invoice"
+          },
+          "description": "Consolidates all billable items and charges for a patient. Includes denormalized 'patientId' and 'generatedByUserId' for authorization independence and QAPs.",
+          "params": [
+            {
+              "name": "invoiceId",
+              "description": "The unique identifier for the Invoice."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/invoices/{invoiceId}/items/{itemId}",
+        "definition": {
+          "entityName": "InvoiceItem",
+          "schema": {
+            "$ref": "#/backend/entities/InvoiceItem"
+          },
+          "description": "Details each individual billable item or service included in an invoice. Includes denormalized 'patientId' and 'generatedByUserId' from the parent invoice for authorization independence.",
+          "params": [
+            {
+              "name": "invoiceId",
+              "description": "The unique identifier of the parent Invoice."
+            },
+            {
+              "name": "itemId",
+              "description": "The unique identifier for the InvoiceItem."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/payments/{paymentId}",
+        "definition": {
+          "entityName": "Payment",
+          "schema": {
+            "$ref": "#/backend/entities/Payment"
+          },
+          "description": "Records all payments received from patients or insurance providers. Includes denormalized 'invoiceId', 'patientId', and 'receivedByUserId' for authorization independence and QAPs.",
+          "params": [
+            {
+              "name": "paymentId",
+              "description": "The unique identifier for the Payment."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/insurance_claims/{claimId}",
+        "definition": {
+          "entityName": "InsuranceClaim",
+          "schema": {
+            "$ref": "#/backend/entities/InsuranceClaim"
+          },
+          "description": "Manages details of claims submitted to insurance providers. Includes denormalized 'patientId', 'invoiceId', 'insuranceProviderId', and 'submittedByUserId' for authorization independence and QAPs.",
+          "params": [
+            {
+              "name": "claimId",
+              "description": "The unique identifier for the InsuranceClaim."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/audit_logs/{logId}",
+        "definition": {
+          "entityName": "AuditLog",
+          "schema": {
+            "$ref": "#/backend/entities/AuditLog"
+          },
+          "description": "Records all critical user actions for security, compliance, and traceability (audit trail). This collection should be append-only and primarily written via server-side processes (e.g., Cloud Functions) to prevent client-side tampering. Accessible by Admin roles only.",
+          "params": [
+            {
+              "name": "logId",
+              "description": "The unique identifier for the AuditLog entry."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The recommended Firestore data structure for MediFlow Pro prioritizes security, scalability, and debuggability in alignment with the core design principles. The primary strategy for authorization independence and enabling secure queries (QAPs) is a combination of:\n\n1.  **Dedicated User Role Collection (`/user_roles/{userId}`):** This top-level collection serves as the central source for Role-Based Access Control (RBAC). Each document's ID is the `request.auth.uid`, containing the user's `roleId`. This allows for a single, atomic `get()` call (or direct path access) in security rules to ascertain a user's role without traversing other collections, critically avoiding hierarchical authorization dependencies.\n\n2.  **Denormalization of Authorization Context:**\n    *   **Direct Owner/Identifier Fields:** For most transactional and patient-specific collections (e.g., `admissions`, `consultations`, `prescriptions`, `invoices`), essential foreign keys such as `patientId`, `admittingUserId`, `consultingDoctorId`, `generatedByUserId`, `receivedByUserId`, and `submittedByUserId` are stored directly within the document. This means that security rules can check `request.auth.uid == resource.data.admittingUserId` (or `patientId` when applicable) without requiring a `get()` call to a parent or related document. This is crucial for atomic operations and simplifies rule logic.\n    *   **Subcollection Denormalization:** For entities within subcollections (e.g., `PrescriptionItem`, `InvoiceItem`), the relevant `patientId` and the primary `userId` (e.g., `prescribingDoctorId`, `generatedByUserId`) from their parent document are explicitly denormalized into each item document. This ensures that rules governing `items` can determine access without needing to `get()` the parent `Prescription` or `Invoice` document, thereby maintaining authorization independence for individual items.\n    *   **ExaminationResult and Document Denormalization:** `ExaminationResult` documents will denormalize `patientId` and `requestingDoctorId` from their corresponding `ExaminationRequest`. Similarly, `Document` entities will denormalize `patientId` (if applicable) and `uploadedByUserId`, along with potentially a `consultingDoctorId` if directly tied to a consultation, ensuring all necessary authorization identifiers are self-contained.\n\n3.  **Structural Segregation for Homogeneous Security Posture:**\n    *   **Reference Data:** Collections like `roles`, `medications`, `services`, `insurance_providers`, `beds`, and `examination_types` are designed as top-level collections containing relatively static reference data. These typically have broader read permissions for various roles but restricted write access (e.g., Admin or specific managers). This segregation prevents mixing different security requirements within the same collection.\n    *   **Transactional/Patient Data:** Core operational entities (e.g., `patients`, `admissions`, `consultations`, `invoices`) are in their own top-level collections, or in carefully considered subcollections, with security rules strictly enforced using the denormalized `patientId` and `userId` fields.\n\n4.  **Enabling QAPs (Query Against Policies):** By denormalizing `patientId` and relevant `userId` fields into each document, the system supports efficient and secure `list` queries. For example, a doctor can query `/consultations` with `where('consultingDoctorId', '==', request.auth.uid)` without triggering complex, insecure, or performance-intensive rule evaluations that involve `get()` calls or filtering data client-side. This ensures that the rules act as true validators, not filters.\n\nThis structure directly addresses the core design principles: Authorization Independence is paramount through denormalization; Clarity of Intent is achieved by explicit authorization fields; DBAC is enabled via `/user_roles`; QAPs are supported by self-contained documents; and Invariants are maintained through careful data modeling and timestamping."
+  }
+}
