@@ -87,12 +87,12 @@ export function Nav() {
       <SidebarFooter className="p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip="Paramètres" isActive={pathname === '/settings'}>
-              <Link href="/settings">
-                <Settings />
-                <span>Paramètres</span>
-              </Link>
-            </SidebarMenuButton>
+                <SidebarMenuButton asChild tooltip="Paramètres" isActive={pathname === '/settings'}>
+                    <Link href="/settings">
+                        <Settings />
+                        <span>Paramètres</span>
+                    </Link>
+                </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
