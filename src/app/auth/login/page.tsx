@@ -13,7 +13,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -116,14 +115,6 @@ export default function LoginPage() {
           </form>
         </Form>
       </CardContent>
-      <CardFooter className="flex flex-col gap-4">
-        <div className="text-center text-sm text-muted-foreground">
-          Pour créer le premier compte,{' '}
-          <Link href="/auth/register" className="font-semibold text-primary underline-offset-4 hover:underline">
-            enregistrez l'administrateur.
-          </Link>
-        </div>
-      </CardFooter>
     </Card>
   );
 }

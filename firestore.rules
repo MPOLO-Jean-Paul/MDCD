@@ -116,7 +116,7 @@ service cloud.firestore {
     match /user_roles/{userId} {
       allow get: if isOwner(userId) || isAdmin();
       allow list: if isAdmin();
-      allow create: if isOwner(userId) || isAdmin();
+      allow create: if isAdmin();
       allow update: if isExistingDoc() && isAdmin();
       allow delete: if isExistingDoc() && isAdmin();
     }
@@ -145,7 +145,7 @@ service cloud.firestore {
     match /users/{userId} {
       allow get: if isOwner(userId) || isAdmin();
       allow list: if isAdmin();
-      allow create: if isOwner(userId);
+      allow create: if isOwner(userId) || isAdmin();
       allow update: if isExistingDoc() && (isOwner(userId) || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
     }
@@ -437,5 +437,3 @@ service cloud.firestore {
 
   }
 }
-
-    
