@@ -15,6 +15,6 @@ export interface Admission {
 // For data table display
 export interface AdmissionWithPatient extends Admission {
     patientName?: string;
-    patientGender?: string;
+    patientGender?: 'Masculin' | 'Féminin' | 'Autre';
     patientDOB?: string;
 }

@@ -3,16 +3,16 @@
 import { firebaseConfig } from '@/firebase/config';
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore'
+import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
 
 // IMPORTANT: DO NOT MODIFY THIS FUNCTION
-export function initializeFirebase() {
+export async function initializeFirebase() { // Made async
+  let firebaseApp: FirebaseApp;
   if (!getApps().length) {
     // Important! initializeApp() is called without any arguments because Firebase App Hosting
     // integrates with the initializeApp() function to provide the environment variables needed to
     // populate the FirebaseOptions in production. It is critical that we attempt to call initializeApp()
     // without arguments.
-    let firebaseApp;
     try {
       // Attempt to initialize via Firebase App Hosting environment variables
       firebaseApp = initializeApp();
@@ -24,19 +24,33 @@ export function initializeFirebase() {
       }
       firebaseApp = initializeApp(firebaseConfig);
     }
-
-    return getSdks(firebaseApp);
+  } else {
+    // If already initialized, use the existing app
+    firebaseApp = getApp();
   }
 
-  // If already initialized, return the SDKs with the already initialized App
-  return getSdks(getApp());
-}
+  const firestore = getFirestore(firebaseApp);
+  const auth = getAuth(firebaseApp);
 
-export function getSdks(firebaseApp: FirebaseApp) {
+  // Enable persistence. This must be done before any other Firestore operations.
+  // It should only be attempted once per app load.
+  try {
+    await enableIndexedDbPersistence(firestore);
+    console.log("Firebase persistence has been enabled.");
+  } catch (error: any) {
+    if (error.code === 'failed-precondition') {
+      // This can happen if multiple tabs are open. Persistence can only be enabled in one tab at a time.
+      console.warn("Firestore persistence failed to enable. This is likely due to another tab being open. Offline capabilities may be limited.");
+    } else if (error.code === 'unimplemented') {
+      // The current browser does not support all of the features required to enable persistence
+      console.warn("Firestore persistence is not supported in this browser. Offline capabilities will be disabled.");
+    }
+  }
+
   return {
     firebaseApp,
-    auth: getAuth(firebaseApp),
-    firestore: getFirestore(firebaseApp)
+    auth,
+    firestore,
   };
 }
 

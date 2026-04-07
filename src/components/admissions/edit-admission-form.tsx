@@ -22,8 +22,9 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { useUser } from '@/firebase';
+import { useUser, useFirestore, updateDocumentNonBlocking } from '@/firebase';
 import { AdmissionWithPatient } from '@/types/admission';
+import { doc } from 'firebase/firestore';
 
 const formSchema = z.object({
   admissionType: z.enum(['Rendez-vous', 'Urgence', 'Hospitalisation']),
@@ -38,6 +39,7 @@ interface EditAdmissionFormProps {
 
 export function EditAdmissionForm({ admission, setDialogOpen }: EditAdmissionFormProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const firestore = useFirestore();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -52,10 +54,15 @@ export function EditAdmissionForm({ admission, setDialogOpen }: EditAdmissionFor
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
+      if (!firestore) throw new Error("Firestore not initialized");
+
+      const admissionDocRef = doc(firestore, 'admissions', admission.id);
+      const dataToUpdate = {
+        ...values,
+        updatedAt: new Date().toISOString()
+      };
       
-      console.log("Updating admission:", { id: admission.id, ...values });
-      // Here you would call a function to update the data in Firestore
-      // e.g., updateDocumentNonBlocking(doc(firestore, 'admissions', admission.id), { ...values, updatedAt: new Date().toISOString() });
+      updateDocumentNonBlocking(admissionDocRef, dataToUpdate);
 
       toast({
         title: 'Admission mise à jour',

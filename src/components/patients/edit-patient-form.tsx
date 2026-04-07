@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
+import { doc } from 'firebase/firestore';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -30,7 +31,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Patient } from '@/types/patient';
-import { WithId } from '@/firebase';
+import { WithId, useFirestore, updateDocumentNonBlocking } from '@/firebase';
 
 
 const formSchema = z.object({
@@ -52,6 +53,7 @@ interface EditPatientFormProps {
 export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const firestore = useFirestore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -64,15 +66,16 @@ export function EditPatientForm({ patient, setDialogOpen }: EditPatientFormProps
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
+      if (!firestore) throw new Error("Firestore not initialized");
+
+      const patientDocRef = doc(firestore, 'patients', patient.id);
       const updatedPatient = {
         ...values,
         dateOfBirth: values.dateOfBirth.toISOString(),
         updatedAt: new Date().toISOString(),
       };
-
-      console.log("Updating patient:", updatedPatient);
-      // Here you would call a function to update the data in Firestore
-      // e.g., updateDocumentNonBlocking(doc(firestore, 'patients', patient.id), updatedPatient);
+      
+      updateDocumentNonBlocking(patientDocRef, updatedPatient);
       
       toast({
         title: 'Patient mis à jour avec succès',

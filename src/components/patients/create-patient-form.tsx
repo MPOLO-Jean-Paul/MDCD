@@ -31,7 +31,8 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-
+import { useFirestore, setDocumentNonBlocking } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 const formSchema = z.object({
   firstName: z.string().min(1, { message: 'Le prénom est requis.' }),
@@ -47,6 +48,7 @@ const formSchema = z.object({
 export function CreatePatientForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const firestore = useFirestore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,7 +62,11 @@ export function CreatePatientForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      const newPatientId = uuidv4();
+      if (!firestore) throw new Error("Firestore not initialized");
+
+      const newPatientId = `PAT-${Date.now()}`;
+      const newPatientDocRef = doc(firestore, 'patients', newPatientId);
+
       const newPatient = {
         id: newPatientId,
         ...values,
@@ -68,10 +74,8 @@ export function CreatePatientForm() {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-
-      console.log("Submitting new patient:", newPatient);
-      // Here you would call a function to save the data to Firestore
-      // e.g., setDocumentNonBlocking(doc(firestore, 'patients', newPatientId), newPatient, {});
+      
+      setDocumentNonBlocking(newPatientDocRef, newPatient, {});
       
       toast({
         title: 'Patient créé avec succès',

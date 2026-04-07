@@ -23,15 +23,10 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { useUser } from '@/firebase';
-
-// Using mock data for patients for now
-const mockPatients = [
-    { id: 'PAT-001', name: 'Amina Diallo' },
-    { id: 'PAT-002', name: 'Moussa Traoré' },
-    { id: 'PAT-003', name: 'Ibrahim Koné' },
-    { id: 'PAT-004', name: 'Fatou Ndiaye' },
-];
+import { useUser, useFirestore, useCollection, useMemoFirebase, setDocumentNonBlocking, WithId } from '@/firebase';
+import { doc, collection } from 'firebase/firestore';
+import { Patient } from '@/types/patient';
+import { Skeleton } from '../ui/skeleton';
 
 
 const formSchema = z.object({
@@ -43,7 +38,14 @@ const formSchema = z.object({
 export function CreateAdmissionForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useUser();
+  const firestore = useFirestore();
   const { toast } = useToast();
+
+  const patientsCollectionRef = useMemoFirebase(
+    () => firestore ? collection(firestore, 'patients') : null,
+    [firestore]
+  );
+  const { data: patients, isLoading: isLoadingPatients } = useCollection<Omit<Patient, 'id'>>(patientsCollectionRef);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,9 +58,11 @@ export function CreateAdmissionForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      if (!user) throw new Error("Vous devez être connecté.");
+      if (!user || !firestore) throw new Error("Vous devez être connecté.");
       
       const newAdmissionId = uuidv4();
+      const newAdmissionDocRef = doc(firestore, 'admissions', newAdmissionId);
+
       const newAdmission = {
         id: newAdmissionId,
         ...values,
@@ -69,9 +73,7 @@ export function CreateAdmissionForm() {
         updatedAt: new Date().toISOString(),
       };
 
-      console.log("Submitting new admission:", newAdmission);
-      // Here you would call a function to save the data to Firestore
-      // e.g., setDocumentNonBlocking(doc(firestore, 'admissions', newAdmissionId), newAdmission, {});
+      setDocumentNonBlocking(newAdmissionDocRef, newAdmission, {});
 
       toast({
         title: 'Admission créée avec succès',
@@ -91,6 +93,15 @@ export function CreateAdmissionForm() {
     }
   }
 
+  if (isLoadingPatients) {
+    return <div className='py-4 space-y-4'>
+      <Skeleton className='h-10 w-full' />
+      <Skeleton className='h-10 w-full' />
+      <Skeleton className='h-20 w-full' />
+      <Skeleton className='h-10 w-full' />
+    </div>
+  }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
@@ -107,9 +118,9 @@ export function CreateAdmissionForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {mockPatients.map(p => (
+                  {patients?.map((p: WithId<Omit<Patient, 'id'>>) => (
                       <SelectItem key={p.id} value={p.id}>
-                          {p.name}
+                          {p.firstName} {p.lastName}
                       </SelectItem>
                   ))}
                 </SelectContent>

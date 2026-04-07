@@ -31,7 +31,8 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { Patient } from '@/types/patient';
 import { EditPatientForm } from './edit-patient-form';
-import { WithId } from '@/firebase';
+import { WithId, useFirestore, deleteDocumentNonBlocking } from '@/firebase';
+import { doc } from 'firebase/firestore';
 
 
 interface PatientTableRowActionsProps {
@@ -41,12 +42,14 @@ interface PatientTableRowActionsProps {
 export function PatientTableRowActions({ patient }: PatientTableRowActionsProps) {
     const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const firestore = useFirestore();
 
     const { toast } = useToast();
 
     const handleDelete = async () => {
-        // Here you would call a function to delete the data from Firestore
-        // e.g., deleteDocumentNonBlocking(doc(firestore, 'patients', patient.id));
+        if (!firestore) return;
+        const patientDocRef = doc(firestore, 'patients', patient.id);
+        deleteDocumentNonBlocking(patientDocRef);
         toast({
             title: 'Patient supprimé',
             description: `Le dossier de ${patient.firstName} ${patient.lastName} a été supprimé.`,
