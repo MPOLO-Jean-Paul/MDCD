@@ -21,6 +21,7 @@ import {
   Users2,
   ClipboardList,
   Stethoscope,
+  Landmark,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -34,6 +35,7 @@ const allMenuItems = [
   { href: '/patients', labelKey: 'nav.patients', icon: Users2, roles: ['admin', 'receptionist', 'doctor'] },
   { href: '/consultations', labelKey: 'nav.consultations', icon: Stethoscope, roles: ['admin', 'doctor'] },
   { href: '/billing', labelKey: 'nav.billing', icon: FilePlus, roles: ['admin', 'accountant'] },
+  { href: '/insurance', labelKey: 'nav.insurance', icon: Landmark, roles: ['admin', 'accountant'] },
   { href: '/pharmacy', labelKey: 'nav.pharmacy', icon: Pill, roles: ['admin', 'pharmacist'] },
   { href: '/reports', labelKey: 'nav.reports', icon: BarChart3, roles: ['admin', 'accountant'] },
   { href: '/services', labelKey: 'nav.services', icon: ClipboardList, roles: ['admin'] },

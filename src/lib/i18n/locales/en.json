@@ -36,6 +36,7 @@
         "patients": "Patients",
         "consultations": "Consultations",
         "billing": "Billing",
+        "insurance": "Insurance",
         "pharmacy": "Pharmacy",
         "reports": "Reports",
         "services": "Services",
@@ -556,6 +557,46 @@
             "createErrorTitle": "Creation Error",
             "updateSuccessTitle": "Consultation Updated",
             "updateSuccessDescription": "The consultation for {patientName} has been updated."
+        }
+    },
+    "insurancePage": {
+        "title": "Insurance Management",
+        "addProvider": "Add Provider",
+        "dialogTitle": "Add New Insurance Provider",
+        "dialogDescription": "Fill in the details to add a new insurance company.",
+        "listTitle": "Insurance Providers",
+        "listDescription": "Manage all partner insurance companies.",
+        "table": {
+            "name": "Name",
+            "contact": "Contact Person",
+            "phone": "Phone",
+            "monthlyFee": "Monthly Fee"
+        },
+        "form": {
+            "name": "Company Name",
+            "namePlaceholder": "Insurance Co.",
+            "contactPerson": "Contact Person",
+            "contactPersonPlaceholder": "John Doe",
+            "contactPhone": "Contact Phone",
+            "contactPhonePlaceholder": "+1 234 567 890",
+            "monthlyFee": "Monthly Fee (USD)",
+            "submit": "Save Provider",
+            "submitting": "Saving..."
+        },
+        "editDialogTitle": "Edit Insurance Provider",
+        "editDialogDescription": "Update details for {providerName}.",
+        "actions": {
+            "deleteWarning": "This will permanently delete the insurance provider."
+        },
+        "toasts": {
+            "createSuccessTitle": "Provider Added",
+            "createSuccessDescription": "The provider {name} has been added.",
+            "createErrorTitle": "Creation Error",
+            "updateSuccessTitle": "Provider Updated",
+            "updateSuccessDescription": "The provider {name} has been updated.",
+            "updateErrorTitle": "Update Error",
+            "deleteSuccessTitle": "Provider Deleted",
+            "deleteSuccessDescription": "The provider {name} has been deleted."
         }
     }
 }

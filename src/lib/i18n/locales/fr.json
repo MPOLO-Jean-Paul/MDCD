@@ -36,6 +36,7 @@
         "patients": "Patients",
         "consultations": "Consultations",
         "billing": "Facturation",
+        "insurance": "Assurances",
         "pharmacy": "Pharmacie",
         "reports": "Rapports",
         "services": "Services",
@@ -556,6 +557,46 @@
             "createErrorTitle": "Erreur de création",
             "updateSuccessTitle": "Consultation mise à jour",
             "updateSuccessDescription": "La consultation de {patientName} a été mise à jour."
+        }
+    },
+    "insurancePage": {
+        "title": "Gestion des Assurances",
+        "addProvider": "Ajouter une assurance",
+        "dialogTitle": "Ajouter une nouvelle assurance",
+        "dialogDescription": "Remplissez les détails pour ajouter une nouvelle compagnie d'assurance.",
+        "listTitle": "Compagnies d'assurance",
+        "listDescription": "Gérez toutes les compagnies d'assurance partenaires.",
+        "table": {
+            "name": "Nom",
+            "contact": "Personne à contacter",
+            "phone": "Téléphone",
+            "monthlyFee": "Abonnement Mensuel"
+        },
+        "form": {
+            "name": "Nom de la compagnie",
+            "namePlaceholder": "Assurance Cie.",
+            "contactPerson": "Personne à contacter",
+            "contactPersonPlaceholder": "Jean Dupont",
+            "contactPhone": "Téléphone du contact",
+            "contactPhonePlaceholder": "+221 77 123 45 67",
+            "monthlyFee": "Abonnement Mensuel (USD)",
+            "submit": "Enregistrer l'assurance",
+            "submitting": "Enregistrement..."
+        },
+        "editDialogTitle": "Modifier l'assurance",
+        "editDialogDescription": "Mettez à jour les détails pour {providerName}.",
+        "actions": {
+            "deleteWarning": "Ceci supprimera définitivement la compagnie d'assurance."
+        },
+        "toasts": {
+            "createSuccessTitle": "Assurance ajoutée",
+            "createSuccessDescription": "L'assurance {name} a été ajoutée.",
+            "createErrorTitle": "Erreur de création",
+            "updateSuccessTitle": "Assurance mise à jour",
+            "updateSuccessDescription": "L'assurance {name} a été mise à jour.",
+            "updateErrorTitle": "Erreur de mise à jour",
+            "deleteSuccessTitle": "Assurance supprimée",
+            "deleteSuccessDescription": "L'assurance {name} a été supprimée."
         }
     }
 }
