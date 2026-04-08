@@ -59,47 +59,62 @@ service cloud.firestore {
       return resource != null;
     }
 
+    // --- NEW ROBUST ROLE CHECKING LOGIC ---
+
     /**
-     * Retrieves the role data for the currently authenticated user.
-     * This is the core of the RBAC system. It assumes a /user_roles/{userId}
-     * document exists containing a 'roleName' field.
+     * Safely retrieves the user's role document.
      */
-    function getUserRole() {
-      return get(/databases/$(database)/documents/user_roles/$(request.auth.uid)).data;
+    function getUserRoleDoc() {
+      return get(/databases/$(database)/documents/user_roles/$(request.auth.uid));
     }
 
     /**
-     * Checks if the user is a staff member with an assigned role.
-     * This is the baseline check for almost all data access.
+     * Safely checks if a user has a specific role.
+     * Checks for sign-in, document existence, and role name match.
+     */
+    function hasRole(role) {
+      let userRoleDoc = getUserRoleDoc();
+      return isSignedIn() && userRoleDoc != null && userRoleDoc.data.roleName == role;
+    }
+    
+    /**
+     * Safely checks if a user has any of a list of roles.
+     */
+    function hasAnyOfRoles(roles) {
+        let userRoleDoc = getUserRoleDoc();
+        return isSignedIn() && userRoleDoc != null && userRoleDoc.data.roleName in roles;
+    }
+    
+    /**
+     * Safely checks if the user is any kind of staff member (has a role doc).
      */
     function isStaff() {
-      return isSignedIn() && exists(/databases/$(database)/documents/user_roles/$(request.auth.uid));
+        return isSignedIn() && getUserRoleDoc() != null;
     }
-
-    // --- Role-specific Helper Functions ---
-
+    
+    // --- Role-specific Helper Functions using the new robust logic ---
     function isAdmin() {
-      return isStaff() && getUserRole().roleName == 'admin';
+      return hasRole('admin');
     }
 
     function isDoctor() {
-      return isStaff() && getUserRole().roleName == 'doctor';
+      return hasRole('doctor');
     }
 
     function isReceptionist() {
-      return isStaff() && getUserRole().roleName == 'receptionist';
+      return hasRole('receptionist');
     }
     
     function isPharmacist() {
-      return isStaff() && getUserRole().roleName == 'pharmacist';
+      return hasRole('pharmacist');
     }
 
     function isAccountant() {
-      return isStaff() && getUserRole().roleName == 'accountant';
+      return hasRole('accountant');
     }
 
     function isLabStaff() {
-      return isStaff() && getUserRole().roleName == 'lab_staff';
+      return hasRole('lab_staff');
     }
     
     // =====================================================================
@@ -372,7 +387,7 @@ service cloud.firestore {
      * @principle Restricts financial data access to authorized roles like accountants and admins.
      */
     match /invoices/{invoiceId} {
-      allow read: if isStaff();
+      allow read: if hasAnyOfRoles(['admin', 'accountant', 'receptionist']);
       allow create: if (isReceptionist() || isAccountant() || isAdmin()) && isOwner(request.resource.data.generatedByUserId);
       allow update: if isExistingDoc() && (isAccountant() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
