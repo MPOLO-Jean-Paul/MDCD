@@ -32,9 +32,8 @@ import { useLanguage } from '@/lib/i18n/provider';
 const allMenuItems = [
   { href: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard, roles: ['admin', 'doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff'] },
   { href: '/patients', labelKey: 'nav.patients', icon: Users2, roles: ['admin', 'receptionist', 'doctor'] },
-  { href: '/admissions', labelKey: 'nav.admissions', icon: BedDouble, roles: ['admin', 'doctor'] },
   { href: '/consultations', labelKey: 'nav.consultations', icon: Stethoscope, roles: ['admin', 'doctor'] },
-  { href: '/billing', labelKey: 'nav.billing', icon: FilePlus, roles: ['admin', 'accountant'] },
+  { href: '/billing', labelKey: 'nav.billing', icon: FilePlus, roles: ['admin', 'accountant', 'receptionist'] },
   { href: '/insurance', labelKey: 'nav.insurance', icon: Landmark, roles: ['admin', 'accountant'] },
   { href: '/pharmacy', labelKey: 'nav.pharmacy', icon: Pill, roles: ['admin', 'pharmacist'] },
   { href: '/reports', labelKey: 'nav.reports', icon: BarChart3, roles: ['admin', 'accountant'] },
