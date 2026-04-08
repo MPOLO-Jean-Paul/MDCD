@@ -158,7 +158,7 @@ service cloud.firestore {
      * @principle Provides broad read access for internal staff but restricts destructive operations to admins.
      */
     match /patients/{patientId} {
-      allow get, list: if isStaff();
+      allow read: if isStaff();
       allow create: if isReceptionist() || isDoctor() || isAdmin();
       allow update: if isExistingDoc() && (isReceptionist() || isDoctor() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
@@ -172,7 +172,7 @@ service cloud.firestore {
      * @principle Enforces read-only access for general users on static reference data, with admin control for writes.
      */
     match /insurance_providers/{providerId} {
-      allow get, list: if isStaff();
+      allow read: if isAccountant() || isReceptionist() || isAdmin();
       allow create: if isAccountant() || isAdmin();
       allow update: if isExistingDoc() && (isAccountant() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
@@ -372,7 +372,7 @@ service cloud.firestore {
      * @principle Restricts financial data access to authorized roles like accountants and admins.
      */
     match /invoices/{invoiceId} {
-      allow get, list: if isAccountant() || isAdmin() || isReceptionist();
+      allow read: if isSignedIn() && exists(/databases/$(database)/documents/user_roles/$(request.auth.uid)) && get(/databases/$(database)/documents/user_roles/$(request.auth.uid)).data.roleName in ['accountant', 'admin', 'receptionist'];
       allow create: if (isReceptionist() || isAccountant() || isAdmin()) && isOwner(request.resource.data.generatedByUserId);
       allow update: if isExistingDoc() && (isAccountant() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
@@ -437,3 +437,5 @@ service cloud.firestore {
 
   }
 }
+
+    
