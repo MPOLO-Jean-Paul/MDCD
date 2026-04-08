@@ -21,6 +21,7 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { ConsultationWithPatient } from '@/types/consultation';
 import { EditConsultationForm } from './edit-consultation-form';
+import { useUserProfile } from '@/firebase/auth-provider';
 
 interface ConsultationTableRowActionsProps {
   consultation: ConsultationWithPatient;
@@ -29,6 +30,9 @@ interface ConsultationTableRowActionsProps {
 export function ConsultationTableRowActions({ consultation }: ConsultationTableRowActionsProps) {
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const { toast } = useToast();
+    const { profile } = useUserProfile();
+
+    const isOwner = profile?.id === consultation.consultingDoctorId;
 
   return (
     <>
@@ -42,7 +46,10 @@ export function ConsultationTableRowActions({ consultation }: ConsultationTableR
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>
+                <DropdownMenuItem 
+                    onClick={() => setIsEditDialogOpen(true)}
+                    disabled={!isOwner}
+                >
                     Modifier
                 </DropdownMenuItem>
                 <DropdownMenuItem>Voir les détails</DropdownMenuItem>

@@ -474,6 +474,23 @@
             "submit": "Create Invoice",
             "submitting": "Creating..."
         },
+        "paymentDialog": {
+            "title": "Record a Payment",
+            "description": "Invoice {invoiceId} for {patientName}.",
+            "amount": "Amount Paid (XOF)",
+            "method": "Payment Method",
+            "selectMethod": "Select a method",
+            "methods": {
+                "cash": "Cash",
+                "card": "Credit Card",
+                "mobile": "Mobile Money",
+                "insurance": "Insurance Claim"
+            },
+            "transactionId": "Transaction ID",
+            "notes": "Notes",
+            "submit": "Record Payment",
+            "submitting": "Recording..."
+        },
         "statuses": {
             "pending": "Pending",
             "paid": "Paid",
@@ -491,7 +508,10 @@
             "createSuccessDescription": "Invoice {invoiceId} has been created.",
             "createErrorTitle": "Creation Error",
             "deleteSuccessTitle": "Invoice Deleted",
-            "deleteSuccessDescription": "Invoice {invoiceId} has been deleted."
+            "deleteSuccessDescription": "Invoice {invoiceId} has been deleted.",
+            "paymentSuccessTitle": "Payment Recorded",
+            "paymentSuccessDescription": "The payment for invoice {invoiceId} has been recorded.",
+            "paymentErrorTitle": "Payment Error"
         }
     },
     "reportsPage": {

@@ -14,7 +14,7 @@ export interface UserProfile {
     email: string;
     firstName: string;
     lastName: string;
-    roleId: 'doctor' | 'receptionist' | 'pharmacist' | 'accountant' | 'lab_staff' | 'admin' | 'cashier';
+    roleId: 'doctor' | 'receptionist' | 'pharmacist' | 'accountant' | 'lab_staff' | 'admin';
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
@@ -26,7 +26,6 @@ const roleTranslations: Record<UserProfile['roleId'], string> = {
     receptionist: 'Réceptionniste',
     pharmacist: 'Pharmacien',
     accountant: 'Comptable',
-    cashier: 'Caissier',
     lab_staff: 'Personnel de laboratoire',
 };
 
@@ -96,5 +95,3 @@ export const columns: ColumnDef<WithId<Omit<UserProfile, 'id'>>>[] = [
         cell: ({ row }) => <UserTableRowActions user={row.original} />,
     },
 ];
-
-    

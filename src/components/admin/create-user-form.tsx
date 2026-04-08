@@ -34,7 +34,7 @@ const formSchema = z.object({
   lastName: z.string().min(1, { message: 'Le nom est requis.' }),
   email: z.string().email({ message: 'Veuillez saisir une adresse e-mail valide.' }),
   password: z.string().min(6, { message: 'Le mot de passe doit contenir au moins 6 caractères.' }),
-  role: z.enum(['doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff', 'admin', 'cashier']),
+  role: z.enum(['doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff', 'admin']),
 });
 
 export function CreateUserForm() {
@@ -183,7 +183,6 @@ export function CreateUserForm() {
                   <SelectItem value="receptionist">Réceptionniste</SelectItem>
                   <SelectItem value="pharmacist">Pharmacien</SelectItem>
                   <SelectItem value="accountant">Comptable</SelectItem>
-                  <SelectItem value="cashier">Caissier</SelectItem>
                   <SelectItem value="lab_staff">Personnel de laboratoire</SelectItem>
                   <SelectItem value="admin">Administrateur</SelectItem>
                 </SelectContent>
@@ -199,5 +198,3 @@ export function CreateUserForm() {
     </Form>
   );
 }
-
-    

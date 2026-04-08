@@ -49,7 +49,7 @@ export function InvoiceTableRowActions({ invoice }: InvoiceTableRowActionsProps)
     const { profile } = useUserProfile();
     const { t } = useLanguage();
 
-    const canRecordPayment = profile?.roleName === 'cashier' || profile?.roleName === 'admin' || profile?.roleName === 'accountant';
+    const canRecordPayment = profile?.roleName === 'accountant' || profile?.roleName === 'admin';
 
     const handleDelete = async () => {
         if (!firestore) return;
@@ -118,5 +118,3 @@ export function InvoiceTableRowActions({ invoice }: InvoiceTableRowActionsProps)
     </>
   );
 }
-
-    

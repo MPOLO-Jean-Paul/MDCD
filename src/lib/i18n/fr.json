@@ -128,8 +128,7 @@
                 "pharmacist": "Pharmacien",
                 "accountant": "Comptable",
                 "lab_staff": "Personnel de laboratoire",
-                "admin": "Administrateur",
-                "cashier": "Caissier"
+                "admin": "Administrateur"
             },
             "submit": "Créer le compte",
             "submitting": "Création en cours..."
@@ -624,5 +623,3 @@
         }
     }
 }
-
-    
