@@ -2,6 +2,7 @@
 
 import { DollarSign, Receipt, ShieldCheck, Banknote } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
+import { AccountingSummaryReport } from './accounting-summary-report';
 
 const kpiData = [
     {
@@ -47,6 +48,7 @@ export function AccountingStatsTab() {
                     </Card>
                 ))}
             </div>
+            <AccountingSummaryReport />
              <Card>
                 <CardHeader>
                     <CardTitle>Statistiques de paiement par service</CardTitle>
