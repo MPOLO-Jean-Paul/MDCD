@@ -31,7 +31,6 @@ import { useLanguage } from '@/lib/i18n/provider';
 const allMenuItems = [
   { href: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard, roles: ['admin', 'doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff'] },
   
-  // Receptionist & Doctor
   { href: '/patients', labelKey: 'nav.patients', icon: Users2, roles: ['admin', 'receptionist', 'doctor'] },
   
   // Doctor Only
@@ -39,10 +38,8 @@ const allMenuItems = [
 
   // Accountant & Receptionist
   { href: '/billing', labelKey: 'nav.billing', icon: FilePlus, roles: ['admin', 'accountant', 'receptionist'] },
-  
-  // Accountant Only
-  { href: '/insurance', labelKey: 'nav.insurance', icon: Landmark, roles: ['admin', 'accountant'] },
-  { href: '/reports', labelKey: 'nav.reports', icon: BarChart3, roles: ['admin', 'accountant'] },
+  { href: '/insurance', labelKey: 'nav.insurance', icon: Landmark, roles: ['admin', 'accountant', 'receptionist'] },
+  { href: '/reports', labelKey: 'nav.reports', icon: BarChart3, roles: ['admin', 'accountant', 'receptionist'] },
   
   // Pharmacist Only
   { href: '/pharmacy', labelKey: 'nav.pharmacy', icon: Pill, roles: ['admin', 'pharmacist'] },
