@@ -9,7 +9,7 @@ import { Footer } from '@/components/dashboard/footer';
 export default function AdmissionsLayout({ children }: { children: ReactNode }) {
   return (
     <AuthRedirect to="/auth/login" condition="isLoggedOut">
-      <RoleRedirect to="/dashboard" allowedRoles={['admin', 'receptionist', 'doctor']} redirectOnUnauthorized>
+      <RoleRedirect to="/dashboard" allowedRoles={['admin', 'doctor']} redirectOnUnauthorized>
         <SidebarProvider>
           <Sidebar>
             <Nav />
