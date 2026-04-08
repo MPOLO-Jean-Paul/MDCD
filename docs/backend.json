@@ -12,7 +12,7 @@
         },
         "name": {
           "type": "string",
-          "description": "The name of the role (e.g., 'Admin', 'Médecin', 'Réceptionniste', 'Pharmacien', 'Comptable')."
+          "description": "The name of the role (e.g., 'Admin', 'Médecin', 'Réceptionniste', 'Pharmacien', 'Comptable', 'Caissier')."
         },
         "description": {
           "type": "string",
@@ -1127,7 +1127,7 @@
         },
         "status": {
           "type": "string",
-          "description": "The current payment status of the invoice (e.g., 'Pending', 'Paid', 'Partially Paid', 'Overdue', 'Cancelled')."
+          "description": "The current payment status of the invoice (e.g., 'Pending', 'Paid', 'Partially Paid', 'Overdue', 'Cancelled', 'Disputed')."
         },
         "generatedByUserId": {
           "type": "string",
@@ -1270,7 +1270,11 @@
         },
         "status": {
           "type": "string",
-          "description": "The status of the payment (e.g., 'Completed', 'Pending', 'Failed', 'Refunded')."
+          "description": "The status of the payment (e.g., 'Completed', 'Pending', 'Failed', 'Refunded', 'Disputed')."
+        },
+        "notes": {
+            "type": "string",
+            "description": "Optional notes regarding the payment, used for disputes or other comments."
         },
         "createdAt": {
           "type": "string",
@@ -1827,4 +1831,5 @@
     "reasoning": "The recommended Firestore data structure for MediFlow Pro prioritizes security, scalability, and debuggability in alignment with the core design principles. The primary strategy for authorization independence and enabling secure queries (QAPs) is a combination of:\n\n1.  **Dedicated User Role Collection (`/user_roles/{userId}`):** This top-level collection serves as the central source for Role-Based Access Control (RBAC). Each document's ID is the `request.auth.uid`, containing the user's `roleId`. This allows for a single, atomic `get()` call (or direct path access) in security rules to ascertain a user's role without traversing other collections, critically avoiding hierarchical authorization dependencies.\n\n2.  **Denormalization of Authorization Context:**\n    *   **Direct Owner/Identifier Fields:** For most transactional and patient-specific collections (e.g., `admissions`, `consultations`, `prescriptions`, `invoices`), essential foreign keys such as `patientId`, `admittingUserId`, `consultingDoctorId`, `generatedByUserId`, `receivedByUserId`, and `submittedByUserId` are stored directly within the document. This means that security rules can check `request.auth.uid == resource.data.admittingUserId` (or `patientId` when applicable) without requiring a `get()` call to a parent or related document. This is crucial for atomic operations and simplifies rule logic.\n    *   **Subcollection Denormalization:** For entities within subcollections (e.g., `PrescriptionItem`, `InvoiceItem`), the relevant `patientId` and the primary `userId` (e.g., `prescribingDoctorId`, `generatedByUserId`) from their parent document are explicitly denormalized into each item document. This ensures that rules governing `items` can determine access without needing to `get()` the parent `Prescription` or `Invoice` document, thereby maintaining authorization independence for individual items.\n    *   **ExaminationResult and Document Denormalization:** `ExaminationResult` documents will denormalize `patientId` and `requestingDoctorId` from their corresponding `ExaminationRequest`. Similarly, `Document` entities will denormalize `patientId` (if applicable) and `uploadedByUserId`, along with potentially a `consultingDoctorId` if directly tied to a consultation, ensuring all necessary authorization identifiers are self-contained.\n\n3.  **Structural Segregation for Homogeneous Security Posture:**\n    *   **Reference Data:** Collections like `roles`, `medications`, `services`, `insurance_providers`, `beds`, and `examination_types` are designed as top-level collections containing relatively static reference data. These typically have broader read permissions for various roles but restricted write access (e.g., Admin or specific managers). This segregation prevents mixing different security requirements within the same collection.\n    *   **Transactional/Patient Data:** Core operational entities (e.g., `patients`, `admissions`, `consultations`, `invoices`) are in their own top-level collections, or in carefully considered subcollections, with security rules strictly enforced using the denormalized `patientId` and `userId` fields.\n\n4.  **Enabling QAPs (Query Against Policies):** By denormalizing `patientId` and relevant `userId` fields into each document, the system supports efficient and secure `list` queries. For example, a doctor can query `/consultations` with `where('consultingDoctorId', '==', request.auth.uid)` without triggering complex, insecure, or performance-intensive rule evaluations that involve `get()` calls or filtering data client-side. This ensures that the rules act as true validators, not filters.\n\nThis structure directly addresses the core design principles: Authorization Independence is paramount through denormalization; Clarity of Intent is achieved by explicit authorization fields; DBAC is enabled via `/user_roles`; QAPs are supported by self-contained documents; and Invariants are maintained through careful data modeling and timestamping."
   }
 }
+
     

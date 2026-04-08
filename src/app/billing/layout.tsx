@@ -9,7 +9,7 @@ import { Footer } from '@/components/dashboard/footer';
 export default function BillingLayout({ children }: { children: ReactNode }) {
   return (
     <AuthRedirect to="/auth/login" condition="isLoggedOut">
-      <RoleRedirect to="/dashboard" allowedRoles={['admin', 'accountant', 'receptionist']} redirectOnUnauthorized>
+      <RoleRedirect to="/dashboard" allowedRoles={['admin', 'accountant', 'receptionist', 'cashier']} redirectOnUnauthorized>
         <SidebarProvider>
           <Sidebar>
             <Nav />
@@ -26,3 +26,5 @@ export default function BillingLayout({ children }: { children: ReactNode }) {
     </AuthRedirect>
   );
 }
+
+    

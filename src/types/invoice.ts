@@ -7,7 +7,7 @@ export interface Invoice {
     totalAmount: number;
     amountPaid: number;
     balanceDue: number;
-    status: 'Pending' | 'Paid' | 'Partially Paid' | 'Overdue' | 'Cancelled';
+    status: 'Pending' | 'Paid' | 'Partially Paid' | 'Overdue' | 'Cancelled' | 'Disputed';
     generatedByUserId: string;
     createdAt: string;
     updatedAt: string;
@@ -17,3 +17,5 @@ export interface Invoice {
 export interface InvoiceWithPatient extends Invoice {
     patientName?: string;
 }
+
+    

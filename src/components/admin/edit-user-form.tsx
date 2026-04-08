@@ -31,7 +31,7 @@ import type { UserProfile } from './user-table-columns';
 const formSchema = z.object({
   firstName: z.string().min(1, { message: 'Le prénom est requis.' }),
   lastName: z.string().min(1, { message: 'Le nom est requis.' }),
-  role: z.enum(['doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff', 'admin']),
+  role: z.enum(['doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff', 'admin', 'cashier']),
 });
 
 interface EditUserFormProps {
@@ -143,6 +143,7 @@ export function EditUserForm({ user, setDialogOpen }: EditUserFormProps) {
                     <SelectItem value="receptionist">Réceptionniste</SelectItem>
                     <SelectItem value="pharmacist">Pharmacien</SelectItem>
                     <SelectItem value="accountant">Comptable</SelectItem>
+                    <SelectItem value="cashier">Caissier</SelectItem>
                     <SelectItem value="lab_staff">Personnel de laboratoire</SelectItem>
                     <SelectItem value="admin">Administrateur</SelectItem>
                     </SelectContent>
@@ -161,3 +162,5 @@ export function EditUserForm({ user, setDialogOpen }: EditUserFormProps) {
     </Form>
   );
 }
+
+    

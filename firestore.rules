@@ -102,6 +102,10 @@ service cloud.firestore {
       return isStaff() && getUserRole().roleName == 'lab_staff';
     }
     
+    function isCashier() {
+        return isStaff() && getUserRole().roleName == 'cashier';
+    }
+
     // =====================================================================
     // Collection Rules
     // =====================================================================
@@ -372,9 +376,9 @@ service cloud.firestore {
      * @principle Restricts financial data access to authorized roles like accountants and admins.
      */
     match /invoices/{invoiceId} {
-      allow get, list: if isAccountant() || isAdmin() || isReceptionist();
+      allow get, list: if isAccountant() || isAdmin() || isReceptionist() || isCashier();
       allow create: if (isAccountant() || isAdmin()) && isOwner(request.resource.data.generatedByUserId);
-      allow update: if isExistingDoc() && (isAccountant() || isAdmin());
+      allow update: if isExistingDoc() && (isAccountant() || isAdmin() || isCashier());
       allow delete: if isExistingDoc() && isAdmin();
     }
 
@@ -400,9 +404,9 @@ service cloud.firestore {
      * @principle Restricts financial data access to authorized roles like accountants and admins.
      */
     match /payments/{paymentId} {
-      allow get, list: if isAccountant() || isAdmin();
-      allow create: if (isAccountant() || isAdmin()) && isOwner(request.resource.data.receivedByUserId);
-      allow update: if isExistingDoc() && (isAccountant() || isAdmin());
+      allow get, list: if isAccountant() || isAdmin() || isCashier() || isReceptionist();
+      allow create: if (isAccountant() || isAdmin() || isCashier()) && isOwner(request.resource.data.receivedByUserId);
+      allow update: if isExistingDoc() && (isAccountant() || isAdmin() || isCashier());
       allow delete: if isExistingDoc() && isAdmin();
     }
 
@@ -437,3 +441,5 @@ service cloud.firestore {
 
   }
 }
+
+    
