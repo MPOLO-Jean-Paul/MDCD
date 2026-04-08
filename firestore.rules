@@ -172,7 +172,7 @@ service cloud.firestore {
      * @principle Enforces read-only access for general users on static reference data, with admin control for writes.
      */
     match /insurance_providers/{providerId} {
-      allow read: if isAccountant() || isReceptionist() || isAdmin();
+      allow read: if isStaff();
       allow create: if isAccountant() || isReceptionist() || isAdmin();
       allow update: if isExistingDoc() && (isAccountant() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
@@ -372,7 +372,7 @@ service cloud.firestore {
      * @principle Restricts financial data access to authorized roles like accountants and admins.
      */
     match /invoices/{invoiceId} {
-      allow read: if isAccountant() || isAdmin() || isReceptionist();
+      allow read: if isStaff();
       allow create: if (isReceptionist() || isAccountant() || isAdmin()) && isOwner(request.resource.data.generatedByUserId);
       allow update: if isExistingDoc() && (isAccountant() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
