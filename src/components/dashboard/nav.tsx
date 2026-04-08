@@ -30,12 +30,24 @@ import { useLanguage } from '@/lib/i18n/provider';
 // Define menu items for all roles
 const allMenuItems = [
   { href: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard, roles: ['admin', 'doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff'] },
+  
+  // Receptionist & Doctor
   { href: '/patients', labelKey: 'nav.patients', icon: Users2, roles: ['admin', 'receptionist', 'doctor'] },
+  
+  // Doctor Only
   { href: '/consultations', labelKey: 'nav.consultations', icon: Stethoscope, roles: ['admin', 'doctor'] },
+
+  // Accountant & Receptionist
   { href: '/billing', labelKey: 'nav.billing', icon: FilePlus, roles: ['admin', 'accountant', 'receptionist'] },
+  
+  // Accountant Only
   { href: '/insurance', labelKey: 'nav.insurance', icon: Landmark, roles: ['admin', 'accountant'] },
-  { href: '/pharmacy', labelKey: 'nav.pharmacy', icon: Pill, roles: ['admin', 'pharmacist'] },
   { href: '/reports', labelKey: 'nav.reports', icon: BarChart3, roles: ['admin', 'accountant'] },
+  
+  // Pharmacist Only
+  { href: '/pharmacy', labelKey: 'nav.pharmacy', icon: Pill, roles: ['admin', 'pharmacist'] },
+
+  // Admin Only
   { href: '/services', labelKey: 'nav.services', icon: ClipboardList, roles: ['admin'] },
   { href: '/admin/users', labelKey: 'nav.users', icon: ShieldCheck, roles: ['admin'] },
 ];
