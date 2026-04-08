@@ -70,26 +70,36 @@ service cloud.firestore {
 
     /**
      * Safely checks if a user has a specific role.
-     * Checks for sign-in, document existence, and role name match.
+     * This is the definitive, robust function for checking a single role.
      */
     function hasRole(role) {
       let userRoleDoc = getUserRoleDoc();
-      return isSignedIn() && userRoleDoc != null && userRoleDoc.data.roleName == role;
+      return isSignedIn()
+          && userRoleDoc != null
+          && 'roleName' in userRoleDoc.data
+          && userRoleDoc.data.roleName == role;
     }
     
     /**
      * Safely checks if a user has any of a list of roles.
+     * This is the definitive, robust function for checking against multiple roles.
      */
     function hasAnyOfRoles(roles) {
         let userRoleDoc = getUserRoleDoc();
-        return isSignedIn() && userRoleDoc != null && userRoleDoc.data.roleName in roles;
+        return isSignedIn()
+            && userRoleDoc != null
+            && 'roleName' in userRoleDoc.data
+            && userRoleDoc.data.roleName in roles;
     }
     
     /**
-     * Safely checks if the user is any kind of staff member (has a role doc).
+     * Safely checks if the user is any kind of staff member (has a role doc with a roleName).
      */
     function isStaff() {
-        return isSignedIn() && getUserRoleDoc() != null;
+        let userRoleDoc = getUserRoleDoc();
+        return isSignedIn() 
+            && userRoleDoc != null
+            && 'roleName' in userRoleDoc.data;
     }
     
     // --- Role-specific Helper Functions using the new robust logic ---
@@ -168,7 +178,7 @@ service cloud.firestore {
     /**
      * @description Stores patient demographic and medical information.
      * @path /patients/{patientId}
-     * @allow (get) Any staff member viewing a patient's file.
+     * @allow (read) Any staff member viewing a patient's file.
      * @deny (delete) A doctor or receptionist trying to delete a patient record.
      * @principle Provides broad read access for internal staff but restricts destructive operations to admins.
      */
@@ -182,7 +192,7 @@ service cloud.firestore {
     /**
      * @description Manages details of insurance companies. This is reference data.
      * @path /insurance_providers/{providerId}
-     * @allow (list) Any staff member listing insurance providers.
+     * @allow (read) Any staff member listing insurance providers.
      * @deny (create) A doctor trying to add a new insurance provider.
      * @principle Enforces read-only access for general users on static reference data, with admin control for writes.
      */
@@ -215,7 +225,7 @@ service cloud.firestore {
      * @principle Allows creation by authorized roles but restricts deletion to admins for data integrity.
      */
     match /admissions/{admissionId} {
-      allow get, list: if isStaff();
+      allow read: if isStaff();
       allow create: if (isReceptionist() || isAdmin()) && isOwner(request.resource.data.admittingUserId);
       allow update: if isExistingDoc() && (isReceptionist() || isDoctor() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
@@ -382,9 +392,9 @@ service cloud.firestore {
     /**
      * @description Consolidates all billable items for a patient.
      * @path /invoices/{invoiceId}
-     * @allow (get) An accountant viewing a patient's invoice.
+     * @allow (read) An accountant or receptionist viewing a patient's invoice.
      * @deny (get) A doctor trying to view a patient's invoice.
-     * @principle Restricts financial data access to authorized roles like accountants and admins.
+     * @principle Restricts financial data access to authorized roles.
      */
     match /invoices/{invoiceId} {
       allow read: if hasAnyOfRoles(['admin', 'accountant', 'receptionist']);
@@ -401,7 +411,7 @@ service cloud.firestore {
      * @principle Inherits permissions from the parent invoice, restricting access to financial roles.
      */
     match /invoices/{invoiceId}/items/{itemId} {
-      allow get, list: if isAccountant() || isAdmin();
+      allow read: if hasAnyOfRoles(['admin', 'accountant', 'receptionist']);
       allow create: if isAccountant() || isAdmin();
       allow update: if isExistingDoc() && (isAccountant() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
@@ -410,12 +420,12 @@ service cloud.firestore {
     /**
      * @description Records payments received from patients.
      * @path /payments/{paymentId}
-     * @allow (create) An accountant recording a new payment.
+     * @allow (create) An accountant or receptionist recording a new payment.
      * @deny (update) A receptionist trying to modify a payment record.
-     * @principle Restricts financial data access to authorized roles like accountants and admins.
+     * @principle Restricts financial data modification access to accountants and admins.
      */
     match /payments/{paymentId} {
-      allow get, list: if isAccountant() || isAdmin() || isReceptionist();
+      allow read: if hasAnyOfRoles(['admin', 'accountant', 'receptionist']);
       allow create: if (isAccountant() || isReceptionist() || isAdmin()) && isOwner(request.resource.data.receivedByUserId);
       allow update: if isExistingDoc() && (isAccountant() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
@@ -429,7 +439,7 @@ service cloud.firestore {
      * @principle Restricts financial data access to authorized roles like accountants and admins.
      */
     match /insurance_claims/{claimId} {
-      allow get, list: if isAccountant() || isAdmin();
+      allow read: if isStaff();
       allow create: if (isAccountant() || isAdmin()) && isOwner(request.resource.data.submittedByUserId);
       allow update: if isExistingDoc() && (isAccountant() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
