@@ -451,7 +451,7 @@
         }
     },
     "billingPage": {
-        "title": "Facturation",
+        "title": "Facturation & Caisse",
         "exportList": "Exporter la liste",
         "createInvoice": "Créer une facture",
         "dialogTitle": "Créer une nouvelle facture",
@@ -496,7 +496,8 @@
             "paid": "Payée",
             "partiallyPaid": "Partiellement payée",
             "overdue": "En retard",
-            "cancelled": "Annulée"
+            "cancelled": "Annulée",
+            "disputed": "Disputée"
         },
         "actions": {
             "viewDetails": "Voir les détails",

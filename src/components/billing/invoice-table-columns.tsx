@@ -15,6 +15,7 @@ const statusTranslations: Record<InvoiceWithPatient['status'], string> = {
     'Partially Paid': 'Partiellement payée',
     Overdue: 'En retard',
     Cancelled: 'Annulée',
+    Disputed: 'Disputée',
 };
 
 const statusVariants: Record<InvoiceWithPatient['status'], 'default' | 'secondary' | 'destructive' | 'outline'> = {
@@ -23,6 +24,7 @@ const statusVariants: Record<InvoiceWithPatient['status'], 'default' | 'secondar
     Pending: 'outline',
     Overdue: 'destructive',
     Cancelled: 'destructive',
+    Disputed: 'destructive',
 };
 
 export const columns: ColumnDef<WithId<Omit<InvoiceWithPatient, 'id'>>>[] = [
@@ -87,7 +89,10 @@ export const columns: ColumnDef<WithId<Omit<InvoiceWithPatient, 'id'>>>[] = [
         cell: ({ row }) => {
             const status = row.getValue('status') as InvoiceWithPatient['status'];
             return <Badge variant={statusVariants[status]}>{statusTranslations[status] || status}</Badge>;
-        }
+        },
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id))
+        },
     },
     {
         id: 'actions',

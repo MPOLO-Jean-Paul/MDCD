@@ -113,6 +113,10 @@ export function DataTable<TData, TValue>({
     [table]
   );
 
+  const statusFilterColumn = React.useMemo(() =>
+    table.getAllColumns().find(c => c.id === 'status'),
+    [table]
+  );
 
   return (
     <div className="space-y-4">
@@ -137,6 +141,31 @@ export function DataTable<TData, TValue>({
                     { label: t('patientsPage.form.genders.male'), value: "Masculin"},
                     { label: t('patientsPage.form.genders.female'), value: "Féminin"},
                     { label: t('patientsPage.form.genders.other'), value: "Autre"},
+                ]}
+            />
+          )}
+          {statusFilterColumn && (
+            <DataTableFacetedFilter
+                column={statusFilterColumn}
+                title={t('common.status')}
+                options={[
+                    // Invoice statuses
+                    { label: t('billingPage.statuses.pending'), value: "Pending"},
+                    { label: t('billingPage.statuses.paid'), value: "Paid"},
+                    { label: t('billingPage.statuses.partiallyPaid'), value: "Partially Paid"},
+                    { label: t('billingPage.statuses.overdue'), value: "Overdue"},
+                    { label: t('billingPage.statuses.cancelled'), value: "Cancelled"},
+                    { label: t('billingPage.statuses.disputed'), value: "Disputed"},
+                    
+                    // Admission statuses
+                    { label: t('admissionsPage.statuses.admitted'), value: "Admitted"},
+                    { label: t('admissionsPage.statuses.discharged'), value: "Discharged"},
+                    { label: t('admissionsPage.statuses.completed'), value: "Completed"},
+                    
+                    // Consultation statuses
+                    { label: t('consultationsPage.statuses.completed'), value: 'Completed' },
+                    { label: t('consultationsPage.statuses.followUp'), value: "Follow-up Required"},
+                    { label: t('consultationsPage.statuses.draft'), value: "Draft"},
                 ]}
             />
           )}
@@ -294,9 +323,18 @@ export function DataTableFacetedFilter<TData, TValue>({
   title,
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
-  const facets = column?.getFacetedUniqueValues();
-  const selectedValues = new Set(column?.getFilterValue() as string[]);
+  const facets = column?.getFacetedUniqueValues()
+  const selectedValues = new Set(column?.getFilterValue() as string[])
   const { t } = useLanguage();
+
+  const availableOptions = React.useMemo(
+    () => options.filter((option) => facets?.has(option.value)),
+    [options, facets]
+  );
+
+  if (!column || availableOptions.length === 0) {
+    return null;
+  }
 
   return (
     <Popover>
@@ -322,7 +360,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     {selectedValues.size} {t('common.selected')}
                   </Badge>
                 ) : (
-                  options
+                  availableOptions
                     .filter((option) => selectedValues.has(option.value))
                     .map((option) => (
                       <Badge
@@ -345,7 +383,7 @@ export function DataTableFacetedFilter<TData, TValue>({
           <CommandList>
             <CommandEmpty>{t('common.noResults')}</CommandEmpty>
             <CommandGroup>
-              {options.map((option) => {
+              {availableOptions.map((option) => {
                 const isSelected = selectedValues.has(option.value);
                 return (
                   <CommandItem

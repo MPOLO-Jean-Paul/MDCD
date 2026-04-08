@@ -85,7 +85,10 @@ export const columns: ColumnDef<AdmissionWithPatient>[] = [
         cell: ({ row }) => {
             const status = row.getValue('status') as AdmissionWithPatient['status'];
             return <Badge variant={admissionStatusVariants[status]}>{admissionStatusTranslations[status] || status}</Badge>;
-        }
+        },
+        filterFn: (row, id, value) => {
+            return value.includes(row.getValue(id))
+        },
     },
     {
         id: 'actions',

@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Card,
   CardContent,
@@ -17,29 +19,32 @@ import {
 } from "@/components/ui/dialog";
 import { InvoiceList } from '@/components/billing/invoice-list';
 import { CreateInvoiceForm } from '@/components/billing/create-invoice-form';
+import { BillingKpiCards } from '@/components/billing/billing-kpi-cards';
+import { useLanguage } from '@/lib/i18n/provider';
 
 export default function BillingPage() {
+  const { t } = useLanguage();
   return (
-    <>
+    <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <h2 className="text-3xl font-bold tracking-tight">Facturation</h2>
+        <h2 className="text-3xl font-bold tracking-tight">{t('billingPage.title')}</h2>
         <div className='flex items-center gap-2'>
             <Button variant="outline">
                 <FileText className="mr-2 h-4 w-4" />
-                Exporter la liste
+                {t('billingPage.exportList')}
             </Button>
             <Dialog>
               <DialogTrigger asChild>
                   <Button>
                       <PlusCircle className="mr-2 h-4 w-4" />
-                      Créer une facture
+                      {t('billingPage.createInvoice')}
                   </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-xl">
                   <DialogHeader>
-                      <DialogTitle>Créer une nouvelle facture</DialogTitle>
+                      <DialogTitle>{t('billingPage.dialogTitle')}</DialogTitle>
                       <DialogDescription>
-                          Générez une nouvelle facture pour un patient.
+                          {t('billingPage.dialogDescription')}
                       </DialogDescription>
                   </DialogHeader>
                   <CreateInvoiceForm />
@@ -47,17 +52,18 @@ export default function BillingPage() {
             </Dialog>
         </div>
       </div>
+      <BillingKpiCards />
       <Card>
         <CardHeader>
-          <CardTitle>Gestion des factures</CardTitle>
+          <CardTitle>{t('billingPage.listTitle')}</CardTitle>
           <CardDescription>
-            Créez, suivez et gérez les factures des patients et des assurances.
+            {t('billingPage.listDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent>
             <InvoiceList />
         </CardContent>
       </Card>
-    </>
+    </div>
   );
 }

@@ -1,0 +1,626 @@
+{
+    "common": {
+        "actions": "Actions",
+        "save": "Save",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "edit": "Edit",
+        "delete": "Delete",
+        "deactivate": "Deactivate",
+        "activate": "Activate",
+        "status": "Status",
+        "active": "Active",
+        "inactive": "Inactive",
+        "none": "None",
+        "optional": "Optional",
+        "loading": "Loading...",
+        "noResults": "No results.",
+        "searchPlaceholder": "Search...",
+        "view": "View",
+        "showHideColumns": "Show/Hide Columns",
+        "reset": "Reset",
+        "previous": "Previous",
+        "next": "Next",
+        "selectedRows": "{count} of {total} row(s) selected.",
+        "areYouSure": "Are you absolutely sure?",
+        "irreversibleAction": "This action is irreversible.",
+        "confirm": "Confirm",
+        "chooseDate": "Choose a date",
+        "selected": "selected",
+        "clearFilters": "Clear filters"
+    },
+    "nav": {
+        "main": "MDCD Polyclinic",
+        "dashboard": "Dashboard",
+        "admissions": "Admissions",
+        "patients": "Patients",
+        "consultations": "Consultations",
+        "billing": "Billing",
+        "insurance": "Insurance",
+        "pharmacy": "Pharmacy",
+        "reports": "Reports",
+        "services": "Services",
+        "users": "Users",
+        "settings": "Settings"
+    },
+    "header": {
+        "searchPlaceholder": "Search...",
+        "notifications": {
+            "title": "Notifications",
+            "unread": "You have {count} unread notifications.",
+            "markAllAsRead": "Mark all as read",
+            "open": "Open notifications"
+        },
+        "userMenu": {
+            "myAccount": "My Account",
+            "profile": "Profile",
+            "billing": "Billing",
+            "settings": "Settings",
+            "support": "Support",
+            "logout": "Log out"
+        }
+    },
+    "footer": {
+        "copyright": "© {year} MDCD Polyclinic. All rights reserved.",
+        "support": "Support",
+        "settings": "Settings",
+        "terms": "Terms of Service",
+        "privacy": "Privacy Policy"
+    },
+    "loginPage": {
+        "title": "Login to MDCD Polyclinic",
+        "description": "Enter your credentials to access your dashboard.",
+        "emailLabel": "Email address",
+        "emailPlaceholder": "example@mediflow.pro",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "********",
+        "submitButton": "Log in",
+        "submittingButton": "Logging in...",
+        "errorTitle": "Login Error",
+        "errorMessageDefault": "An error occurred during login.",
+        "errorMessageInvalid": "Incorrect email address or password."
+    },
+    "dashboardPage": {
+        "title": "Dashboard",
+        "kpi": {
+            "revenueToday": "Revenue (Today)",
+            "revenueYesterday": "+20.1% from yesterday",
+            "admissionsToday": "Admissions (Today)",
+            "admissionsYesterday": "+5 since yesterday",
+            "occupancyRate": "Occupancy Rate",
+            "occupancyYesterday": "-2% from yesterday",
+            "actsToBill": "Acts to Bill",
+            "actsToBillPending": "Pending processing"
+        },
+        "revenueChart": {
+            "title": "Revenue Overview",
+            "description": "Monthly overview of the hospital's revenue.",
+            "label": "Revenue"
+        },
+        "recentAdmissions": {
+            "title": "Recent Admissions",
+            "description": "The last 5 admissions of the day.",
+            "status": {
+                "emergency": "Emergency",
+                "scheduled": "Scheduled",
+                "observation": "Observation"
+            }
+        }
+    },
+    "usersPage": {
+        "title": "User Management",
+        "createUser": "Create User",
+        "dialogTitle": "Create a new user",
+        "dialogDescription": "Fill in the information below to create a new account for a staff member.",
+        "listTitle": "User List",
+        "listDescription": "Create, edit, and manage staff member accounts.",
+        "form": {
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "email": "Email Address",
+            "password": "Password",
+            "passwordPlaceholder": "Temporary password",
+            "role": "Role",
+            "selectRole": "Select a role",
+            "roles": {
+                "doctor": "Doctor",
+                "receptionist": "Receptionist",
+                "pharmacist": "Pharmacist",
+                "accountant": "Accountant",
+                "lab_staff": "Lab Staff",
+                "admin": "Administrator"
+            },
+            "submit": "Create Account",
+            "submitting": "Creating..."
+        },
+        "editDialogTitle": "Edit User",
+        "editDialogDescription": "Update the information for {user}.",
+        "table": {
+            "name": "Name",
+            "email": "Email",
+            "role": "Role",
+            "status": "Status"
+        },
+        "actions": {
+            "edit": "Edit",
+            "deactivate": "Deactivate",
+            "activate": "Activate",
+            "delete": "Delete",
+            "deleteWarning": "This action is irreversible. It will permanently delete the user's data from Firestore, but will not delete their authentication account.",
+            "deactivateWarningTitle": "Confirm {action}",
+            "deactivateWarningDescription": "Do you really want to {action} the account of {user}? The user will {context} be able to log in."
+        },
+        "toasts": {
+            "createSuccessTitle": "User created successfully",
+            "createSuccessDescription": "The account for {user} has been created.",
+            "createErrorTitle": "Creation Error",
+            "createErrorEmailInUse": "This email address is already in use.",
+            "updateSuccessTitle": "User updated",
+            "updateSuccessDescription": "The account of {user} has been successfully updated.",
+            "updateErrorTitle": "Update Error",
+            "deleteSuccessTitle": "User deleted",
+            "deleteSuccessDescription": "The account of {user} has been deleted from the database.",
+            "toggleStatusTitle": "User {status}",
+            "toggleStatusDescription": "The account of {user} has been updated."
+        }
+    },
+    "servicesPage": {
+        "title": "Service Management",
+        "addService": "Add Service",
+        "dialogTitle": "Add a new service",
+        "dialogDescription": "Fill in the information below to create a new hospital service.",
+        "listTitle": "Service List",
+        "listDescription": "Create, edit, and manage the services offered by the polyclinic.",
+        "form": {
+            "name": "Service Name",
+            "description": "Description",
+            "category": "Category",
+            "unitPrice": "Unit Price (XOF)",
+            "responsible": "Service Manager",
+            "selectResponsible": "Select a manager",
+            "responsibleDescription": "Optional. The staff member in charge of this service.",
+            "submit": "Create Service",
+            "submitting": "Creating..."
+        },
+        "editDialogTitle": "Edit Service",
+        "editDialogDescription": "Update the information for the service {service}.",
+        "table": {
+            "name": "Service Name",
+            "category": "Category",
+            "unitPrice": "Unit Price",
+            "responsible": "Manager"
+        },
+        "actions": {
+            "deactivateWarningTitle": "Confirm {action}",
+            "deactivateWarningDescription": "Do you really want to {action} the service {service}?",
+            "deleteWarning": "This action is irreversible. It will permanently delete the service from the database."
+        },
+        "toasts": {
+            "createSuccessTitle": "Service created successfully",
+            "createSuccessDescription": "The service \"{service}\" has been added.",
+            "createErrorTitle": "Creation Error",
+            "updateSuccessTitle": "Service updated",
+            "updateSuccessDescription": "The service \"{service}\" has been successfully updated.",
+            "updateErrorTitle": "Update Error",
+            "deleteSuccessTitle": "Service deleted",
+            "deleteSuccessDescription": "The service {service} has been deleted.",
+            "toggleStatusTitle": "Service {status}",
+            "toggleStatusDescription": "The service {service} has been updated."
+        }
+    },
+    "settingsPage": {
+        "title": "Settings",
+        "display": {
+            "title": "Display",
+            "description": "Customize the appearance of the application."
+        },
+        "theme": {
+            "title": "Theme",
+            "description": "Select a theme for the dashboard.",
+            "light": "Light",
+            "dark": "Dark",
+            "system": "System"
+        },
+        "language": {
+            "title": "Language",
+            "description": "Choose the interface language."
+        },
+        "notifications": {
+            "title": "Notifications",
+            "description": "Manage your notification preferences.",
+            "unavailable": "Notification settings will be available soon."
+        }
+    },
+    "supportPage": {
+        "title": "Support",
+        "helpCenter": "Help Center",
+        "description": "Need help? Contact our support team.",
+        "body": "If you encounter a technical problem or have questions about using the application, our team is here to help you.",
+        "contactByEmail": "Contact by email",
+        "supportHours": "Support Hours",
+        "hours": "Monday - Friday: 9:00 AM - 5:00 PM"
+    },
+    "profilePage": {
+        "title": "My Profile",
+        "profileTab": "Profile",
+        "passwordTab": "Password",
+        "profileInfo": {
+            "title": "Profile Information",
+            "description": "Update your personal information."
+        },
+        "changePassword": {
+            "title": "Change Password",
+            "description": "Make sure to use a long, random password to ensure your account's security."
+        },
+        "updateForm": {
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "email": "Email Address",
+            "submit": "Save Changes",
+            "submitting": "Saving..."
+        },
+        "passwordForm": {
+            "current": "Current Password",
+            "new": "New Password",
+            "submit": "Change Password",
+            "submitting": "Updating..."
+        },
+        "toasts": {
+            "updateSuccessTitle": "Profile updated",
+            "updateSuccessDescription": "Your information has been successfully saved.",
+            "updateErrorTitle": "Update Error",
+            "passwordSuccessTitle": "Password updated",
+            "passwordSuccessDescription": "Your password has been successfully changed.",
+            "passwordErrorWrong": "The current password is incorrect.",
+            "passwordErrorWeak": "The new password is too weak."
+        }
+    },
+    "admissionsPage": {
+        "title": "Admissions",
+        "newAdmission": "New Admission",
+        "dialogTitle": "Create an Admission",
+        "dialogDescription": "Register a new admission for a patient.",
+        "listTitle": "Recent Admissions",
+        "listDescription": "List of the latest admissions, emergencies, and appointments.",
+        "table": {
+            "patient": "Patient",
+            "date": "Admission Date",
+            "type": "Type",
+            "reason": "Reason"
+        },
+        "form": {
+            "patient": "Patient",
+            "selectPatient": "Select a patient",
+            "type": "Admission Type",
+            "selectType": "Select a type",
+            "reason": "Reason for Admission",
+            "reasonPlaceholder": "Describe the reason for the visit...",
+            "submit": "Register Admission",
+            "submitting": "Registering..."
+        },
+        "types": {
+            "appointment": "Appointment",
+            "emergency": "Emergency",
+            "hospitalization": "Hospitalization"
+        },
+        "statuses": {
+            "pending": "Pending",
+            "admitted": "Admitted",
+            "discharged": "Discharged",
+            "completed": "Completed",
+            "canceled": "Canceled"
+        },
+        "editDialogTitle": "Edit Admission",
+        "editDialogDescription": "Update the admission record for {patientName}.",
+        "toasts": {
+            "createSuccessTitle": "Admission Created Successfully",
+            "createSuccessDescription": "The admission for the patient has been registered.",
+            "createErrorTitle": "Creation Error",
+            "updateSuccessTitle": "Admission Updated",
+            "updateSuccessDescription": "The admission for {patientName} has been updated."
+        }
+    },
+    "patientsPage": {
+        "title": "Patient Management",
+        "newPatient": "New Patient",
+        "dialogTitle": "Register a New Patient",
+        "dialogDescription": "Fill out the form below to add a new patient to the system.",
+        "listTitle": "Patient List",
+        "listDescription": "Search, view, and manage patient records.",
+        "table": {
+            "fullName": "Full Name",
+            "age": "Age",
+            "gender": "Gender",
+            "phone": "Phone",
+            "address": "Address"
+        },
+        "form": {
+            "lastName": "Last Name",
+            "firstName": "First Name",
+            "dob": "Date of Birth",
+            "gender": "Gender",
+            "genders": {
+                "male": "Male",
+                "female": "Female",
+                "other": "Other"
+            },
+            "phone": "Phone",
+            "email": "Email",
+            "address": "Address",
+            "bloodGroup": "Blood Group",
+            "firstVisitReason": "Reason for first visit",
+            "submit": "Register Patient",
+            "submitting": "Registering..."
+        },
+        "editDialogTitle": "Edit Patient Record",
+        "editDialogDescription": "Update the information for {patientName}.",
+        "actions": {
+            "viewRecord": "View Record",
+            "deleteWarning": "This action is irreversible. It will permanently delete the patient's record and all associated data."
+        },
+        "toasts": {
+            "createSuccessTitle": "Patient Created Successfully",
+            "createSuccessDescription": "The record for {patientName} has been created.",
+            "createErrorTitle": "Creation Error",
+            "updateSuccessTitle": "Patient Updated Successfully",
+            "updateSuccessDescription": "The record for {patientName} has been updated.",
+            "deleteSuccessTitle": "Patient Deleted",
+            "deleteSuccessDescription": "The record of {patientName} has been deleted."
+        }
+    },
+    "pharmacyPage": {
+        "title": "Pharmacy Management",
+        "manageProducts": "Manage Products",
+        "dialogTitle": "Manage Pharmacy Products",
+        "dialogDescription": "Add a new item to stock or define a new type of medication.",
+        "tabs": {
+            "addStock": "Add to Stock",
+            "defineMedication": "New Medication"
+        },
+        "kpi": {
+            "totalValue": "Total Stock Value",
+            "totalValueDesc": "Calculated across {count} products",
+            "lowStock": "Low Stock Products",
+            "lowStockDesc": "Below reorder level",
+            "nearingExpiry": "Nearing Expiry",
+            "nearingExpiryDesc": "Within the next 30 days",
+            "inStock": "Products in Stock",
+            "inStockDesc": "Active unique batches"
+        },
+        "inventory": {
+            "title": "Stock Inventory",
+            "description": "Track and manage all stock items in the pharmacy."
+        },
+        "addStockForm": {
+            "medication": "Medication",
+            "selectMedication": "Select a medication to stock",
+            "batchNumber": "Batch No.",
+            "quantity": "Quantity",
+            "expirationDate": "Expiration Date",
+            "location": "Storage Location",
+            "locationPlaceholder": "Shelf A, Section 2",
+            "locationDesc": "Optional. Helps to easily locate the product.",
+            "submit": "Add to Stock",
+            "submitting": "Adding..."
+        },
+        "addMedicationForm": {
+            "name": "Medication Name",
+            "namePlaceholder": "Paracetamol 500mg",
+            "description": "Description",
+            "descriptionPlaceholder": "Analgesic and antipyretic...",
+            "unitPrice": "Unit Price (XOF)",
+            "reorderLevel": "Reorder Level",
+            "unit": "Unit",
+            "unitPlaceholder": "tablet, bottle...",
+            "dosage": "Dosage",
+            "dosagePlaceholder": "500mg, 10%",
+            "manufacturer": "Manufacturer",
+            "manufacturerPlaceholder": "Lab X",
+            "submit": "Create Medication",
+            "submitting": "Creating..."
+        },
+        "editStockDialogTitle": "Edit Stock Item",
+        "editStockDialogDescription": "Update information for batch {batchNumber} of {medicationName}.",
+        "table": {
+            "medication": "Medication",
+            "batchNumber": "Batch No.",
+            "quantity": "Quantity",
+            "expirationDate": "Expiration Date"
+        },
+        "statuses": {
+            "inStock": "In Stock",
+            "lowStock": "Low Stock",
+            "nearingExpiry": "Nearing Expiry",
+            "expired": "Expired"
+        },
+        "actions": {
+            "deleteWarning": "This action is irreversible. It will permanently delete this item from the stock."
+        },
+        "toasts": {
+            "addStockSuccessTitle": "Item Added to Stock",
+            "addStockSuccessDescription": "Batch {batchNumber} has been added to the inventory.",
+            "addStockErrorTitle": "Add Error",
+            "addMedicationSuccessTitle": "Medication Created Successfully",
+            "addMedicationSuccessDescription": "The medication \"{name}\" has been added to the catalog.",
+            "addMedicationErrorTitle": "Creation Error",
+            "updateSuccessTitle": "Stock Updated",
+            "updateSuccessDescription": "Batch {batchNumber} has been updated.",
+            "updateErrorTitle": "Update Error",
+            "deleteSuccessTitle": "Item Deleted from Stock",
+            "deleteSuccessDescription": "Batch {batchNumber} of {medicationName} has been deleted."
+        }
+    },
+    "billingPage": {
+        "title": "Billing & Cash Desk",
+        "exportList": "Export List",
+        "createInvoice": "Create Invoice",
+        "dialogTitle": "Create a New Invoice",
+        "dialogDescription": "Generate a new invoice for a patient.",
+        "listTitle": "Invoice Management",
+        "listDescription": "Create, track, and manage patient and insurance invoices.",
+        "table": {
+            "invoiceNo": "Invoice No.",
+            "patient": "Patient",
+            "invoiceDate": "Invoice Date",
+            "totalAmount": "Total Amount",
+            "balanceDue": "Balance Due"
+        },
+        "form": {
+            "patient": "Patient",
+            "selectPatient": "Select a patient",
+            "totalAmount": "Total Amount (XOF)",
+            "dueDate": "Due Date",
+            "status": "Status",
+            "submit": "Create Invoice",
+            "submitting": "Creating..."
+        },
+        "paymentDialog": {
+            "title": "Record a Payment",
+            "description": "Invoice {invoiceId} for {patientName}.",
+            "amount": "Amount Paid (XOF)",
+            "method": "Payment Method",
+            "selectMethod": "Select a method",
+            "methods": {
+                "cash": "Cash",
+                "card": "Credit Card",
+                "mobile": "Mobile Money",
+                "insurance": "Insurance Claim"
+            },
+            "transactionId": "Transaction ID",
+            "notes": "Notes",
+            "submit": "Record Payment",
+            "submitting": "Recording..."
+        },
+        "statuses": {
+            "pending": "Pending",
+            "paid": "Paid",
+            "partiallyPaid": "Partially Paid",
+            "overdue": "Overdue",
+            "cancelled": "Cancelled",
+            "disputed": "Disputed"
+        },
+        "actions": {
+            "viewDetails": "View Details",
+            "recordPayment": "Record Payment",
+            "deleteWarning": "This action is irreversible. It will permanently delete the invoice."
+        },
+        "toasts": {
+            "createSuccessTitle": "Invoice Created Successfully",
+            "createSuccessDescription": "Invoice {invoiceId} has been created.",
+            "createErrorTitle": "Creation Error",
+            "deleteSuccessTitle": "Invoice Deleted",
+            "deleteSuccessDescription": "Invoice {invoiceId} has been deleted.",
+            "paymentSuccessTitle": "Payment Recorded",
+            "paymentSuccessDescription": "The payment for invoice {invoiceId} has been recorded.",
+            "paymentErrorTitle": "Payment Error"
+        }
+    },
+    "reportsPage": {
+        "title": "Financial & Operational Reports",
+        "export": "Export Reports",
+        "kpi": {
+            "totalRevenue": "Total Revenue",
+            "totalRevenueDesc": "+15.2% this month",
+            "unpaidInvoices": "Unpaid Invoices",
+            "unpaidInvoicesDesc": "32 overdue invoices",
+            "recoveryRate": "Recovery Rate",
+            "recoveryRateDesc": "+1.5% from last month",
+            "insuranceRefunds": "Insurance Reimbursements",
+            "insuranceRefundsDesc": "Pending reconciliation"
+        },
+        "revenueByService": {
+            "title": "Revenue by Service",
+            "description": "Detailed analysis of revenue generated by each service category.",
+            "consultations": "Consultations",
+            "lab": "Laboratory",
+            "imaging": "Imaging",
+            "hospitalization": "Hospitalization",
+            "pharmacy": "Pharmacy",
+            "surgeries": "Surgeries"
+        }
+    },
+    "consultationsPage": {
+        "title": "Consultations",
+        "newConsultation": "New Consultation",
+        "dialogTitle": "New Medical Consultation",
+        "dialogDescription": "Fill in the details below to record a new consultation.",
+        "listTitle": "Recent Consultations",
+        "listDescription": "List of the latest medical consultations.",
+        "table": {
+            "date": "Date",
+            "patient": "Patient",
+            "diagnosis": "Diagnosis"
+        },
+        "form": {
+            "patient": "Patient",
+            "selectPatient": "Select a patient",
+            "symptoms": "Symptoms",
+            "symptomsPlaceholder": "Fever, cough, headache...",
+            "diagnosis": "Diagnosis",
+            "diagnosisPlaceholder": "Seasonal flu...",
+            "notes": "Additional Notes (Optional)",
+            "notesPlaceholder": "Prescribe rest, follow-up in 3 days...",
+            "submit": "Save Consultation",
+            "submitting": "Saving..."
+        },
+        "statuses": {
+            "completed": "Completed",
+            "followUp": "Follow-up Required",
+            "draft": "Draft"
+        },
+        "editDialogTitle": "Edit Consultation",
+        "editDialogDescription": "Update the consultation record for {patientName}.",
+        "actions": {
+            "viewDetails": "View Details",
+            "prescribe": "Prescribe Medication",
+            "requestExam": "Request Exam"
+        },
+        "toasts": {
+            "createSuccessTitle": "Consultation Saved",
+            "createSuccessDescription": "The consultation for the patient has been successfully saved.",
+            "createErrorTitle": "Creation Error",
+            "updateSuccessTitle": "Consultation Updated",
+            "updateSuccessDescription": "The consultation for {patientName} has been updated."
+        }
+    },
+    "insurancePage": {
+        "title": "Insurance Management",
+        "addProvider": "Add Provider",
+        "dialogTitle": "Add New Insurance Provider",
+        "dialogDescription": "Fill in the details to add a new insurance company.",
+        "listTitle": "Insurance Providers",
+        "listDescription": "Manage all partner insurance companies.",
+        "table": {
+            "name": "Name",
+            "contact": "Contact Person",
+            "phone": "Phone",
+            "monthlyFee": "Monthly Fee"
+        },
+        "form": {
+            "name": "Company Name",
+            "namePlaceholder": "Insurance Co.",
+            "contactPerson": "Contact Person",
+            "contactPersonPlaceholder": "John Doe",
+            "contactPhone": "Contact Phone",
+            "contactPhonePlaceholder": "+1 234 567 890",
+            "monthlyFee": "Monthly Fee (USD)",
+            "submit": "Save Provider",
+            "submitting": "Saving..."
+        },
+        "editDialogTitle": "Edit Insurance Provider",
+        "editDialogDescription": "Update details for {providerName}.",
+        "actions": {
+            "deleteWarning": "This will permanently delete the insurance provider."
+        },
+        "toasts": {
+            "createSuccessTitle": "Provider Added",
+            "createSuccessDescription": "The provider {name} has been added.",
+            "createErrorTitle": "Creation Error",
+            "updateSuccessTitle": "Provider Updated",
+            "updateSuccessDescription": "The provider {name} has been updated.",
+            "updateErrorTitle": "Update Error",
+            "deleteSuccessTitle": "Provider Deleted",
+            "deleteSuccessDescription": "The provider {name} has been deleted."
+        }
+    }
+}
