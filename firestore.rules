@@ -173,7 +173,7 @@ service cloud.firestore {
      */
     match /insurance_providers/{providerId} {
       allow read: if isAccountant() || isReceptionist() || isAdmin();
-      allow create: if isAccountant() || isAdmin();
+      allow create: if isAccountant() || isReceptionist() || isAdmin();
       allow update: if isExistingDoc() && (isAccountant() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
     }
@@ -372,7 +372,7 @@ service cloud.firestore {
      * @principle Restricts financial data access to authorized roles like accountants and admins.
      */
     match /invoices/{invoiceId} {
-      allow read: if isSignedIn() && exists(/databases/$(database)/documents/user_roles/$(request.auth.uid)) && get(/databases/$(database)/documents/user_roles/$(request.auth.uid)).data.roleName in ['accountant', 'admin', 'receptionist'];
+      allow read: if isAccountant() || isAdmin() || isReceptionist();
       allow create: if (isReceptionist() || isAccountant() || isAdmin()) && isOwner(request.resource.data.generatedByUserId);
       allow update: if isExistingDoc() && (isAccountant() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
@@ -401,7 +401,7 @@ service cloud.firestore {
      */
     match /payments/{paymentId} {
       allow get, list: if isAccountant() || isAdmin() || isReceptionist();
-      allow create: if (isAccountant() || isAdmin()) && isOwner(request.resource.data.receivedByUserId);
+      allow create: if (isAccountant() || isReceptionist() || isAdmin()) && isOwner(request.resource.data.receivedByUserId);
       allow update: if isExistingDoc() && (isAccountant() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
     }
@@ -437,5 +437,3 @@ service cloud.firestore {
 
   }
 }
-
-    
