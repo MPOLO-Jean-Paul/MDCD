@@ -27,7 +27,8 @@
         "confirm": "Confirm",
         "chooseDate": "Choose a date",
         "selected": "selected",
-        "clearFilters": "Clear filters"
+        "clearFilters": "Clear filters",
+        "soon": "This feature will be available soon."
     },
     "nav": {
         "main": "MDCD Polyclinic",
@@ -41,7 +42,8 @@
         "reports": "Reports",
         "services": "Services",
         "users": "Users",
-        "settings": "Settings"
+        "settings": "Settings",
+        "accounting": "Accounting"
     },
     "header": {
         "searchPlaceholder": "Search...",
@@ -621,6 +623,27 @@
             "updateErrorTitle": "Update Error",
             "deleteSuccessTitle": "Provider Deleted",
             "deleteSuccessDescription": "The provider {name} has been deleted."
+        }
+    },
+    "accountingPage": {
+        "title": "Accounting Workspace",
+        "tabs": {
+            "invoicesToProcess": "Invoices to Process",
+            "stats": "Statistics",
+            "claims": "Claims",
+            "disputes": "Disputes"
+        },
+        "invoices": {
+            "title": "Pending Invoices",
+            "description": "List of invoices requiring action (payment, follow-up)."
+        },
+        "claims": {
+            "title": "Insurance Claims",
+            "description": "Manage claims submitted to insurance companies."
+        },
+        "disputes": {
+            "title": "Dispute Management",
+            "description": "Track and resolve billing-related disputes."
         }
     }
 }

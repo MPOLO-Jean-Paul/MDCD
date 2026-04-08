@@ -367,13 +367,13 @@ service cloud.firestore {
     /**
      * @description Consolidates all billable items for a patient.
      * @path /invoices/{invoiceId}
-     * @allow (create) An accountant generating an invoice for a patient.
+     * @allow (get) An accountant viewing a patient's invoice.
      * @deny (get) A doctor trying to view a patient's invoice.
      * @principle Restricts financial data access to authorized roles like accountants and admins.
      */
     match /invoices/{invoiceId} {
       allow get, list: if isAccountant() || isAdmin() || isReceptionist();
-      allow create: if (isAccountant() || isAdmin()) && isOwner(request.resource.data.generatedByUserId);
+      allow create: if (isReceptionist() || isAccountant() || isAdmin()) && isOwner(request.resource.data.generatedByUserId);
       allow update: if isExistingDoc() && (isAccountant() || isAdmin());
       allow delete: if isExistingDoc() && isAdmin();
     }

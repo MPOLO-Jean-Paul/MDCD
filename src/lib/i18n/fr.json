@@ -27,7 +27,8 @@
         "confirm": "Confirmer",
         "chooseDate": "Choisissez une date",
         "selected": "sélectionné(s)",
-        "clearFilters": "Effacer les filtres"
+        "clearFilters": "Effacer les filtres",
+        "soon": "Cette fonctionnalité sera bientôt disponible."
     },
     "nav": {
         "main": "Polyclinique MDCD",
@@ -41,7 +42,8 @@
         "reports": "Rapports",
         "services": "Services",
         "users": "Utilisateurs",
-        "settings": "Paramètres"
+        "settings": "Paramètres",
+        "accounting": "Comptabilité"
     },
     "header": {
         "searchPlaceholder": "Rechercher...",
@@ -621,6 +623,27 @@
             "updateErrorTitle": "Erreur de mise à jour",
             "deleteSuccessTitle": "Assurance supprimée",
             "deleteSuccessDescription": "L'assurance {name} a été supprimée."
+        }
+    },
+    "accountingPage": {
+        "title": "Espace Comptabilité",
+        "tabs": {
+            "invoicesToProcess": "Factures à Traiter",
+            "stats": "Statistiques",
+            "claims": "Réclamations",
+            "disputes": "Litiges"
+        },
+        "invoices": {
+            "title": "Factures en Attente de Paiement",
+            "description": "Liste des factures nécessitant une action (paiement, suivi)."
+        },
+        "claims": {
+            "title": "Réclamations d'Assurance",
+            "description": "Gérer les réclamations soumises aux compagnies d'assurance."
+        },
+        "disputes": {
+            "title": "Gestion des Litiges",
+            "description": "Suivre et résoudre les litiges liés à la facturation."
         }
     }
 }

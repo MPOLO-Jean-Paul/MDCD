@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/sidebar';
 import {
   BarChart3,
-  FilePlus,
   Hospital,
   LayoutDashboard,
   Pill,
@@ -21,6 +20,7 @@ import {
   ClipboardList,
   Stethoscope,
   Landmark,
+  Banknote,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -31,20 +31,22 @@ import { useLanguage } from '@/lib/i18n/provider';
 const allMenuItems = [
   { href: '/dashboard', labelKey: 'nav.dashboard', icon: LayoutDashboard, roles: ['admin', 'doctor', 'receptionist', 'pharmacist', 'accountant', 'lab_staff'] },
   
-  { href: '/patients', labelKey: 'nav.patients', icon: Users2, roles: ['admin', 'receptionist', 'doctor'] },
+  // Reception
+  { href: '/patients', labelKey: 'nav.patients', icon: Users2, roles: ['admin', 'receptionist'] },
+  { href: '/billing', labelKey: 'nav.billing', icon: ClipboardList, roles: ['admin', 'receptionist'] },
+  { href: '/insurance', labelKey: 'nav.insurance', icon: Landmark, roles: ['admin', 'receptionist'] },
+  { href: '/reports', labelKey: 'nav.reports', icon: BarChart3, roles: ['admin', 'receptionist'] },
   
-  // Doctor Only
+  // Doctor
   { href: '/consultations', labelKey: 'nav.consultations', icon: Stethoscope, roles: ['admin', 'doctor'] },
-
-  // Accountant & Receptionist
-  { href: '/billing', labelKey: 'nav.billing', icon: FilePlus, roles: ['admin', 'accountant', 'receptionist'] },
-  { href: '/insurance', labelKey: 'nav.insurance', icon: Landmark, roles: ['admin', 'accountant', 'receptionist'] },
-  { href: '/reports', labelKey: 'nav.reports', icon: BarChart3, roles: ['admin', 'accountant', 'receptionist'] },
   
-  // Pharmacist Only
+  // Accountant
+  { href: '/accounting', labelKey: 'nav.accounting', icon: Banknote, roles: ['admin', 'accountant'] },
+
+  // Pharmacist
   { href: '/pharmacy', labelKey: 'nav.pharmacy', icon: Pill, roles: ['admin', 'pharmacist'] },
 
-  // Admin Only
+  // Admin
   { href: '/services', labelKey: 'nav.services', icon: ClipboardList, roles: ['admin'] },
   { href: '/admin/users', labelKey: 'nav.users', icon: ShieldCheck, roles: ['admin'] },
 ];
