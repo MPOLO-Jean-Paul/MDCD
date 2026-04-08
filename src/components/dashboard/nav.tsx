@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/sidebar';
 import {
   BarChart3,
-  BedDouble,
   FilePlus,
   Hospital,
   LayoutDashboard,
