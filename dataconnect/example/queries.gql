@@ -1,0 +1,48 @@
+# Inventory Queries
+query GetInventory @auth(level: USER) {
+  inventoryItems(orderBy: [{name: ASC}]) {
+    id
+    name
+    category
+    unitPrice
+    currentStock
+    reorderLevel
+    updatedAt
+  }
+}
+
+# Patient Queries
+query GetPatientHistory($patientId: UUID!) @auth(level: USER) {
+  patientDetail(id: $patientId) {
+    id
+    medicalHistory
+    familyHistory
+    allergies
+    bloodGroup
+  }
+}
+
+# Billing Queries
+query GetLatestInvoice($patientId: UUID!) @auth(level: USER) {
+  invoices(where: {patientId: {eq: $patientId}}, orderBy: [{createdAt: DESC}], limit: 1) {
+    id
+    totalAmount
+    status
+    createdAt
+    reason
+    amountPatient
+    amountInsurance
+  }
+}
+
+# Analytics Queries
+query GetGlobalAnalytics @auth(level: USER) {
+  invoices {
+    totalAmount
+    status
+    createdAt
+    reason
+    amountPatient
+    amountInsurance
+  }
+}

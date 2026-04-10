@@ -20,21 +20,19 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { useFirestore, setDocumentNonBlocking } from '@/firebase';
+import { HospitalDataService } from '@/lib/firestore-service';
 
 const formSchema = z.object({
   name: z.string().min(1, { message: 'Le nom du médicament est requis.' }),
   description: z.string().min(1, { message: 'La description est requise.' }),
-  unitOfMeasure: z.string().min(1, { message: 'L\'unité de mesure est requise.' }),
+  category: z.string().default('Tablets'), // New field from Prisma
   unitPrice: z.coerce.number().positive({ message: 'Le prix doit être un nombre positif.' }),
   reorderLevel: z.coerce.number().int().nonnegative({ message: 'Le seuil doit être un nombre positif.' }),
-  manufacturer: z.string().optional(),
-  strength: z.string().optional(),
+  initialStock: z.coerce.number().int().nonnegative().optional(),
 });
 
 export function AddMedicationForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const firestore = useFirestore();
   const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -42,43 +40,33 @@ export function AddMedicationForm() {
     defaultValues: {
       name: '',
       description: '',
-      unitOfMeasure: 'comprimé',
+      category: 'Tablets',
       unitPrice: 0,
       reorderLevel: 10,
-      manufacturer: '',
-      strength: ''
+      initialStock: 0,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      if (!firestore) throw new Error("Firestore is not initialized");
-      
-      const newMedicationId = uuidv4();
-      const medicationDocRef = doc(firestore, 'medications', newMedicationId);
-      
-      const dataToSubmit = {
-        ...values,
-        id: newMedicationId,
-        isActive: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
-      setDocumentNonBlocking(medicationDocRef, dataToSubmit, {});
+      // Persist to Firestore
+      await HospitalDataService.addInventoryItem({
+         ...values,
+         category: values.category || 'Tablets'
+      });
 
       toast({
-        title: 'Médicament créé avec succès',
-        description: `Le médicament "${values.name}" a été ajouté au catalogue.`,
+        title: 'Médicament créé',
+        description: `Le produit "${values.name}" a été ajouté à l'inventaire.`,
       });
       form.reset();
 
     } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: "Erreur de création",
-        description: error.message || "Une erreur est survenue.",
+        title: "Erreur lors de la création",
+        description: error.message || "Impossible de créer le médicament.",
       });
       console.error("Error creating medication:", error);
     } finally {

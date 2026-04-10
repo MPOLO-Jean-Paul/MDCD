@@ -1,0 +1,81 @@
+type InsuranceProvider @table {
+  name: String!
+  contactPerson: String
+  phone: String
+  agreementDetails: String
+  active: Boolean!
+  createdAt: Timestamp!
+}
+
+type Staff @table {
+  email: String! @unique
+  firstName: String!
+  lastName: String!
+  role: String!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  specialty: String
+  phone: String
+}
+
+type PatientDetail @table {
+  firstName: String!
+  lastName: String!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  dateOfBirth: Date
+  gender: String
+  nationalId: String @unique
+  address: String
+  phone: String
+  medicalHistory: String
+  familyHistory: String
+  allergies: String
+  bloodGroup: String
+}
+
+type InventoryItem @table {
+  name: String!
+  category: String!
+  unitPrice: Float!
+  currentStock: Int!
+  reorderLevel: Int!
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+  description: String
+  manufacturer: String
+}
+
+type InventoryTransaction @table {
+  itemId: UUID
+  item: InventoryItem
+  type: String!
+  quantity: Int!
+  performedAt: Timestamp!
+  reason: String
+  staffId: UUID
+}
+
+type Invoice @table {
+  patientId: UUID!
+  patient: PatientDetail!
+  insuranceId: UUID
+  insurance: InsuranceProvider
+  items: String! # JSON string of items (medications, fees, etc.)
+  reason: String! # E.g., 'PHARMACY', 'CONSULTATION', 'LAB'
+  totalAmount: Float!
+  amountPatient: Float!
+  amountInsurance: Float!
+  status: String! # PENDING, PAID, CANCELLED
+  createdAt: Timestamp!
+  updatedAt: Timestamp!
+}
+
+type LabReportArchive @table {
+  patientId: UUID!
+  patient: PatientDetail!
+  consultationId: UUID!
+  testResults: String!
+  archivedAt: Timestamp!
+  interpretations: String
+}

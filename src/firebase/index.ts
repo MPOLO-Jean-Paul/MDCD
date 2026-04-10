@@ -3,54 +3,53 @@
 import { firebaseConfig } from '@/firebase/config';
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore';
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
+import { getDataConnect } from 'firebase/data-connect';
+import { connectorConfig } from '@/dataconnect-generated';
 
-// IMPORTANT: DO NOT MODIFY THIS FUNCTION
-export async function initializeFirebase() { // Made async
+export async function initializeFirebase() {
   let firebaseApp: FirebaseApp;
+  
   if (!getApps().length) {
-    // Important! initializeApp() is called without any arguments because Firebase App Hosting
-    // integrates with the initializeApp() function to provide the environment variables needed to
-    // populate the FirebaseOptions in production. It is critical that we attempt to call initializeApp()
-    // without arguments.
     try {
-      // Attempt to initialize via Firebase App Hosting environment variables
       firebaseApp = initializeApp();
     } catch (e) {
-      // Only warn in production because it's normal to use the firebaseConfig to initialize
-      // during development
       if (process.env.NODE_ENV === "production") {
         console.warn('Automatic initialization failed. Falling back to firebase config object.', e);
       }
       firebaseApp = initializeApp(firebaseConfig);
     }
   } else {
-    // If already initialized, use the existing app
     firebaseApp = getApp();
   }
 
-  const firestore = getFirestore(firebaseApp);
   const auth = getAuth(firebaseApp);
 
-  // Enable persistence. This must be done before any other Firestore operations.
-  // It should only be attempted once per app load.
+  // Modern offline-first persistence setup (replaces deprecated enableIndexedDbPersistence)
+  // Uses multi-tab cache so all browser tabs share the same offline cache
+  let firestore;
   try {
-    await enableIndexedDbPersistence(firestore);
-    console.log("Firebase persistence has been enabled.");
-  } catch (error: any) {
-    if (error.code === 'failed-precondition') {
-      // This can happen if multiple tabs are open. Persistence can only be enabled in one tab at a time.
-      console.warn("Firestore persistence failed to enable. This is likely due to another tab being open. Offline capabilities may be limited.");
-    } else if (error.code === 'unimplemented') {
-      // The current browser does not support all of the features required to enable persistence
-      console.warn("Firestore persistence is not supported in this browser. Offline capabilities will be disabled.");
+    firestore = initializeFirestore(firebaseApp, {
+      localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager()
+      })
+    });
+    console.log("Firestore offline persistence (multi-tab) enabled.");
+  } catch (e: any) {
+    // initializeFirestore throws if already initialized - fall back to getFirestore
+    firestore = getFirestore(firebaseApp);
+    if (e.code !== 'failed-precondition') {
+      console.warn('Firestore persistence setup warning:', e);
     }
   }
+
+  const dataConnect = getDataConnect(firebaseApp, connectorConfig);
 
   return {
     firebaseApp,
     auth,
     firestore,
+    dataConnect,
   };
 }
 

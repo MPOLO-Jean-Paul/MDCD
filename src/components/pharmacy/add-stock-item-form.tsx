@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { HospitalDataService } from '@/lib/firestore-service';
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -49,16 +50,24 @@ const formSchema = z.object({
 
 export function AddStockItemForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const firestore = useFirestore();
+  const [inventory, setInventory] = useState<any[]>([]);
+  const [isLoadingInv, setIsLoadingInv] = useState(true);
   const { user } = useUser();
   const { toast } = useToast();
 
-  const medicationsCollectionRef = useMemoFirebase(
-    () => firestore ? collection(firestore, 'medications') : null,
-    [firestore]
-  );
-  
-  const { data: medications, isLoading: isLoadingMedications } = useCollection<Omit<Medication, 'id'>>(medicationsCollectionRef);
+  useEffect(() => {
+    async function loadInv() {
+      try {
+        const data = await HospitalDataService.getInventory();
+        setInventory(data || []);
+      } catch (e) {
+        console.error("Error loading inventory items:", e);
+      } finally {
+        setIsLoadingInv(false);
+      }
+    }
+    loadInv();
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -71,44 +80,37 @@ export function AddStockItemForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      if (!firestore || !user) throw new Error("Services non initialisés");
+      if (!user) throw new Error("Utilisateur non authentifié.");
       
-      const newStockItemId = uuidv4();
-      const stockItemDocRef = doc(firestore, 'stock_items', newStockItemId);
-      
-      const dataToSubmit = {
-        ...values,
-        id: newStockItemId,
-        expirationDate: values.expirationDate.toISOString(),
-        lastUpdateUserId: user.uid,
-        lastUpdateDateTime: new Date().toISOString(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-
-      setDocumentNonBlocking(stockItemDocRef, dataToSubmit, {});
+      // Update Stock via Firestore
+      await HospitalDataService.updateStock(
+        values.medicationId,
+        values.currentQuantity,
+        `Réapprovisionnement Lot ${values.batchNumber}`,
+        user.uid
+      );
 
       toast({
-        title: 'Article ajouté au stock',
-        description: `Le lot ${values.batchNumber} a été ajouté à l'inventaire.`,
+        title: 'Stock mis à jour',
+        description: `Le lot ${values.batchNumber} de ${values.currentQuantity} unités a été ajouté au stock.`,
       });
       form.reset();
 
     } catch (error: any) {
       toast({
         variant: 'destructive',
-        title: "Erreur d'ajout",
-        description: error.message || "Une erreur est survenue.",
+        title: "Erreur lors de la mise à jour",
+        description: error.message || "Impossible de mettre à jour le stock.",
       });
-      console.error("Error creating stock item:", error);
+      console.error("Error updating stock item:", error);
     } finally {
       setIsLoading(false);
     }
   }
 
-  if (isLoadingMedications) {
+  if (isLoadingInv) {
     return <div className="space-y-4 py-4">
-        {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-10" />)}
+        {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-10 w-full" />)}
     </div>
   }
 
@@ -128,9 +130,9 @@ export function AddStockItemForm() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {medications?.map((med: WithId<Omit<Medication, 'id'>>) => (
-                      <SelectItem key={med.id} value={med.id}>
-                          {med.name}
+                  {inventory?.map((item: any) => (
+                      <SelectItem key={item.id} value={item.id}>
+                          {item.name} ({item.currentStock} en stock)
                       </SelectItem>
                   ))}
                 </SelectContent>

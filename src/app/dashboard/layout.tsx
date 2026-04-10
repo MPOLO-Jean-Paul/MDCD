@@ -4,6 +4,7 @@ import { Nav } from '@/components/dashboard/nav';
 import { Header } from '@/components/dashboard/header';
 import AuthRedirect from '@/components/auth/auth-redirect';
 import { Footer } from '@/components/dashboard/footer';
+import { MotionPage } from '@/components/providers/motion-page';
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
@@ -12,11 +13,11 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <Sidebar>
             <Nav />
           </Sidebar>
-          <SidebarInset>
+          <SidebarInset className="bg-background/95 backdrop-blur-sm">
             <Header />
-            <main className="flex-1 space-y-4 p-4 pt-6 md:p-8">
+            <MotionPage className="flex-1 space-y-4 p-4 pt-6 md:p-8">
               {children}
-            </main>
+            </MotionPage>
             <Footer />
           </SidebarInset>
         </SidebarProvider>

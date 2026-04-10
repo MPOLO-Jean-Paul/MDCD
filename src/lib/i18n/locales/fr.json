@@ -38,6 +38,8 @@
         "billing": "Facturation",
         "insurance": "Assurances",
         "pharmacy": "Pharmacie",
+        "laboratory": "Plateau Technique",
+        "inpatient": "Hospitalisation (Lits)",
         "reports": "Rapports",
         "services": "Services",
         "users": "Utilisateurs",

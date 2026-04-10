@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:HgR7fzIzwHwnMqX7@db.ranckfnkwpfbptubpgyh.supabase.co:5432/postgres"
+}
+
+// Global Staff Profile Linked to Firebase Auth
+model Staff {
+  id                String   @id // matches firebase userId
+  firstName         String
+  lastName          String
+  role              String   // admin, doctor, pharmacist, lab_staff, etc.
+  specialty         String?
+  phone             String?
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// Heavy Patient Records (Postgres for historical reliability)
+model PatientDetail {
+  id                String   @id @default(uuid())
+  firstName         String
+  lastName          String
+  dateOfBirth       DateTime?
+  gender            String?
+  nationalId        String?  @unique
+  address           String?
+  phone             String?
+  medicalHistory    String?  @db.Text
+  familyHistory     String?  @db.Text
+  allergies         String?  @db.Text
+  bloodGroup        String?
+  invoices          Invoice[]
+  labReports        LabReportArchive[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// Comprehensive Pharmacy Inventory
+model InventoryItem {
+  id                String   @id @default(uuid())
+  name              String
+  description       String?
+  category          String   // Tablets, Syrups, Consumables
+  unitPrice         Decimal
+  currentStock      Int      @default(0)
+  reorderLevel      Int      @default(10)
+  manufacturer      String?
+  transactions      InventoryTransaction[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model InventoryTransaction {
+  id                String   @id @default(uuid())
+  itemId            String
+  item              InventoryItem @relation(fields: [itemId], references: [id])
+  type              String   // IN, OUT, ADJUST
+  quantity          Int
+  reason            String?
+  staffId           String?  // Who performed it
+  performedAt       DateTime @default(now())
+}
+
+// Insurance Partners
+model InsuranceProvider {
+  id                String   @id @default(uuid())
+  name              String
+  contactPerson     String?
+  phone             String?
+  agreementDetails  String?  @db.Text
+  active            Boolean  @default(true)
+  createdAt         DateTime @default(now())
+}
+
+// Financial Records
+model Invoice {
+  id                String   @id @default(uuid())
+  patientId         String
+  patient           PatientDetail @relation(fields: [patientId], references: [id])
+  insuranceId       String?
+  items             Json     // [{name, price, quantity}]
+  totalAmount       Decimal
+  paidAmount        Decimal  @default(0)
+  status            String   @default("UNPAID") // UNPAID, PARTIAL, PAID
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// Clinical Archiving
+model LabReportArchive {
+  id                String   @id @default(uuid())
+  patientId         String
+  patient           PatientDetail @relation(fields: [patientId], references: [id])
+  consultationId    String
+  testResults       Json
+  interpretations   String?  @db.Text
+  archivedAt        DateTime @default(now())
+}

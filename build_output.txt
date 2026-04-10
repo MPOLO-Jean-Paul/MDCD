@@ -1,0 +1,6 @@
+
+> nextn@0.1.0 build
+> NODE_ENV=production next build
+
+'NODE_ENV' n'est pas reconnu en tant que commande interne
+ou externe, un programme ex‚cutable ou un fichier de commandes.

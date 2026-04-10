@@ -75,6 +75,7 @@ export function useCollection<T = any>(
     // Directly use memoizedTargetRefOrQuery as it's assumed to be the final query
     const unsubscribe = onSnapshot(
       memoizedTargetRefOrQuery,
+      { includeMetadataChanges: true }, // Important for detecting sync state silently
       (snapshot: QuerySnapshot<DocumentData>) => {
         const results: ResultItemType[] = [];
         for (const doc of snapshot.docs) {
@@ -82,7 +83,12 @@ export function useCollection<T = any>(
         }
         setData(results);
         setError(null);
-        setIsLoading(false);
+        
+        // If we have data from cache and it's not the first load, 
+        // we can stop loading even if server sync is pending.
+        if (!snapshot.metadata.hasPendingWrites || snapshot.metadata.fromCache) {
+           setIsLoading(false);
+        }
       },
       (error: FirestoreError) => {
         // This logic extracts the path from either a ref or a query

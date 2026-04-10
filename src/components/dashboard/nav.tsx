@@ -34,6 +34,7 @@ const allMenuItems = [
   // Reception
   { href: '/patients', labelKey: 'nav.patients', icon: Users2, roles: ['admin', 'receptionist'] },
   { href: '/billing', labelKey: 'nav.billing', icon: ClipboardList, roles: ['admin', 'receptionist'] },
+  { href: '/inpatient', labelKey: 'nav.inpatient', icon: Hospital, roles: ['admin', 'receptionist', 'doctor'] },
   { href: '/insurance', labelKey: 'nav.insurance', icon: Landmark, roles: ['admin', 'receptionist'] },
   { href: '/reports', labelKey: 'nav.reports', icon: BarChart3, roles: ['admin', 'receptionist'] },
   
@@ -45,6 +46,9 @@ const allMenuItems = [
 
   // Pharmacist
   { href: '/pharmacy', labelKey: 'nav.pharmacy', icon: Pill, roles: ['admin', 'pharmacist'] },
+
+  // Laboratory
+  { href: '/laboratory', labelKey: 'nav.laboratory', icon: Stethoscope, roles: ['admin', 'lab_staff'] },
 
   // Admin
   { href: '/services', labelKey: 'nav.services', icon: ClipboardList, roles: ['admin'] },
@@ -70,13 +74,10 @@ export function Nav() {
           </span>
         </Link>
       </SidebarHeader>
-      <SidebarContent className="p-2">
+      <SidebarContent className="p-2 space-y-1">
         <SidebarMenu>
           {isProfileLoading ? (
             <>
-              <SidebarMenuSkeleton showIcon />
-              <SidebarMenuSkeleton showIcon />
-              <SidebarMenuSkeleton showIcon />
               <SidebarMenuSkeleton showIcon />
               <SidebarMenuSkeleton showIcon />
               <SidebarMenuSkeleton showIcon />
@@ -88,10 +89,13 @@ export function Nav() {
                   asChild
                   tooltip={t(item.labelKey)}
                   isActive={pathname.startsWith(item.href) && (item.href === '/dashboard' ? pathname === item.href : true) }
+                  className="transition-all duration-200 hover:bg-primary/5 group"
                 >
-                  <Link href={item.href}>
-                    <item.icon />
-                    <span>{t(item.labelKey)}</span>
+                  <Link href={item.href} className="flex items-center gap-3">
+                    <div className={`p-1.5 rounded-lg transition-colors ${pathname.startsWith(item.href) && (item.href === '/dashboard' ? pathname === item.href : true) ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' : 'text-muted-foreground group-hover:text-primary'}`}>
+                      <item.icon className="size-4" />
+                    </div>
+                    <span className="font-medium">{t(item.labelKey)}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

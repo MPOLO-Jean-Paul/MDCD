@@ -61,6 +61,7 @@ export function useDoc<T = any>(
 
     const unsubscribe = onSnapshot(
       memoizedDocRef,
+      { includeMetadataChanges: true },
       (snapshot: DocumentSnapshot<DocumentData>) => {
         if (snapshot.exists()) {
           setData({ ...(snapshot.data() as T), id: snapshot.id });
@@ -69,7 +70,11 @@ export function useDoc<T = any>(
           setData(null);
         }
         setError(null); // Clear any previous error on successful snapshot (even if doc doesn't exist)
-        setIsLoading(false);
+        
+        // Silent sync: Resolve loading state if data is from cache or synced
+        if (!snapshot.metadata.hasPendingWrites || snapshot.metadata.fromCache) {
+            setIsLoading(false);
+        }
       },
       (error: FirestoreError) => {
         const contextualError = new FirestorePermissionError({

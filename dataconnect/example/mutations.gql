@@ -1,0 +1,99 @@
+# Staff Mutations
+mutation UpsertStaff($id: UUID!, $firstName: String!, $lastName: String!, $role: String!, $email: String!, $specialty: String, $phone: String) @auth(level: USER) {
+  staff_upsert(data: {
+    id: $id,
+    firstName: $firstName,
+    lastName: $lastName,
+    role: $role,
+    email: $email,
+    specialty: $specialty,
+    phone: $phone,
+    updatedAt_expr: "request.time",
+    createdAt_expr: "request.time"
+  })
+}
+
+# Patient Mutations
+mutation UpsertPatient($id: UUID!, $firstName: String!, $lastName: String!, $nationalId: String, $gender: String, $bloodGroup: String) @auth(level: USER) {
+  patientDetail_upsert(data: {
+    id: $id,
+    firstName: $firstName,
+    lastName: $lastName,
+    nationalId: $nationalId,
+    gender: $gender,
+    bloodGroup: $bloodGroup,
+    updatedAt_expr: "request.time",
+    createdAt_expr: "request.time"
+  })
+}
+
+# Inventory Mutations
+mutation AddInventoryItem($name: String!, $category: String!, $unitPrice: Float!, $initialStock: Int!, $reorderLevel: Int!) @auth(level: USER) {
+  inventoryItem_insert(data: {
+    name: $name,
+    category: $category,
+    unitPrice: $unitPrice,
+    currentStock: $initialStock,
+    reorderLevel: $reorderLevel,
+    createdAt_expr: "request.time",
+    updatedAt_expr: "request.time"
+  })
+}
+
+mutation UpdateStock($itemId: UUID!, $newStock: Int!) @auth(level: USER) {
+  inventoryItem_update(id: $itemId, data: {
+    currentStock: $newStock,
+    updatedAt_expr: "request.time"
+  })
+}
+
+mutation LogTransaction($itemId: UUID!, $type: String!, $quantity: Int!, $reason: String, $staffId: UUID) @auth(level: USER) {
+  inventoryTransaction_insert(data: {
+    itemId: $itemId,
+    type: $type,
+    quantity: $quantity,
+    reason: $reason,
+    staffId: $staffId,
+    performedAt_expr: "request.time"
+  })
+}
+
+# Billing Mutations
+mutation CreateInvoice(
+  $patientId: UUID!, 
+  $items: String!, 
+  $totalAmount: Float!, 
+  $amountPatient: Float!, 
+  $amountInsurance: Float!, 
+  $reason: String!
+) @auth(level: USER) {
+  invoice_insert(data: {
+    patientId: $patientId,
+    items: $items,
+    totalAmount: $totalAmount,
+    amountPatient: $amountPatient,
+    amountInsurance: $amountInsurance,
+    reason: $reason,
+    status: "PENDING",
+    createdAt_expr: "request.time",
+    updatedAt_expr: "request.time"
+  })
+}
+
+mutation UpdateInvoiceStatus($id: UUID!, $status: String!) @auth(level: USER) {
+  invoice_update(id: $id, data: {
+    status: $status,
+    updatedAt_expr: "request.time"
+  })
+}
+
+# Lab Mutations
+mutation ArchiveLabReport($patientId: UUID!, $consultationId: UUID!, $testResults: String!, $interpretations: String) @auth(level: USER) {
+  labReportArchive_insert(data: {
+    patientId: $patientId,
+    consultationId: $consultationId,
+    testResults: $testResults,
+    interpretations: $interpretations,
+    archivedAt_expr: "request.time"
+  })
+}

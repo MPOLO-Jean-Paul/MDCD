@@ -1,41 +1,31 @@
 'use client';
 
-import { useMemo } from 'react';
-import { useCollection, useFirestore, useMemoFirebase } from '@/firebase';
-import { collection } from 'firebase/firestore';
+import { useState, useEffect } from 'react';
 import { DataTable } from '@/components/ui/data-table';
 import { columns } from './stock-table-columns';
 import { Skeleton } from '../ui/skeleton';
-import { StockItem, Medication } from '@/types/medication';
+import { HospitalDataService } from '@/lib/firestore-service';
 
 export function StockList() {
-  const firestore = useFirestore();
-  
-  const stockItemsCollectionRef = useMemoFirebase(
-    () => firestore ? collection(firestore, 'stock_items') : null,
-    [firestore]
-  );
-  const medicationsCollectionRef = useMemoFirebase(
-    () => firestore ? collection(firestore, 'medications') : null,
-    [firestore]
-  );
-  
-  const { data: stockItems, isLoading: isLoadingStock, error: stockError } = useCollection<Omit<StockItem, 'id'>>(stockItemsCollectionRef);
-  const { data: medications, isLoading: isLoadingMedications, error: medError } = useCollection<Omit<Medication, 'id'>>(medicationsCollectionRef);
+  const [inventory, setInventory] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<any>(null);
 
-  const isLoading = isLoadingStock || isLoadingMedications;
-  const error = stockError || medError;
-
-  const stockWithMedicationName = useMemo(() => {
-    if (!stockItems || !medications) return [];
-    const medicationsMap = new Map(medications.map(m => [m.id, { name: m.name, reorderLevel: m.reorderLevel, unitPrice: m.unitPrice }]));
-    return stockItems.map(item => ({
-      ...item,
-      medicationName: medicationsMap.get(item.medicationId)?.name || 'Médicament inconnu',
-      reorderLevel: medicationsMap.get(item.medicationId)?.reorderLevel || 0,
-      unitPrice: medicationsMap.get(item.medicationId)?.unitPrice || 0,
-    }));
-  }, [stockItems, medications]);
+  useEffect(() => {
+    async function loadInventory() {
+      try {
+        setIsLoading(true);
+        const data = await HospitalDataService.getInventory();
+        setInventory(data || []);
+      } catch (e) {
+        console.error("Error loading inventory:", e);
+        setError(e);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadInventory();
+  }, []);
 
   if (isLoading) {
     return (
@@ -52,7 +42,15 @@ export function StockList() {
     return <p className="text-destructive">Erreur lors du chargement des stocks : {error.message}</p>;
   }
 
+  // Adapted inventory data for the columns
+  const displayData = inventory.map(item => ({
+    ...item,
+    medicationName: item.name, // Mapping 'name' to the expected column key
+    currentQuantity: item.currentStock, // Mapping 'currentStock' to the expected column key
+    expirationDate: item.updatedAt, // Fallback for demo
+  }));
+
   return (
-    <DataTable columns={columns} data={stockWithMedicationName || []} />
+    <DataTable columns={columns} data={displayData} />
   );
 }
